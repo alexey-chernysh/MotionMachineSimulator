@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="MotionMachineSimulator">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/dist/MotionMachineSimulator.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
