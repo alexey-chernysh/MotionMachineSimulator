@@ -10,11 +10,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-
-import java.awt.*;
+import motionmachinesimulator.Processor.ProcessorSettings;
 
 /**
  *
@@ -24,23 +22,24 @@ public class MotionMachineSimulator extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+/*
         Button startButton = new Button();
         startButton.setText("Start");
         startButton.setOnAction(new EventHandler<ActionEvent>() {
-            
+
             @Override
             public void handle(ActionEvent event) {
             }
         });
-        
+
         StackPane root = new StackPane();
-        root.getChildren().add(startButton);
-        
         Scene scene = new Scene(root, 1300, 750);
         
         primaryStage.setTitle("Hello World!");
         primaryStage.setScene(scene);
         primaryStage.show();
+        */
+
     }
 
     /**
