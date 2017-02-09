@@ -40,11 +40,16 @@ public class ProcessorSettings {
              "MM per motor shaft revolution = "
              + ProcessorSettings.mmPerMotorRevolution 
              + ";  MicroStep per motor shaft revolution = "
-             + ProcessorSettings.microstepPerMotorRevolution
-             + ";  MicroStep size = "
-             + ProcessorSettings.stepSize ;
-    
-    public static final String accuracy_state = 
+             + ProcessorSettings.microstepPerMotorRevolution ;
+
+    public static final String step_state =
+                            "MicroStep size = "
+                            + ProcessorSettings.stepSize
+                            + " mm, Step size = "
+                            + ProcessorSettings.stepSize*ProcessorSettings.microStepNumber
+                            + " mm";
+
+    public static final String accuracy_state =
              " Max veloity = "
              + ProcessorSettings.maxVelocityReachable
              + " m/min";
