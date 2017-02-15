@@ -11,11 +11,12 @@ import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 
 /**
  * @author alexey
  */
-public class MotionMachineSimulator extends JDialog {
+public class MotionMachineSimulator extends JDialog implements ActionListener {
     private JPanel contentPane;
     private JButton buttonStart;
     private JButton buttonStop;
@@ -24,8 +25,15 @@ public class MotionMachineSimulator extends JDialog {
     private JPanel motionPane;
     private JPanel positionPane;
 
+    Timer timer;
+
     public MotionMachineSimulator() {
         $$$setupUI$$$();
+
+        timer = new Timer(20, this);
+        timer.setInitialDelay(190);
+        timer.start();
+
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonStart);
@@ -62,29 +70,33 @@ public class MotionMachineSimulator extends JDialog {
         positionPane = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                int lines = 5;
-                int lineGap = 5;
+
+/*
+                positionPane.setPreferredSize(new Dimension(420, 420));
+*/
+                int lines = (int) (30 * Math.random()) + 1;
                 int width = getWidth();
                 int height = getHeight();
+                int lineGap = height / lines;
 
                 //  Draw lines starting from left to bottom
+                g.setColor(new Color(0, 0, 255));
 
-                int x = lineGap;
-                int y = 0;
+                int x = 0;
+                int y = height;
 
                 for (int i = 0; i < lines; i++) {
-                    g.drawLine(0, y, x, height);
+                    g.drawLine(0, 0, x, y);
                     x += lineGap;
-                    y += lineGap;
+                    y -= lineGap;
                 }
                 //  Draw lines starting from bottom to right
 
                 x = 0;
-                y = height - lineGap;
+                y = height;
 
                 for (int i = 0; i < lines; i++) {
-                    g.drawLine(x, height, width, y);
+                    g.drawLine(width, height, x, y);
                     x += lineGap;
                     y -= lineGap;
                 }
@@ -94,11 +106,18 @@ public class MotionMachineSimulator extends JDialog {
                 //  Draw lines starting from top to left
 
             }
-        };
-        positionPane.setBackground(new Color(255, 255, 255));
-        positionPane.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-        positionPane.setPreferredSize(new Dimension(420, 420));
 
+            ;
+        };
+        motionPane = new JPanel() {
+            @Override
+            public void paintComponent(Graphics g) {
+                int width = getWidth();
+                int height = getHeight();
+                g.setColor(new Color(255, 0, 0));
+                g.drawLine(0, 0, width, height);
+            }
+        };
     }
 
 
@@ -116,21 +135,21 @@ public class MotionMachineSimulator extends JDialog {
 
         logSettings();
 
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                MotionMachineSimulator dialog = new MotionMachineSimulator();
-                dialog.pack();
-                dialog.setVisible(true);
-                System.exit(0);
-            }
-        });
-
+        MotionMachineSimulator dialog = new MotionMachineSimulator();
+        dialog.pack();
+        dialog.setVisible(true);
+        System.exit(0);
     }
 
     private static void logSettings() {
         System.out.println(ProcessorSettings.gear_state);
         System.out.println(ProcessorSettings.step_state);
         System.out.println(ProcessorSettings.accuracy_state);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
     }
 
     /**
@@ -153,18 +172,16 @@ public class MotionMachineSimulator extends JDialog {
         panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
         buttonsPane.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         buttonStart = new JButton();
-        buttonStart.setBackground(new Color(-65536));
+        buttonStart.setBackground(new Color(-16711936));
         buttonStart.setText("Start");
         panel1.add(buttonStart, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonStop = new JButton();
-        buttonStop.setBackground(new Color(-16711936));
+        buttonStop.setBackground(new Color(-65536));
         buttonStop.setText("Stop");
         panel1.add(buttonStop, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         viewPane = new JPanel();
         viewPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(viewPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        motionPane = new JPanel();
-        motionPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         motionPane.setBackground(new Color(-1));
         viewPane.add(motionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(200, 200), null, null, 1, false));
         viewPane.add(positionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(200, 200), null, null, 1, false));

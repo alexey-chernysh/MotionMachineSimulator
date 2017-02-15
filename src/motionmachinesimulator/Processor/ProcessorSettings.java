@@ -53,5 +53,5 @@ public class ProcessorSettings {
              " Max veloity = "
              + ProcessorSettings.maxVelocityReachable
              + " m/min";
-    
+
 }
