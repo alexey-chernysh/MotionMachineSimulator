@@ -11,6 +11,8 @@ package motionmachinesimulator.Processor;
 
 class Motion {
 
+    private static final int dim = 3;
+
     // general params
     protected double[] positionChange;
     private double velocity;
@@ -22,6 +24,8 @@ class Motion {
     private DIRECTION direction;
 
     //general vars
+    private double[] K = new double[dim];
+    private double wayLengthXY;
     private double wayLength;
     //arc vars
     private double Radius;
@@ -32,19 +36,17 @@ class Motion {
     private static final double twoPi = 2.0*Math.PI;
 
     public Motion(double[] change, double[] center, double vel, DIRECTION dir) throws Exception {
+
         this.positionChange = change;
-        if(this.positionChange == null){
-            if(this.positionChange.length != 3){
+
+        if(this.positionChange != null){
+            if(this.positionChange.length != dim){
                 throw new Exception("Position change X, Y, Z coordinates needed only");
-            } else {
-                if(       (this.positionChange[0] == 0.0)
-                        &&(this.positionChange[1] == 0.0)
-                        &&(this.positionChange[2] == 0.0)){
-                    throw new Exception("Zero position change in motion");
-                }
             }
-        } else throw new Exception("Null motion not supported")
-        this.centerOffset = center;
+        } else throw new Exception("Null motion not supported");
+
+        this.centerOffset = center; // should be non zero for arc motion
+
         if(this.centerOffset != null){
             if(this.centerOffset.length != 2) {
                 throw new Exception("Arc center offset's X & Y coordinates needed only");
@@ -66,11 +68,18 @@ class Motion {
                 default:
                     throw new Exception("Unsupported arc direction");
             }
+            this.wayLengthXY = this.Radius*this.angle;
         } else {
-            this.wayLength = Math.sqrt(this.positionChange[0]*this.positionChange[0] +
-                                     + this.positionChange[1]*this.positionChange[1]
-                                     + this.positionChange[2]*this.positionChange[2]);
+            this.wayLengthXY = Math.sqrt(this.positionChange[0]*this.positionChange[0] +
+                                        +this.positionChange[1]*this.positionChange[1]);
         };
+        this.wayLength = Math.sqrt(this.positionChange[2]*this.positionChange[2]
+                                 + this.wayLengthXY*this.wayLengthXY);
+        if( this.wayLength <= 0.0)
+            throw new Exception("Null motion not supported");
+        for(int i=0; i<dim; i++)
+            this.K[i] = this.positionChange[i]/this.wayLength;
+
         this.velocity = vel;
         if(this.velocity <= 0.0){
             throw new Exception("Null or negative velocity for motion");
