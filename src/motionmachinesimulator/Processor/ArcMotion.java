@@ -64,12 +64,12 @@ public class ArcMotion extends Motion {
     }
 
     @Override
-    void execute() {
+    void paint(Graphics g) {
 
     }
 
     @Override
-    void paint(Graphics g) {
+    public void run() {
 
     }
 

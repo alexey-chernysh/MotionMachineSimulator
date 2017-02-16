@@ -6,7 +6,7 @@ import java.awt.*;
  * Created by Sales on 16.02.2017.
  */
 
-abstract class Motion {
+abstract class Motion implements Runnable {
 
     public static final int DIM = 3;
     protected double wayLengthXY;
@@ -46,8 +46,6 @@ abstract class Motion {
     public void setPhaseStateNotExecuted(){
         this.phase = -1;
     }
-
-    abstract void execute();
 
     abstract void paint(Graphics g);
 }
