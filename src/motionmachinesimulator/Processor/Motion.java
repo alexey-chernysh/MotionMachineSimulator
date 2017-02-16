@@ -1,5 +1,7 @@
 package motionmachinesimulator.Processor;
 
+import java.util.LinkedList;
+
 /**
  * Created by Sales on 16.02.2017.
  */

@@ -21,6 +21,7 @@ class StraightMotion extends Motion {
                                         +this.positionChange[1]*this.positionChange[1]);
         this.wayLength = Math.sqrt(this.positionChange[2]*this.positionChange[2]
                                  + this.wayLengthXY*this.wayLengthXY);
+
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
