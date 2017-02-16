@@ -1,10 +1,11 @@
 package motionmachinesimulator.Processor;
 
-import java.util.LinkedList;
+import java.awt.*;
 
 /**
  * Created by Sales on 16.02.2017.
  */
+
 abstract class Motion {
 
     public static final int DIM = 3;
@@ -15,7 +16,12 @@ abstract class Motion {
     protected double[] positionChange;
     protected double velocity;
 
-    public Motion(double[] change, double vel) throws Exception {
+    /**
+     * @param change - relative position chenge after motion
+     * @param vel - motion velocity
+     * @throws Exception
+     */
+    Motion(double[] change, double vel) throws Exception {
         this.positionChange = change;
 
         if(this.positionChange != null){
@@ -30,12 +36,18 @@ abstract class Motion {
         }
     };
 
-    public double getVelocity(){ return this.velocity; };
-    public double getVelocityPerSec(){ return this.velocity/60.0; };
-    public double getLength(){
-        return this.wayLength;
+    //execution state
+    protected double phase = -1; // 0..1 - execution state, -1 - yet not executed
+
+    public double getPhase() {
+        return this.phase;
+    }
+
+    public void setPhaseStateNotExecuted(){
+        this.phase = -1;
     }
 
     abstract void execute();
 
+    abstract void paint(Graphics g);
 }

@@ -1,5 +1,7 @@
 package motionmachinesimulator.Processor;
 
+import java.awt.*;
+
 /**
  * Created by Sales on 16.02.2017.
  */
@@ -63,6 +65,11 @@ public class ArcMotion extends Motion {
 
     @Override
     void execute() {
+
+    }
+
+    @Override
+    void paint(Graphics g) {
 
     }
 

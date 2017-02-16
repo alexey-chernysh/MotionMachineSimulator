@@ -5,6 +5,8 @@
  */
 package motionmachinesimulator.Processor;
 
+import java.awt.*;
+
 /**
  * @author alexey
  */
@@ -32,6 +34,11 @@ class StraightMotion extends Motion {
 
     @Override
     void execute() {
+
+    }
+
+    @Override
+    void paint(Graphics g) {
 
     }
 }
