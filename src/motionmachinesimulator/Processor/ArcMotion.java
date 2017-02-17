@@ -59,6 +59,10 @@ public class ArcMotion extends Motion {
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
+        this.velocityXY = this.velocity*this.velocityXY/this.wayLength;
+
+        this.duration = this.wayLength/this.velocity;
+
         this.Kz = this.positionChange[2]/this.wayLength;
 
     }

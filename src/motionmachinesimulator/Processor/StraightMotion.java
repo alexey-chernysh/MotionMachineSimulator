@@ -27,6 +27,10 @@ class StraightMotion extends Motion {
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
+        this.velocityXY = this.velocity*this.velocityXY/this.wayLength;
+
+        this.duration = this.wayLength/this.velocity;
+
         for(int i = 0; i< DIM; i++)
             this.K[i] = this.positionChange[i]/this.wayLength;
 

@@ -9,12 +9,16 @@ import java.awt.*;
 abstract class Motion implements Runnable {
 
     public static final int DIM = 3;
-    protected double wayLengthXY;
-    protected double wayLength;
-
     // general params
-    protected double[] positionChange;
+    protected double[] positionChange; // in meters
+
+    protected double velocityXY; // in meter/sec
     protected double velocity;
+
+    protected double duration;  // in sec
+
+    protected double wayLengthXY; // in meters
+    protected double wayLength;
 
     /**
      * @param change - relative position chenge after motion
