@@ -10,7 +10,9 @@ package motionmachinesimulator.Processor;
  * @author alexey
  */
 public class ProcessorSettings {
-    
+
+    public static final int DIM = 3;
+
     public static final double maxVelocityRequired = 30000; // 30 m/min
     public static final double fpgaClock = 50000000; // 50MHz
     public static final double maxPulseFrequency = 200000; // 200KHz

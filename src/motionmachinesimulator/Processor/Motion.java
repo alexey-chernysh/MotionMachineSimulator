@@ -8,7 +8,6 @@ import java.awt.*;
 
 abstract class Motion implements Runnable {
 
-    public static final int DIM = 3;
     // general params
     protected double[] positionChange; // in meters
 
@@ -16,6 +15,7 @@ abstract class Motion implements Runnable {
     protected double velocity;
 
     protected double duration;  // in sec
+    protected int nTicks;
 
     protected double wayLengthXY; // in meters
     protected double wayLength;
@@ -29,7 +29,7 @@ abstract class Motion implements Runnable {
         this.positionChange = change;
 
         if(this.positionChange != null){
-            if(this.positionChange.length != Motion.DIM){
+            if(this.positionChange.length != ProcessorSettings.DIM){
                 throw new Exception("Position change X, Y, Z coordinates needed only");
             }
         } else throw new Exception("Null motion not supported");

@@ -10,7 +10,7 @@ public class MotionProcess extends ExecutionState implements Runnable {
 
     private LinkedList currentTask = new LinkedList<Motion>();
 
-    private double processorFrequency = 100000.0; // 100 kHz
+    private static double processorFrequency = 100000.0; // 100 kHz
 
     private static MotionProcess ourInstance = new MotionProcess();
 
@@ -19,6 +19,7 @@ public class MotionProcess extends ExecutionState implements Runnable {
     }
 
     private MotionProcess() {
+        super();
         // debug sequence
         double[] point1 = {1.0,1.0,0.0};
         double[] center1 = {1.0,0.0};
@@ -77,6 +78,10 @@ public class MotionProcess extends ExecutionState implements Runnable {
         }
 
         this.setState(STATE.FINISHED);
+    }
+
+    public static double getProcessorFrequency() {
+        return processorFrequency;
     }
 
 }
