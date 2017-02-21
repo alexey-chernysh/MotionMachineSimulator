@@ -22,23 +22,25 @@ public abstract class Motion implements Runnable {
 
     /**
      * @param change - relative position chenge after motion
-     * @param vel - motion velocity
+     * @param vel    - motion velocity
      * @throws Exception
      */
     Motion(double[] change, double vel) throws Exception {
         this.positionChange = change;
 
-        if(this.positionChange != null){
-            if(this.positionChange.length != ProcessorSettings.DIM){
+        if (this.positionChange != null) {
+            if (this.positionChange.length != ProcessorSettings.DIM) {
                 throw new Exception("Position change X, Y, Z coordinates needed only");
             }
         } else throw new Exception("Null motion not supported");
 
         this.velocity = vel;
-        if(this.velocity <= 0.0){
+        if (this.velocity <= 0.0) {
             throw new Exception("Null or negative velocity for motion");
         }
-    };
+    }
+
+    ;
 
     //execution state
     protected double phase = -1; // 0..1 - execution state, -1 - yet not executed
@@ -47,9 +49,10 @@ public abstract class Motion implements Runnable {
         return this.phase;
     }
 
-    public void setPhaseStateNotExecuted(){
+    public void setPhaseStateNotExecuted() {
         this.phase = -1;
     }
 
-    abstract void paint(Graphics g);
+    public abstract double[] paint(Graphics g, double[] fromPoint);
+
 }

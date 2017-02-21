@@ -70,11 +70,6 @@ public class ArcMotion extends Motion {
     }
 
     @Override
-    void paint(Graphics g) {
-
-    }
-
-    @Override
     public void run() {
 
     }

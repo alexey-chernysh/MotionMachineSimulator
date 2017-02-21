@@ -5,13 +5,15 @@
  */
 package motionmachinesimulator.Processor;
 
+import motionmachinesimulator.TrajectoryView;
+
 import java.awt.*;
 
 /**
  * @author alexey
  */
 
-class StraightMotion extends Motion {
+public class StraightMotion extends Motion {
 
     //general vars
     private double[] K = new double[ProcessorSettings.DIM];
@@ -48,8 +50,27 @@ class StraightMotion extends Motion {
     }
 
     @Override
-    void paint(Graphics g) {
-
+    public double[] paint(Graphics g, double[] fromPoint) {
+        try {
+            int[] p1 = TrajectoryView.transfer(fromPoint);
+            double[] innerPoint = new double[ProcessorSettings.DIM];
+            for (int i=0; i<ProcessorSettings.DIM; i++) {
+                innerPoint[i] = fromPoint[i] + this.getPhase()*this.positionChange[i];
+            }
+            int[] p2 = TrajectoryView.transfer(innerPoint);
+            double[] endPoint = new double[ProcessorSettings.DIM];
+            for (int i=0; i<ProcessorSettings.DIM; i++) {
+                endPoint[i] = fromPoint[i] + this.positionChange[i];
+            }
+            int[] p3 = TrajectoryView.transfer(endPoint);
+            g.setColor(TrajectoryView.color1);
+            g.drawLine(p1[0],p1[1],p2[0],p2[1]);
+            g.setColor(TrajectoryView.color2);
+            g.drawLine(p2[0],p2[1],p3[0],p3[1]);
+            return endPoint;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

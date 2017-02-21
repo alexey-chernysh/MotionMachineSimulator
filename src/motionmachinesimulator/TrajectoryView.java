@@ -2,6 +2,7 @@ package motionmachinesimulator;
 
 import motionmachinesimulator.Processor.Motion;
 import motionmachinesimulator.Processor.ProcessorSettings;
+import motionmachinesimulator.Processor.StraightMotion;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -15,18 +16,21 @@ public class TrajectoryView {
     private static double[][] rotationMatrix = {{1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{0.0, 0.0, 0.0}};
     private static double[] offsetVector = {0.0, 0.0, 0.0};
 
-    private static double[] transfer(double[] input) throws Exception {
+    public static final Color color1 = new Color(255,0,0);
+    public static final Color color2 = new Color(0,0,255);
+
+    public static int[] transfer(double[] input) throws Exception {
         if(input != null){
             if(input.length != ProcessorSettings.DIM){
                 throw new Exception("Point X, Y and Z coordinates needed only");
             }
-            double[] result = new double[ProcessorSettings.DIM];
+            int[] result = new int[ProcessorSettings.DIM];
             for (int i=0; i<ProcessorSettings.DIM; i++){
                 double tmp = offsetVector[i];
                 for(int j=0; j<ProcessorSettings.DIM; j++){
                     tmp += input[j]*rotationMatrix[i][j];
                 }
-                result[i] = scale*tmp;
+                result[i] = (int)(scale*tmp);
             }
             return result;
         } else throw new Exception("Null point not supported");
@@ -37,6 +41,7 @@ public class TrajectoryView {
         for(Motion currentMotion : task){
             try {
                 if(currentMotion instanceof StraightMotion) {
+                    startPoint = currentMotion.paint(g, startPoint);
                 } else throw new Exception("For arc yet not ready");
             } catch (Exception e) {
                 e.printStackTrace();
