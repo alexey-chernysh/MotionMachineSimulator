@@ -6,7 +6,7 @@ import java.awt.*;
  * Created by Sales on 16.02.2017.
  */
 
-abstract class Motion implements Runnable {
+public abstract class Motion implements Runnable {
 
     // general params
     protected double[] positionChange; // in meters
