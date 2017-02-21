@@ -18,7 +18,6 @@ public class StraightMotion extends Motion {
     //general vars
     private double[] K = new double[ProcessorSettings.DIM];
     private double dL;
-    private double currentWayLength;
 
     public StraightMotion(double[] change, double vel) throws Exception {
         super(change, vel);
@@ -71,6 +70,7 @@ public class StraightMotion extends Motion {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     @Override

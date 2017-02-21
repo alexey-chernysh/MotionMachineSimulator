@@ -2,9 +2,6 @@ package motionmachinesimulator.Processor;
 
 import java.awt.*;
 
-/**
- * Created by Sales on 16.02.2017.
- */
 public class ArcMotion extends Motion {
 
 
@@ -72,6 +69,11 @@ public class ArcMotion extends Motion {
     @Override
     public void run() {
 
+    }
+
+    @Override
+    public double[] paint(Graphics g, double[] fromPoint) {
+        return new double[0];
     }
 
     public enum DIRECTION {

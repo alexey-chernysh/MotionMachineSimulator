@@ -2,10 +2,6 @@ package motionmachinesimulator.Processor;
 
 import java.awt.*;
 
-/**
- * Created by Sales on 16.02.2017.
- */
-
 public abstract class Motion implements Runnable {
 
     // general params
@@ -19,6 +15,7 @@ public abstract class Motion implements Runnable {
 
     protected double wayLengthXY; // in meters
     protected double wayLength;
+    protected double currentWayLength;
 
     /**
      * @param change - relative position chenge after motion
@@ -38,21 +35,18 @@ public abstract class Motion implements Runnable {
         if (this.velocity <= 0.0) {
             throw new Exception("Null or negative velocity for motion");
         }
-    }
 
-    ;
-
-    //execution state
-    protected double phase = -1; // 0..1 - execution state, -1 - yet not executed
-
-    public double getPhase() {
-        return this.phase;
-    }
-
-    public void setPhaseStateNotExecuted() {
-        this.phase = -1;
+        this.setPhaseStateNotExecuted();
     }
 
     public abstract double[] paint(Graphics g, double[] fromPoint);
+
+    public void setPhaseStateNotExecuted() {
+        this.currentWayLength = 0;
+    }
+
+    public double getPhase() {  // 0..1 - execution state, -1 - yet not executed
+        return this.currentWayLength/this.wayLength;
+    }
 
 }
