@@ -1,7 +1,7 @@
 package motionmachinesimulator;
 
 import motionmachinesimulator.Processor.Motion;
-import motionmachinesimulator.Processor.ProcessorSettings;
+import motionmachinesimulator.Processor.ControllerSettings;
 import motionmachinesimulator.Processor.StraightMotion;
 
 import java.awt.*;
@@ -21,13 +21,13 @@ public class TrajectoryView {
 
     public static int[] transfer(double[] input) throws Exception {
         if(input != null){
-            if(input.length != ProcessorSettings.DIM){
+            if(input.length != ControllerSettings.DIM){
                 throw new Exception("Point X, Y and Z coordinates needed only");
             }
-            int[] result = new int[ProcessorSettings.DIM];
-            for (int i=0; i<ProcessorSettings.DIM; i++){
+            int[] result = new int[ControllerSettings.DIM];
+            for (int i = 0; i< ControllerSettings.DIM; i++){
                 double tmp = offsetVector[i];
-                for(int j=0; j<ProcessorSettings.DIM; j++){
+                for(int j = 0; j< ControllerSettings.DIM; j++){
                     tmp += input[j]*rotationMatrix[i][j];
                 }
                 result[i] = (int)(scale*tmp);

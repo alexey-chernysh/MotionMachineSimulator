@@ -16,10 +16,10 @@ import java.awt.*;
 public class StraightMotion extends Motion {
 
     //general vars
-    private double[] K = new double[ProcessorSettings.DIM];
+    private double[] K = new double[ControllerSettings.DIM];
     private double dL;
 
-    public StraightMotion(double[] change, double vel) throws Exception {
+    StraightMotion(double[] change, double vel) throws Exception {
         super(change, vel);
         System.out.println("StraightMotion: ");
 
@@ -38,12 +38,12 @@ public class StraightMotion extends Motion {
 
         this.duration = this.wayLength/this.velocity;
         System.out.println("duration = " + this.duration);
-        this.nTicks = (int)(this.duration*MotionProcess.getProcessorFrequency());
+        this.nTicks = (int)(this.duration* MotionController.getProcessorFrequency());
         System.out.println("nTicks = " + this.nTicks);
-        this.dL = this.velocity/MotionProcess.getProcessorFrequency();
+        this.dL = this.velocity/ MotionController.getProcessorFrequency();
         System.out.println("dL = " + this.dL);
 
-        for(int i = 0; i< ProcessorSettings.DIM; i++)
+        for(int i = 0; i< ControllerSettings.DIM; i++)
             this.K[i] = this.positionChange[i]/this.wayLength;
 
     }
@@ -52,13 +52,13 @@ public class StraightMotion extends Motion {
     public double[] paint(Graphics g, double[] fromPoint) {
         try {
             int[] p1 = TrajectoryView.transfer(fromPoint);
-            double[] innerPoint = new double[ProcessorSettings.DIM];
-            for (int i=0; i<ProcessorSettings.DIM; i++) {
+            double[] innerPoint = new double[ControllerSettings.DIM];
+            for (int i = 0; i< ControllerSettings.DIM; i++) {
                 innerPoint[i] = fromPoint[i] + this.getPhase()*this.positionChange[i];
             }
             int[] p2 = TrajectoryView.transfer(innerPoint);
-            double[] endPoint = new double[ProcessorSettings.DIM];
-            for (int i=0; i<ProcessorSettings.DIM; i++) {
+            double[] endPoint = new double[ControllerSettings.DIM];
+            for (int i = 0; i< ControllerSettings.DIM; i++) {
                 endPoint[i] = fromPoint[i] + this.positionChange[i];
             }
             int[] p3 = TrajectoryView.transfer(endPoint);
@@ -75,16 +75,16 @@ public class StraightMotion extends Motion {
 
     @Override
     public void run() {
-        final double[] startPosition = MotionProcess.getCurrentPosition();
+        final double[] startPosition = MotionController.getCurrentPosition();
         this.currentWayLength = 0.0;
-        double[] reachedPosition = new double[ProcessorSettings.DIM];
-        for(int i=0; i<ProcessorSettings.DIM; i++)
+        double[] reachedPosition = new double[ControllerSettings.DIM];
+        for(int i = 0; i< ControllerSettings.DIM; i++)
             reachedPosition[i] = 0;
         while (this.currentWayLength < this.wayLength){
             this.currentWayLength += dL;
-            for(int i=0; i<ProcessorSettings.DIM; i++)
+            for(int i = 0; i< ControllerSettings.DIM; i++)
                 reachedPosition[i] = startPosition[i] + this.currentWayLength*this.K[i];
-            MotionProcess.setCurrentPosition(reachedPosition);
+            MotionController.setCurrentPosition(reachedPosition);
         }
     }
 }

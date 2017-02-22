@@ -9,7 +9,7 @@ package motionmachinesimulator.Processor;
  *
  * @author alexey
  */
-public class ProcessorSettings {
+public class ControllerSettings {
 
     public static final int DIM = 3;
 
@@ -40,20 +40,20 @@ public class ProcessorSettings {
     
     public static final String gear_state = 
              "MM per motor shaft revolution = "
-             + ProcessorSettings.mmPerMotorRevolution 
+             + ControllerSettings.mmPerMotorRevolution
              + ";  MicroStep per motor shaft revolution = "
-             + ProcessorSettings.microstepPerMotorRevolution ;
+             + ControllerSettings.microstepPerMotorRevolution ;
 
     public static final String step_state =
                             "MicroStep size = "
-                            + ProcessorSettings.stepSize
+                            + ControllerSettings.stepSize
                             + " mm, Step size = "
-                            + ProcessorSettings.stepSize*ProcessorSettings.microStepNumber
+                            + ControllerSettings.stepSize* ControllerSettings.microStepNumber
                             + " mm";
 
     public static final String accuracy_state =
              " Max veloity = "
-             + ProcessorSettings.maxVelocityReachable
+             + ControllerSettings.maxVelocityReachable
              + " m/min";
 
 }

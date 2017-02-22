@@ -59,8 +59,8 @@ public class ArcMotion extends Motion {
         this.velocityXY = this.velocity*this.velocityXY/this.wayLength;
 
         this.duration = this.wayLength/this.velocity;
-        this.nTicks = (int)(this.duration*MotionProcess.getProcessorFrequency());
-        double dL = this.velocity/MotionProcess.getProcessorFrequency();
+        this.nTicks = (int)(this.duration* MotionController.getProcessorFrequency());
+        double dL = this.velocity/ MotionController.getProcessorFrequency();
 
         this.Kz = this.positionChange[2]/this.wayLength;
 

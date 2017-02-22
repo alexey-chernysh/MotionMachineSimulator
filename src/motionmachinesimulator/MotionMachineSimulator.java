@@ -5,13 +5,11 @@
  */
 package motionmachinesimulator;
 
-import motionmachinesimulator.Processor.ProcessorSettings;
+import motionmachinesimulator.Processor.ControllerSettings;
 
 import javax.swing.*;
-import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Random;
 
 /**
  * @author alexey
@@ -142,9 +140,9 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     }
 
     private static void logSettings() {
-        System.out.println(ProcessorSettings.gear_state);
-        System.out.println(ProcessorSettings.step_state);
-        System.out.println(ProcessorSettings.accuracy_state);
+        System.out.println(ControllerSettings.gear_state);
+        System.out.println(ControllerSettings.step_state);
+        System.out.println(ControllerSettings.accuracy_state);
     }
 
     @Override

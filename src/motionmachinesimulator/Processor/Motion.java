@@ -26,7 +26,7 @@ public abstract class Motion implements Runnable {
         this.positionChange = change;
 
         if (this.positionChange != null) {
-            if (this.positionChange.length != ProcessorSettings.DIM) {
+            if (this.positionChange.length != ControllerSettings.DIM) {
                 throw new Exception("Position change X, Y, Z coordinates needed only");
             }
         } else throw new Exception("Null motion not supported");

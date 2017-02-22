@@ -6,19 +6,19 @@ import java.util.LinkedList;
 /**
  * Created by Sales on 16.02.2017.
  */
-public class MotionProcess extends ExecutionState implements Runnable {
+public class MotionController extends ControllerState implements Runnable {
 
     private LinkedList currentTask = new LinkedList<Motion>();
 
     private static double processorFrequency = 100000.0; // 100 kHz
 
-    private static MotionProcess ourInstance = new MotionProcess();
+    private static MotionController ourInstance = new MotionController();
 
-    public static MotionProcess getInstance() {
+    public static MotionController getInstance() {
         return ourInstance;
     }
 
-    private MotionProcess() {
+    private MotionController() {
         super();
         // debug sequence
         double[] point1 = {1.0,1.0,0.0};

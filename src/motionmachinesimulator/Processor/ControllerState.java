@@ -3,13 +3,13 @@ package motionmachinesimulator.Processor;
 /**
  * Created by alexey on 16.02.17.
  */
-public class ExecutionState {
+public class ControllerState {
 
     private static STATE currentState = STATE.EMPTY;
-    private static double[] currentPosition = new double[ProcessorSettings.DIM];
+    private static double[] currentPosition = new double[ControllerSettings.DIM];
 
-    public ExecutionState() {
-        for(int i = 0; i< ProcessorSettings.DIM; i++) currentPosition[i] = 0.0;
+    public ControllerState() {
+        for(int i = 0; i< ControllerSettings.DIM; i++) currentPosition[i] = 0.0;
     }
 
     public static  synchronized STATE getState() {
@@ -21,11 +21,11 @@ public class ExecutionState {
     }
 
     public static double[] getCurrentPosition() {
-        return ExecutionState.currentPosition;
+        return ControllerState.currentPosition;
     }
 
     public static void setCurrentPosition(double[] newPosition) {
-        ExecutionState.currentPosition = newPosition;
+        ControllerState.currentPosition = newPosition;
     }
 
     enum STATE {
