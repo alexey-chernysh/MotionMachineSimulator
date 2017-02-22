@@ -5,6 +5,11 @@ import java.util.LinkedList;
 
 /**
  * Created by Sales on 16.02.2017.
+ * Functions needed to be implemented:
+ *  start/resume
+ *  stop/pause
+ *  direction change (forward/backward)
+ *  velocity change (acceleration/deceleration)
  */
 public class MotionController extends ControllerState implements Runnable {
 
@@ -21,66 +26,37 @@ public class MotionController extends ControllerState implements Runnable {
     private MotionController() {
         super();
         // debug sequence
-        double[] point1 = {1.0,1.0,0.0};
-        double[] center1 = {1.0,0.0};
-        double[] point2 = {2.0,0.0,0.0};
+        double[] point1 = { 0.0,  0.055,0.0};
+        double[] point2 = { 0.05, 0.0,  0.0};
+        double[] point3 = { 0.0, -0.05, 0.0};
+        double[] point4 = {-0.055,0.0,  0.0};
         try {
             StraightMotion straightMotion1 = new StraightMotion(point1,2000.0);
             currentTask.addLast(straightMotion1);
-            ArcMotion arcMotion1 = new ArcMotion(point2,center1,2000.0, ArcMotion.DIRECTION.CW);
-            currentTask.addLast(arcMotion1);
-            this.setState(STATE.NEW);
+            StraightMotion straightMotion2 = new StraightMotion(point2,2000.0);
+            currentTask.addLast(straightMotion2);
+            StraightMotion straightMotion3 = new StraightMotion(point3,2000.0);
+            currentTask.addLast(straightMotion3);
+            StraightMotion straightMotion4 = new StraightMotion(point4,2000.0);
+            currentTask.addLast(straightMotion4);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void go() {
         new Thread(this).start();
     }
 
-    private void rewindToStart(){
-        Iterator<Motion> iter = currentTask.iterator();
-        Motion motion = iter.next();
-        while ((iter.hasNext()) && (motion.getPhase() >= 1)) {
-            motion.setPhaseStateNotExecuted();
-            motion = iter.next();
-        }
+    public void resume(){
+        this.setMotionState(MOTION_STATE.STARTED);
     }
-
-    public void pause(){
-        this.setState(STATE.PAUSED);
+    public void pause() {
+        this.setMotionState(MOTION_STATE.PAUSED);
     }
 
     @Override
     public void run() {
-        // find current position
-        Iterator<Motion> iter = currentTask.iterator();
-        Motion motion = iter.next();
-        while ((iter.hasNext()) && (motion.getPhase() >= 1))
-            motion = iter.next();
-        if (motion.getPhase() >= 1){ // execution finished, start from first again
-            rewindToStart();
-            iter = currentTask.iterator();
-            motion = iter.next();
-        }
-
-        this.setState(STATE.STARTED);
-        while (iter.hasNext()){
-            Motion currentMotion = iter.next();
-            Thread currentMotionThread = new Thread(currentMotion);
-            currentMotionThread.start();
-            try {
-                currentMotionThread.join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        this.setState(STATE.FINISHED);
     }
 
-    public static double getProcessorFrequency() {
+    static double getProcessorFrequency() {
         return processorFrequency;
     }
 

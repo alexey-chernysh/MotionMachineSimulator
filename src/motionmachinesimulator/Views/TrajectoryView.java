@@ -1,4 +1,4 @@
-package motionmachinesimulator;
+package motionmachinesimulator.Views;
 
 import motionmachinesimulator.Processor.Motion;
 import motionmachinesimulator.Processor.ControllerSettings;
@@ -7,9 +7,6 @@ import motionmachinesimulator.Processor.StraightMotion;
 import java.awt.*;
 import java.util.LinkedList;
 
-/**
- * Created by Sales on 17.02.2017.
- */
 public class TrajectoryView {
 
     private static double scale = 1.0;

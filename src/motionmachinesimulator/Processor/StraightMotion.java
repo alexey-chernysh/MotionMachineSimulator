@@ -5,7 +5,7 @@
  */
 package motionmachinesimulator.Processor;
 
-import motionmachinesimulator.TrajectoryView;
+import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
 
