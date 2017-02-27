@@ -69,8 +69,8 @@ public class StraightMotion extends Motion {
             return endPoint;
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     @Override

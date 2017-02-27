@@ -60,4 +60,8 @@ public class MotionController extends ControllerState implements Runnable {
         return processorFrequency;
     }
 
+    public LinkedList getCurrentTask() {
+        return currentTask;
+    }
+
 }

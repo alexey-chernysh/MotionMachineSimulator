@@ -2,6 +2,7 @@ package motionmachinesimulator.Views;
 
 import motionmachinesimulator.Processor.Motion;
 import motionmachinesimulator.Processor.ControllerSettings;
+import motionmachinesimulator.Processor.MotionController;
 import motionmachinesimulator.Processor.StraightMotion;
 
 import java.awt.*;
@@ -33,13 +34,15 @@ public class TrajectoryView {
         } else throw new Exception("Null point not supported");
     }
 
-    public static void paint(Graphics g, LinkedList<Motion> task){
+    public static void paint(Graphics g){
+        MotionController mc = MotionController.getInstance();
+        LinkedList<Motion> task = mc.getCurrentTask();
         double[] startPoint = {0.0, 0.0, 0.0};
         for(Motion currentMotion : task){
             try {
                 if(currentMotion instanceof StraightMotion) {
                     startPoint = currentMotion.paint(g, startPoint);
-                } else throw new Exception("For arc yet not ready");
+                } else throw new Exception("Yet not ready for arc motion");
             } catch (Exception e) {
                 e.printStackTrace();
             }
