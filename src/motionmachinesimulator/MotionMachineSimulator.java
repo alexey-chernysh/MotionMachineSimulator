@@ -6,6 +6,7 @@
 package motionmachinesimulator;
 
 import motionmachinesimulator.Processor.ControllerSettings;
+import motionmachinesimulator.Processor.MotionController;
 import motionmachinesimulator.Views.TrajectoryView;
 
 import javax.swing.*;
@@ -29,7 +30,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     public MotionMachineSimulator() {
         $$$setupUI$$$();
 
-        timer = new Timer(20, this);
+        timer = new Timer(200, this);
         timer.setInitialDelay(190);
         timer.start();
 
@@ -39,7 +40,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onOK();
+                onStartResume();
             }
         });
 
@@ -69,8 +70,9 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         positionPane = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
-                TrajectoryView.paint(g);
+//                TrajectoryView.paint(g);
 /*
+*/
                 positionPane.setPreferredSize(new Dimension(420, 420));
                 int lines = (int) (30 * Math.random()) + 1;
                 int width = getWidth();
@@ -102,7 +104,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
                 //  Draw lines starting from right to top
 
                 //  Draw lines starting from top to left
-*/
+//*/
 
             }
 
@@ -120,13 +122,15 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     }
 
 
-    private void onOK() {
+    private void onStartResume() {
 // add your code here
+//        MotionController.getInstance().resume();
         dispose();
     }
 
     private void onCancel() {
 // add your code here if necessary
+//        MotionController.getInstance().pause();
         dispose();
     }
 

@@ -10,9 +10,9 @@ import java.util.LinkedList;
 
 public class TrajectoryView {
 
-    private static double scale = 1.0;
-    private static double[][] rotationMatrix = {{1.0, 0.0, 0.0},{0.0, 1.0, 0.0},{0.0, 0.0, 0.0}};
-    private static double[] offsetVector = {0.0, 0.0, 0.0};
+    private static double scale = 3000.0;
+    private static double[][] rotationMatrix = {{1.0, 0.0, 0.0},{0.0,-1.0, 0.0},{0.0, 0.0, 0.0}};
+    private static double[] offsetVector = {0.003,0.07, 0.0};
 
     public static final Color color1 = new Color(255,0,0);
     public static final Color color2 = new Color(0,0,255);
