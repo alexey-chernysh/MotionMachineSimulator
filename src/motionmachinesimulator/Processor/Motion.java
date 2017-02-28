@@ -16,6 +16,7 @@ public abstract class Motion extends Thread {
     protected double wayLengthXY; // in meters
     protected double wayLength;
     protected double currentWayLength;
+    private Thread motionThread;
 
     /**
      * @param change - relative position chenge after motion
@@ -37,6 +38,7 @@ public abstract class Motion extends Thread {
         }
 
         this.setPhaseStateNotExecuted();
+        renew();
     }
 
     public abstract double[] paint(Graphics g, double[] fromPoint);
@@ -49,4 +51,16 @@ public abstract class Motion extends Thread {
         return this.currentWayLength/this.wayLength;
     }
 
+    public void renew(){
+        if(motionThread != null){
+            while(motionThread.isAlive()){
+                try {
+                    Thread.currentThread().sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        motionThread = new Thread(this);
+    }
 }

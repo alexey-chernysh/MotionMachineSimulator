@@ -40,13 +40,13 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onStartResume();
+                MotionController.getInstance().resumeExecution();
             }
         });
 
         buttonStop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onCancel();
+            MotionController.getInstance().pauseExecution();
             }
         });
 
@@ -124,13 +124,11 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
     private void onStartResume() {
 // add your code here
-        MotionController.getInstance().resumeExecution();
 //        dispose();
     }
 
     private void onCancel() {
 // add your code here if necessary
-//        MotionController.getInstance().pause();
         dispose();
     }
 

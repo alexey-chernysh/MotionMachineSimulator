@@ -86,10 +86,12 @@ public class StraightMotion extends Motion {
         for(int i = 0; i< ControllerSettings.DIM; i++)
             reachedPosition[i] = 0;
         while (this.currentWayLength < this.wayLength){
-            this.currentWayLength += dL;
-            for(int i = 0; i< ControllerSettings.DIM; i++)
-                reachedPosition[i] = startPosition[i] + this.currentWayLength*this.K[i];
-            MotionController.setCurrentPosition(reachedPosition);
+            if(MotionController.getInstance().getMotionState() == ControllerState.MOTION_STATE.STARTED){
+                this.currentWayLength += dL;
+                for(int i = 0; i< ControllerSettings.DIM; i++)
+                    reachedPosition[i] = startPosition[i] + this.currentWayLength*this.K[i];
+                MotionController.setCurrentPosition(reachedPosition);
+            }
             try {
                 Thread.sleep(100);
             } catch (InterruptedException ie) {

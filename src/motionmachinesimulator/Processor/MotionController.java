@@ -43,11 +43,15 @@ public class MotionController extends ControllerState {
             e.printStackTrace();
         }
         controllerThread = new Thread(this);
+        controllerThread.start();
     }
 
-    public void resumeExecution(){
+    public void resumeExecution() {
         this.setMotionState(MOTION_STATE.STARTED);
-        controllerThread.start();
+        if(!controllerThread.isAlive()) {
+            controllerThread = new Thread(this);
+            controllerThread.start();
+        }
     }
 
     public void pauseExecution() {
@@ -57,12 +61,17 @@ public class MotionController extends ControllerState {
     @Override
     public void run() {
         for(Motion motion: currentTask){
+            motion.renew();
             motion.start();
             try {
                 motion.join();
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
+        }
+        setMotionState(ControllerState.MOTION_STATE.PAUSED);
+        for(Motion motion: currentTask){
+            motion.setPhaseStateNotExecuted();
         }
     }
 
