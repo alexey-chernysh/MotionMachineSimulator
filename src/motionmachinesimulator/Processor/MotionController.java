@@ -13,8 +13,9 @@ import java.util.LinkedList;
 public class MotionController extends ControllerState {
 
     private LinkedList<Motion> currentTask = new LinkedList<Motion>();
+    private Thread controllerThread;
 
-    private static double processorFrequency = 100000.0; // 100 kHz
+    private static double processorFrequency = 200000.0; // 100 kHz
 
     private static MotionController ourInstance = new MotionController();
 
@@ -41,13 +42,14 @@ public class MotionController extends ControllerState {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        new Thread(this).start();
+        controllerThread = new Thread(this);
     }
 
     public void resumeExecution(){
         this.setMotionState(MOTION_STATE.STARTED);
-        this.start();
+        controllerThread.start();
     }
+
     public void pauseExecution() {
         this.setMotionState(MOTION_STATE.PAUSED);
     }
@@ -68,7 +70,7 @@ public class MotionController extends ControllerState {
         return processorFrequency;
     }
 
-    public LinkedList getCurrentTask() {
+    public LinkedList<Motion> getCurrentTask() {
         return currentTask;
     }
 

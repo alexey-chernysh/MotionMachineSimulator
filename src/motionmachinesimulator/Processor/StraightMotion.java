@@ -51,21 +51,24 @@ public class StraightMotion extends Motion {
     @Override
     public double[] paint(Graphics g, double[] fromPoint) {
         try {
-            int[] p1 = TrajectoryView.transfer(fromPoint);
             double[] innerPoint = new double[ControllerSettings.DIM];
+            double[]   endPoint = new double[ControllerSettings.DIM];
+            double phase = this.getPhase();
             for (int i = 0; i< ControllerSettings.DIM; i++) {
-                innerPoint[i] = fromPoint[i] + this.getPhase()*this.positionChange[i];
+                double change = this.positionChange[i];
+                innerPoint[i] = fromPoint[i] + phase*change;
+                endPoint[i] = fromPoint[i] + change;
             }
+            int[] p1 = TrajectoryView.transfer(fromPoint);
             int[] p2 = TrajectoryView.transfer(innerPoint);
-            double[] endPoint = new double[ControllerSettings.DIM];
-            for (int i = 0; i< ControllerSettings.DIM; i++) {
-                endPoint[i] = fromPoint[i] + this.positionChange[i];
-            }
             int[] p3 = TrajectoryView.transfer(endPoint);
             g.setColor(TrajectoryView.color1);
             g.drawLine(p1[0],p1[1],p2[0],p2[1]);
             g.setColor(TrajectoryView.color2);
             g.drawLine(p2[0],p2[1],p3[0],p3[1]);
+//            System.out.println("Start = " + fromPoint[0] + ", " + fromPoint[1]
+//                    + " Inner = " + innerPoint[0] + ", " + innerPoint[1]
+//                    + " End = " + endPoint[0] + ", " + endPoint[1]);
             return endPoint;
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,7 +91,7 @@ public class StraightMotion extends Motion {
                 reachedPosition[i] = startPosition[i] + this.currentWayLength*this.K[i];
             MotionController.setCurrentPosition(reachedPosition);
             try {
-                Thread.sleep(400);
+                Thread.sleep(100);
             } catch (InterruptedException ie) {
                 ie.printStackTrace();
             }
