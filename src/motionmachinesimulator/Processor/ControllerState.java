@@ -1,6 +1,6 @@
 package motionmachinesimulator.Processor;
 
-public class ControllerState {
+public class ControllerState extends Thread {
 
     public ControllerState() {
         for(int i = 0; i< ControllerSettings.DIM; i++) currentPosition[i] = 0.0;

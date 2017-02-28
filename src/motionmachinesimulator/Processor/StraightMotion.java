@@ -75,6 +75,8 @@ public class StraightMotion extends Motion {
 
     @Override
     public void run() {
+        Thread t = Thread.currentThread();
+        System.out.println("Thread started: "+t.getName());
         final double[] startPosition = MotionController.getCurrentPosition();
         this.currentWayLength = 0.0;
         double[] reachedPosition = new double[ControllerSettings.DIM];
@@ -85,6 +87,13 @@ public class StraightMotion extends Motion {
             for(int i = 0; i< ControllerSettings.DIM; i++)
                 reachedPosition[i] = startPosition[i] + this.currentWayLength*this.K[i];
             MotionController.setCurrentPosition(reachedPosition);
+            try {
+                Thread.sleep(400);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
         }
+        System.out.println("Thread ended: "+t.getName());
+
     }
 }

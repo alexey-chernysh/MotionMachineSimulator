@@ -70,9 +70,9 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         positionPane = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
-//                TrajectoryView.paint(g);
+                TrajectoryView.paint(g);
 /*
-*/
+
                 positionPane.setPreferredSize(new Dimension(420, 420));
                 int lines = (int) (30 * Math.random()) + 1;
                 int width = getWidth();
@@ -104,7 +104,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
                 //  Draw lines starting from right to top
 
                 //  Draw lines starting from top to left
-//*/
+*/
 
             }
 
@@ -124,8 +124,8 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
     private void onStartResume() {
 // add your code here
-//        MotionController.getInstance().resume();
-        dispose();
+        MotionController.getInstance().resumeExecution();
+//        dispose();
     }
 
     private void onCancel() {

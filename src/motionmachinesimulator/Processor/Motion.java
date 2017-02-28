@@ -2,7 +2,7 @@ package motionmachinesimulator.Processor;
 
 import java.awt.*;
 
-public abstract class Motion implements Runnable {
+public abstract class Motion extends Thread {
 
     // general params
     protected double[] positionChange; // in meters
