@@ -67,7 +67,7 @@ public class ArcMotion extends Motion {
     }
 
     @Override
-    public void run() {
+    void execute() {
 
     }
 

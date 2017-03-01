@@ -69,7 +69,9 @@
             <properties>
               <background color="-1"/>
             </properties>
-            <border type="none"/>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
             <children/>
           </grid>
           <grid id="f8d73" binding="positionPane" custom-create="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -79,8 +81,12 @@
                 <minimum-size width="200" height="200"/>
               </grid>
             </constraints>
-            <properties/>
-            <border type="none"/>
+            <properties>
+              <background color="-1"/>
+            </properties>
+            <border type="line">
+              <color color="-16777216"/>
+            </border>
             <children/>
           </grid>
         </children>

@@ -61,13 +61,7 @@ public class MotionController extends ControllerState {
     @Override
     public void run() {
         for(Motion motion: currentTask){
-            motion.renew();
-            motion.start();
-            try {
-                motion.join();
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
+            motion.execute();
         }
         setMotionState(ControllerState.MOTION_STATE.PAUSED);
         for(Motion motion: currentTask){
