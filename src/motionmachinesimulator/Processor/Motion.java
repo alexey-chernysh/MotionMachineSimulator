@@ -16,6 +16,7 @@ public abstract class Motion {
     protected double wayLengthXY; // in meters
     protected double wayLength;
     protected double currentWayLength;
+    protected int numberOfSteps;
 
     /**
      * @param change - relative position chenge after motion
@@ -39,7 +40,9 @@ public abstract class Motion {
         this.setPhaseStateNotExecuted();
     }
 
-    abstract void execute();
+    abstract void prepare();
+
+    abstract void onFastTimerTick();
 
     public abstract double[] paint(Graphics g, double[] fromPoint);
 

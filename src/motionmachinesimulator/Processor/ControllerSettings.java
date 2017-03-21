@@ -14,9 +14,9 @@ public class ControllerSettings {
     public static final int DIM = 3;
 
     public static final double maxVelocityRequired = 30000; // 30 m/min
-    public static final double fpgaClock = 50000000; // 50MHz
+    public static final double fastTimerClock = 10000000; // 10MHz
     public static final double maxPulseFrequency = 200000; // 200KHz
-    public static final double freqRatio = fpgaClock/maxPulseFrequency;
+    public static final double freqRatio = fastTimerClock /maxPulseFrequency;
 
     public static final double rackModule = 3.14; // mm/tooth
     public static final int toothPerRevolution = 15;
@@ -29,7 +29,7 @@ public class ControllerSettings {
     public static final int microstepPerMotorRevolution 
             = stepPerMotorRevolution*microStepNumber;
 
-    public static final double stepSize // mm per mirostep
+    public static final double stepSize // mm per microstep
             = mmPerMotorRevolution/microstepPerMotorRevolution;
     public static final double maxVelocityReachable = 60*stepSize*maxPulseFrequency/1000.0;
     

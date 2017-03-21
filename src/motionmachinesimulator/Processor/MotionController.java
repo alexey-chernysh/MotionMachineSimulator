@@ -61,7 +61,7 @@ public class MotionController extends ControllerState {
     @Override
     public void run() {
         for(Motion motion: currentTask){
-            motion.execute();
+            motion.prepare();
         }
         setMotionState(ControllerState.MOTION_STATE.PAUSED);
         for(Motion motion: currentTask){

@@ -32,6 +32,7 @@ public class StraightMotion extends Motion {
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
+        this.numberOfSteps = (int)(this.wayLength / ControllerSettings.stepSize);
 
         this.velocityXY = this.velocity*this.velocityXY/this.wayLength;
         System.out.println("velocityXY = " + this.velocityXY);
@@ -77,7 +78,7 @@ public class StraightMotion extends Motion {
     }
 
     @Override
-    public void execute() {
+    public void prepare() {
         final double[] startPosition = MotionController.getCurrentPosition();
         this.currentWayLength = 0.0;
         double[] reachedPosition = new double[ControllerSettings.DIM];
@@ -96,5 +97,10 @@ public class StraightMotion extends Motion {
                 ie.printStackTrace();
             }
         }
+    }
+
+    @Override
+    void onFastTimerTick() {
+
     }
 }

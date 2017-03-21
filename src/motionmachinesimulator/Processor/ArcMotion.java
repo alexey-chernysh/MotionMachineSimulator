@@ -67,7 +67,12 @@ public class ArcMotion extends Motion {
     }
 
     @Override
-    void execute() {
+    void prepare() {
+
+    }
+
+    @Override
+    void onFastTimerTick() {
 
     }
 
