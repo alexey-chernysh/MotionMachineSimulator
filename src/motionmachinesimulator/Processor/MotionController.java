@@ -58,19 +58,26 @@ public class MotionController extends ControllerState {
         this.setTaskState(TASK_STATE.PAUSED);
     }
 
+    private final double stepSize = 0.00001;
+
     @Override
     public void run() {
         for(Motion motion: currentTask){
             do{
-                motion.onFastTimerForwardTick(0.1);
-                try {
-                    this.sleep(10);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
+                if(this.getTaskState() == TASK_STATE.STARTED){
+                    System.out.println(" Motion controller step for " + this.stepSize);
+                    motion.onFastTimerForwardTick(stepSize);
+                    try {
+                        this.sleep(1);
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+                } else {
+                    System.out.println(" Motion controller empty run ");
                 }
             }while(motion.isOnTheRun());
         }
-        setTaskState(TASK_STATE.PAUSED);
+        this.setTaskState(TASK_STATE.PAUSED);
         resetTask();
     }
 

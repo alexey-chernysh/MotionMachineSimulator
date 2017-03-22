@@ -37,6 +37,7 @@ public class TrajectoryView {
     public static void paint(Graphics g){
         MotionController mc = MotionController.getInstance();
         LinkedList<Motion> task = mc.getCurrentTask();
+        //  draw trajectory
         double[] startPoint = {0.0, 0.0, 0.0};
         for(Motion currentMotion : task){
             try {
@@ -47,6 +48,13 @@ public class TrajectoryView {
                 e.printStackTrace();
             }
         }
+        // draw current position
+        double[] currentPosition = MotionController.getCurrentPosition();
+        int x = (int)currentPosition[0];
+        int y = (int)currentPosition[1];
+        g.setColor(TrajectoryView.color1);
+        g.drawLine(x-5,y-5,x+5,y+5);
+        g.drawLine(x-5,y+5,x+5,y-5);
     }
 
     public static void setScale(double newScale) {

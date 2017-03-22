@@ -32,9 +32,10 @@ public class StraightMotion extends Motion {
         for(int i = 0; i< ControllerSettings.DIM; i++)
             this.K[i] = this.positionChange[i]/this.wayLength;
 
-        System.out.println("StraightMotion: ");
-        System.out.println("wayLengthXY = " + this.wayLengthXY);
-        System.out.println("wayLength = " + this.wayLength);
+        System.out.print("StraightMotion:");
+        System.out.print(" dX = " + this.positionChange[0]);
+        System.out.print(" dY = " + this.positionChange[1]);
+        System.out.println(" wayLength = " + this.wayLength);
     }
 
     @Override
