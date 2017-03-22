@@ -15,16 +15,16 @@ public class ControllerState extends Thread {
         ControllerState.currentPosition = newPosition;
     }
 
-    private static MOTION_STATE motionState = MOTION_STATE.PAUSED;
+    private static TASK_STATE taskState = TASK_STATE.PAUSED;
 
-    static MOTION_STATE getMotionState() {
-        return motionState;
+    static TASK_STATE getTaskState() {
+        return taskState;
     }
-    static void setMotionState(MOTION_STATE newState) {
-        motionState = newState;
+    static void setTaskState(TASK_STATE newState) {
+        taskState = newState;
     }
 
-    enum MOTION_STATE {
+    enum TASK_STATE {
         STARTED,
         PAUSED,
     }

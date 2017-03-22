@@ -20,8 +20,8 @@ public class ArcMotion extends Motion {
 
     private static final double twoPi = 2.0*Math.PI;
 
-    public ArcMotion(double[] change, double[] center, double vel, ArcMotion.DIRECTION dir) throws Exception {
-        super(change, vel);
+    public ArcMotion(double[] change, double[] center, ArcMotion.DIRECTION dir) throws Exception {
+        super(change);
 
         this.centerOffset = center; // should be non zero for arc motion
         this.direction = dir;
@@ -56,23 +56,12 @@ public class ArcMotion extends Motion {
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
-        this.velocityXY = this.velocity*this.velocityXY/this.wayLength;
-
-        this.duration = this.wayLength/this.velocity;
-        this.nTicks = (int)(this.duration* MotionController.getProcessorFrequency());
-        double dL = this.velocity/ MotionController.getProcessorFrequency();
-
         this.Kz = this.positionChange[2]/this.wayLength;
 
     }
 
     @Override
-    void prepare() {
-
-    }
-
-    @Override
-    void onFastTimerTick() {
+    void onPositionChange() {
 
     }
 

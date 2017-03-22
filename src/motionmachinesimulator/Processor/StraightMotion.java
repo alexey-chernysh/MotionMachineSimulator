@@ -17,36 +17,24 @@ public class StraightMotion extends Motion {
 
     //general vars
     private double[] K = new double[ControllerSettings.DIM];
-    private double dL;
 
-    StraightMotion(double[] change, double vel) throws Exception {
-        super(change, vel);
-        System.out.println("StraightMotion: ");
+    StraightMotion(double[] change) throws Exception {
+        super(change);
 
         this.wayLengthXY = Math.sqrt(this.positionChange[0]*this.positionChange[0] +
                                         +this.positionChange[1]*this.positionChange[1]);
-        System.out.println("wayLengthXY = " + this.wayLengthXY);
         this.wayLength = Math.sqrt(this.positionChange[2]*this.positionChange[2]
                                  + this.wayLengthXY*this.wayLengthXY);
-        System.out.println("wayLength = " + this.wayLength);
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
-        this.numberOfSteps = (int)(this.wayLength / ControllerSettings.stepSize);
-
-        this.velocityXY = this.velocity*this.velocityXY/this.wayLength;
-        System.out.println("velocityXY = " + this.velocityXY);
-
-        this.duration = this.wayLength/this.velocity;
-        System.out.println("duration = " + this.duration);
-        this.nTicks = (int)(this.duration* MotionController.getProcessorFrequency());
-        System.out.println("nTicks = " + this.nTicks);
-        this.dL = this.velocity/ MotionController.getProcessorFrequency();
-        System.out.println("dL = " + this.dL);
 
         for(int i = 0; i< ControllerSettings.DIM; i++)
             this.K[i] = this.positionChange[i]/this.wayLength;
 
+        System.out.println("StraightMotion: ");
+        System.out.println("wayLengthXY = " + this.wayLengthXY);
+        System.out.println("wayLength = " + this.wayLength);
     }
 
     @Override
@@ -78,29 +66,9 @@ public class StraightMotion extends Motion {
     }
 
     @Override
-    public void prepare() {
-        final double[] startPosition = MotionController.getCurrentPosition();
-        this.currentWayLength = 0.0;
-        double[] reachedPosition = new double[ControllerSettings.DIM];
-        for(int i = 0; i< ControllerSettings.DIM; i++)
-            reachedPosition[i] = 0;
-        while (this.currentWayLength < this.wayLength){
-            if(MotionController.getInstance().getMotionState() == ControllerState.MOTION_STATE.STARTED){
-                this.currentWayLength += dL;
-                for(int i = 0; i< ControllerSettings.DIM; i++)
-                    reachedPosition[i] = startPosition[i] + this.currentWayLength*this.K[i];
-                MotionController.setCurrentPosition(reachedPosition);
-            }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
+    void onPositionChange() {
+        for(int i = 0; i< ControllerSettings.DIM; i++){
+            this.currentRelativePosition[i] = this.currentWayLength*this.K[i];
         }
-    }
-
-    @Override
-    void onFastTimerTick() {
-
     }
 }

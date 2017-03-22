@@ -31,13 +31,13 @@ public class MotionController extends ControllerState {
         double[] point3 = { 0.0,  -0.05,  0.0};
         double[] point4 = {-0.055, 0.0,   0.0};
         try {
-            StraightMotion straightMotion1 = new StraightMotion(point1,200.0);
+            StraightMotion straightMotion1 = new StraightMotion(point1);
             currentTask.addLast(straightMotion1);
-            StraightMotion straightMotion2 = new StraightMotion(point2,200.0);
+            StraightMotion straightMotion2 = new StraightMotion(point2);
             currentTask.addLast(straightMotion2);
-            StraightMotion straightMotion3 = new StraightMotion(point3,200.0);
+            StraightMotion straightMotion3 = new StraightMotion(point3);
             currentTask.addLast(straightMotion3);
-            StraightMotion straightMotion4 = new StraightMotion(point4,200.0);
+            StraightMotion straightMotion4 = new StraightMotion(point4);
             currentTask.addLast(straightMotion4);
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,7 +47,7 @@ public class MotionController extends ControllerState {
     }
 
     public void resumeExecution() {
-        this.setMotionState(MOTION_STATE.STARTED);
+        this.setTaskState(TASK_STATE.STARTED);
         if(!controllerThread.isAlive()) {
             controllerThread = new Thread(this);
             controllerThread.start();
@@ -55,22 +55,29 @@ public class MotionController extends ControllerState {
     }
 
     public void pauseExecution() {
-        this.setMotionState(MOTION_STATE.PAUSED);
+        this.setTaskState(TASK_STATE.PAUSED);
     }
 
     @Override
     public void run() {
         for(Motion motion: currentTask){
-            motion.prepare();
+            do{
+                motion.onFastTimerForwardTick(0.1);
+                try {
+                    this.sleep(10);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }while(motion.isOnTheRun());
         }
-        setMotionState(ControllerState.MOTION_STATE.PAUSED);
+        setTaskState(TASK_STATE.PAUSED);
+        resetTask();
+    }
+
+    private void resetTask(){
         for(Motion motion: currentTask){
             motion.setPhaseStateNotExecuted();
         }
-    }
-
-    static double getProcessorFrequency() {
-        return processorFrequency;
     }
 
     public LinkedList<Motion> getCurrentTask() {
