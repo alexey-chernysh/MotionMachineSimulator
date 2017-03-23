@@ -50,11 +50,15 @@ public class TrajectoryView {
         }
         // draw current position
         double[] currentPosition = MotionController.getCurrentPosition();
-        int x = (int)currentPosition[0];
-        int y = (int)currentPosition[1];
-        g.setColor(TrajectoryView.color1);
-        g.drawLine(x-5,y-5,x+5,y+5);
-        g.drawLine(x-5,y+5,x+5,y-5);
+        int[] x = new int[0];
+        try {
+            x = TrajectoryView.transfer(currentPosition);
+            g.setColor(TrajectoryView.color1);
+            g.drawLine(x[0]-5,x[1]-5,x[0]+5,x[1]+5);
+            g.drawLine(x[0]-5,x[1]+5,x[0]+5,x[1]-5);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static void setScale(double newScale) {

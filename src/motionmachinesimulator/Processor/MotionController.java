@@ -54,11 +54,21 @@ public class MotionController extends ControllerState {
         }
     }
 
+    public void rewindExecution() {
+    }
+
+    private double stepSize = 0.01/1000.0;
+
     public void pauseExecution() {
         this.setTaskState(TASK_STATE.PAUSED);
     }
+    public void velocityUp() {
+        stepSize = stepSize * 1.1;
+    }
+    public void velocityDown() {
+        stepSize = stepSize * 0.9;
+    }
 
-    private final double stepSize = 0.00001;
 
     @Override
     public void run() {

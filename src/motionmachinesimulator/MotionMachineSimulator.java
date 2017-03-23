@@ -18,9 +18,12 @@ import java.awt.event.*;
  */
 public class MotionMachineSimulator extends JDialog implements ActionListener {
     private JPanel contentPane;
+    private JPanel buttonsPane;
     private JButton buttonStart;
     private JButton buttonStop;
-    private JPanel buttonsPane;
+    private JButton buttonRewind;
+    private JButton buttonVelocityUp;
+    private JButton buttonVelocityDown;
     private JPanel viewPane;
     private JPanel motionPane;
     private JPanel positionPane;
@@ -43,10 +46,24 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
                 MotionController.getInstance().resumeExecution();
             }
         });
-
         buttonStop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MotionController.getInstance().pauseExecution();
+            }
+        });
+        buttonRewind.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MotionController.getInstance().rewindExecution();
+            }
+        });
+        buttonVelocityUp.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MotionController.getInstance().velocityUp();
+            }
+        });
+        buttonVelocityDown.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                MotionController.getInstance().velocityDown();
             }
         });
 
@@ -71,41 +88,6 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
             @Override
             public void paintComponent(Graphics g) {
                 TrajectoryView.paint(g);
-/*
-
-                positionPane.setPreferredSize(new Dimension(420, 420));
-                int lines = (int) (30 * Math.random()) + 1;
-                int width = getWidth();
-                int height = getHeight();
-                int lineGap = height / lines;
-
-                //  Draw lines starting from left to bottom
-                g.setColor(new Color(0, 0, 255));
-
-                int x = 0;
-                int y = height;
-
-                for (int i = 0; i < lines; i++) {
-                    g.drawLine(0, 0, x, y);
-                    x += lineGap;
-                    y -= lineGap;
-                }
-                //  Draw lines starting from bottom to right
-
-                x = 0;
-                y = height;
-
-                for (int i = 0; i < lines; i++) {
-                    g.drawLine(width, height, x, y);
-                    x += lineGap;
-                    y -= lineGap;
-                }
-
-                //  Draw lines starting from right to top
-
-                //  Draw lines starting from top to left
-*/
-
             }
 
             ;
@@ -121,14 +103,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         };
     }
 
-
-    private void onStartResume() {
-// add your code here
-//        dispose();
-    }
-
     private void onCancel() {
-// add your code here if necessary
         dispose();
     }
 
@@ -170,21 +145,38 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         buttonsPane.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1, true, false));
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 6, new Insets(0, 0, 0, 0), -1, -1));
         buttonsPane.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         buttonStart = new JButton();
         buttonStart.setBackground(new Color(-16711936));
+        buttonStart.setForeground(new Color(-1));
         buttonStart.setText("Start");
         panel1.add(buttonStart, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonRewind = new JButton();
+        buttonRewind.setBackground(new Color(-16776961));
+        buttonRewind.setForeground(new Color(-1));
+        buttonRewind.setText("Rewind");
+        panel1.add(buttonRewind, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonVelocityUp = new JButton();
+        buttonVelocityUp.setBackground(new Color(-16777088));
+        buttonVelocityUp.setForeground(new Color(-1));
+        buttonVelocityUp.setText("Faster");
+        panel1.add(buttonVelocityUp, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonVelocityDown = new JButton();
+        buttonVelocityDown.setBackground(new Color(-16777088));
+        buttonVelocityDown.setForeground(new Color(-1));
+        buttonVelocityDown.setText("Slower");
+        panel1.add(buttonVelocityDown, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         buttonStop = new JButton();
         buttonStop.setBackground(new Color(-65536));
+        buttonStop.setForeground(new Color(-1));
         buttonStop.setText("Stop");
-        panel1.add(buttonStop, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(buttonStop, new com.intellij.uiDesigner.core.GridConstraints(0, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         viewPane = new JPanel();
         viewPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(viewPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         motionPane.setBackground(new Color(-1));
-        viewPane.add(motionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(900, 200), null, null, 1, false));
+        viewPane.add(motionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(600, 200), null, null, 1, false));
         motionPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
         positionPane.setBackground(new Color(-1));
         viewPane.add(positionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(200, 200), null, null, 1, false));
