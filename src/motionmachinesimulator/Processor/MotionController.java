@@ -69,13 +69,12 @@ public class MotionController extends ControllerState {
         stepSize = stepSize * 0.9;
     }
 
-
     @Override
     public void run() {
         for(Motion motion: currentTask){
             do{
                 if(this.getTaskState() == TASK_STATE.STARTED){
-                    System.out.println(" Motion controller step for " + this.stepSize);
+//                    System.out.println(" Motion controller step for " + this.stepSize);
                     motion.onFastTimerForwardTick(stepSize);
                     try {
                         this.sleep(1);
@@ -83,7 +82,7 @@ public class MotionController extends ControllerState {
                         ie.printStackTrace();
                     }
                 } else {
-                    System.out.println(" Motion controller empty run ");
+//                    System.out.println(" Motion controller empty run ");
                 }
             }while(motion.isOnTheRun());
         }
