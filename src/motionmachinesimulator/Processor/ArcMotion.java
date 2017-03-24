@@ -77,29 +77,28 @@ public class ArcMotion extends Motion {
     @Override
     public double[] paint(Graphics g, double[] fromPoint) {
         try {
-            double[]  innerPoint = new double[ControllerSettings.DIM];
-            double[]    endPoint = new double[ControllerSettings.DIM];
-            double[] centerPoint = new double[ControllerSettings.DIM];
+            double[]  tmpPoint1 = new double[ControllerSettings.DIM];
+            double[]  tmpPoint2 = new double[ControllerSettings.DIM];
+            double[]  endPoint  = new double[ControllerSettings.DIM];
             for (int i = 0; i< ControllerSettings.DIM; i++) {
-                double change = this.positionChange[i];
-                endPoint[i] = fromPoint[i] + change;
-                centerPoint[i] = fromPoint[i] + centerOffset[i];
+                tmpPoint1[i] = fromPoint[i] + centerOffset[i] - radius;
+                tmpPoint2[i] = fromPoint[i] + centerOffset[i] + radius;
+                endPoint[i]  = fromPoint[i] + positionChange[i];
             }
             double angleChange = this.currentWayLength/this.radius;
             if(this.direction == DIRECTION.CCW) angleChange = - angleChange;
-            innerPoint[0] = centerPoint[0] + this.radius * Math.cos(angleChange);
-            innerPoint[1] = centerPoint[1] + centerOffset[1] + this.radius * Math.sin(angleChange);
-            innerPoint[2] = fromPoint[2] + Kz*this.currentWayLength;
-            int[] p1 = TrajectoryView.transfer(fromPoint);
-            int[] p2 = TrajectoryView.transfer(innerPoint);
-            int[] p3 = TrajectoryView.transfer(endPoint);
-            int[] c1 = TrajectoryView.transfer(centerPoint);// remove?????
+            int[] p1 = TrajectoryView.transfer(tmpPoint1);
+            int[] p2 = TrajectoryView.transfer(tmpPoint2);
+            int x1 = Math.min(p1[0],p2[0]);
+            int y1 = Math.min(p1[1],p2[1]);
+            int x2 = Math.max(p1[0],p2[0]) - x1;
+            int y2 = Math.max(p1[1],p2[1]) - y1;
             g.setColor(TrajectoryView.color1);
-            g.drawArc(p1[0],p1[1],p2[0],p2[1],
+            g.drawArc(x1, y1, x2, y2,
                     (int)(180.0*startAngle/Math.PI),
                     (int)(180.0*angleChange/Math.PI));
             g.setColor(TrajectoryView.color2);
-            g.drawArc(p2[0],p2[1],p3[0],p3[1],
+            g.drawArc(x1, y1, x2, y2,
                     (int)(180.0*(startAngle+angleChange)/Math.PI),
                     (int)(180.0*(angle-angleChange)/Math.PI));
             return endPoint;
