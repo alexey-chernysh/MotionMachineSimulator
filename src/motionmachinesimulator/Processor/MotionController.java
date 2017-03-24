@@ -14,8 +14,7 @@ public class MotionController extends ControllerState {
 
     private LinkedList<Motion> currentTask = new LinkedList<Motion>();
     private Thread controllerThread;
-
-    private static double processorFrequency = 200000.0; // 100 kHz
+    private boolean forwardDirection = true;
 
     private static MotionController ourInstance = new MotionController();
 
@@ -30,11 +29,14 @@ public class MotionController extends ControllerState {
         double[] point2 = { 0.05,  0.0,   0.0};
         double[] point3 = { 0.0,  -0.05,  0.0};
         double[] point4 = {-0.055, 0.0,   0.0};
+        double[] center1 = {0.025, 0.00, 0.0};
         try {
             StraightMotion straightMotion1 = new StraightMotion(point1);
             currentTask.addLast(straightMotion1);
-            StraightMotion straightMotion2 = new StraightMotion(point2);
-            currentTask.addLast(straightMotion2);
+            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CCW);
+            currentTask.addLast(arcMotion1);
+//            StraightMotion straightMotion2 = new StraightMotion(point2);
+//            currentTask.addLast(straightMotion2);
             StraightMotion straightMotion3 = new StraightMotion(point3);
             currentTask.addLast(straightMotion3);
             StraightMotion straightMotion4 = new StraightMotion(point4);
@@ -46,21 +48,28 @@ public class MotionController extends ControllerState {
         controllerThread.start();
     }
 
-    public void resumeExecution() {
-        this.setTaskState(TASK_STATE.STARTED);
+    public void resumeForwardExecution() {
+        forwardDirection = true;
         if(!controllerThread.isAlive()) {
             controllerThread = new Thread(this);
             controllerThread.start();
         }
+        MotionController.setTaskState(TASK_STATE.STARTED);
     }
 
-    public void rewindExecution() {
+    public void resumeBackwardExecution() {
+        forwardDirection = false;
+        if(!controllerThread.isAlive()) {
+            controllerThread = new Thread(this);
+            controllerThread.start();
+        }
+        MotionController.setTaskState(TASK_STATE.STARTED);
     }
 
     private double stepSize = 0.01/1000.0;
 
     public void pauseExecution() {
-        this.setTaskState(TASK_STATE.PAUSED);
+        MotionController.setTaskState(TASK_STATE.PAUSED);
     }
     public void velocityUp() {
         stepSize = stepSize * 1.1;
@@ -73,20 +82,22 @@ public class MotionController extends ControllerState {
     public void run() {
         for(Motion motion: currentTask){
             do{
-                if(this.getTaskState() == TASK_STATE.STARTED){
-//                    System.out.println(" Motion controller step for " + this.stepSize);
-                    motion.onFastTimerForwardTick(stepSize);
+                if(MotionController.getTaskState() == TASK_STATE.STARTED){
+                    if(this.forwardDirection)
+                        motion.onFastTimerForwardTick(stepSize);
+                    else
+                        motion.onFastTimerBackwardTick(stepSize);
                     try {
-                        this.sleep(1);
+                        Thread.sleep(1);
                     } catch (InterruptedException ie) {
                         ie.printStackTrace();
                     }
                 } else {
-//                    System.out.println(" Motion controller empty run ");
+                    System.out.println(" Motion controller empty run ");
                 }
             }while(motion.isOnTheRun());
         }
-        this.setTaskState(TASK_STATE.PAUSED);
+        MotionController.setTaskState(TASK_STATE.PAUSED);
         resetTask();
     }
 

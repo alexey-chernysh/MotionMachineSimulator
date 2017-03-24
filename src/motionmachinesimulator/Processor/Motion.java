@@ -71,10 +71,6 @@ public abstract class Motion {
         this.currentWayLength = 0.0;
     }
 
-    public double getPhase() {  // 0..1 - execution state, -1 - yet not executed
-        return this.currentWayLength/this.wayLength;
-    }
-
     public boolean isOnTheRun(){ return onTheRun; }
 
 }

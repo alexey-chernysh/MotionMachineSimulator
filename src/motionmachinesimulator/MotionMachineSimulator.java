@@ -43,7 +43,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MotionController.getInstance().resumeExecution();
+                MotionController.getInstance().resumeForwardExecution();
             }
         });
         buttonStop.addActionListener(new ActionListener() {
@@ -53,7 +53,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         });
         buttonRewind.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MotionController.getInstance().rewindExecution();
+                MotionController.getInstance().resumeBackwardExecution();
             }
         });
         buttonVelocityUp.addActionListener(new ActionListener() {

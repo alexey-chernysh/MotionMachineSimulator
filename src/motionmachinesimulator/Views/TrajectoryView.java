@@ -40,13 +40,7 @@ public class TrajectoryView {
         //  draw trajectory
         double[] startPoint = {0.0, 0.0, 0.0};
         for(Motion currentMotion : task){
-            try {
-                if(currentMotion instanceof StraightMotion) {
-                    startPoint = currentMotion.paint(g, startPoint);
-                } else throw new Exception("Yet not ready for arc motion");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            startPoint = currentMotion.paint(g, startPoint);
         }
         // draw current position
         double[] currentPosition = MotionController.getCurrentPosition();

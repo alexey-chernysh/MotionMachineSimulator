@@ -43,7 +43,7 @@ public class StraightMotion extends Motion {
         try {
             double[] innerPoint = new double[ControllerSettings.DIM];
             double[]   endPoint = new double[ControllerSettings.DIM];
-            double phase = this.getPhase();
+            double phase = this.currentWayLength/this.wayLength;
             for (int i = 0; i< ControllerSettings.DIM; i++) {
                 double change = this.positionChange[i];
                 innerPoint[i] = fromPoint[i] + phase*change;
@@ -56,9 +56,6 @@ public class StraightMotion extends Motion {
             g.drawLine(p1[0],p1[1],p2[0],p2[1]);
             g.setColor(TrajectoryView.color2);
             g.drawLine(p2[0],p2[1],p3[0],p3[1]);
-//            System.out.println("Start = " + fromPoint[0] + ", " + fromPoint[1]
-//                    + " Inner = " + innerPoint[0] + ", " + innerPoint[1]
-//                    + " End = " + endPoint[0] + ", " + endPoint[1]);
             return endPoint;
         } catch (Exception e) {
             e.printStackTrace();
@@ -69,7 +66,7 @@ public class StraightMotion extends Motion {
     @Override
     void onPositionChange() {
         for(int i = 0; i< ControllerSettings.DIM; i++){
-            this.currentRelativePosition[i] = this.currentWayLength*this.K[i];
+            this.currentRelativePosition[i] = this.currentWayLength * this.K[i];
         }
     }
 }
