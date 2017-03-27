@@ -2,17 +2,20 @@ package motionmachinesimulator.Processor;
 
 public class ControllerState extends Thread {
 
-    public ControllerState() {
-        for(int i = 0; i< ControllerSettings.DIM; i++) currentPosition[i] = 0.0;
-    }
-
     private static double[] currentPosition = new double[ControllerSettings.DIM];
+
+    public ControllerState() {
+        resetCurrentPosition();
+    }
 
     public static double[] getCurrentPosition() {
         return ControllerState.currentPosition;
     }
     public static void setCurrentPosition(double[] newPosition) {
         ControllerState.currentPosition = newPosition;
+    }
+    public static void resetCurrentPosition(){
+        for(int i = 0; i< ControllerSettings.DIM; i++) currentPosition[i] = 0.0;
     }
 
     private static TASK_STATE taskState = TASK_STATE.PAUSED;

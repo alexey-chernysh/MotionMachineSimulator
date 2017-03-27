@@ -105,6 +105,7 @@ public class MotionController extends ControllerState {
         for(Motion motion: currentTask){
             motion.setPhaseStateNotExecuted();
         }
+        ControllerState.resetCurrentPosition();
     }
 
     public LinkedList<Motion> getCurrentTask() {
