@@ -75,7 +75,7 @@ public class MotionController extends ControllerState {
         MotionController.setTaskState(TASK_STATE.STARTED);
     }
 
-    private double stepSize = 0.01/1000.0;
+    private double stepSize = 0.005/1000.0;
 
     public void pauseExecution() {
         MotionController.setTaskState(TASK_STATE.PAUSED);

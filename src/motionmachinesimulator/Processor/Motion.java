@@ -57,10 +57,11 @@ public abstract class Motion {
         this.onTheRun = true;
         this.currentWayLength -= dl;
         onPositionChange();
-        for(int i=0; i<ControllerSettings.DIM;i++)
-            this.currentAbsolutePositiom[i] = this.absoluteStartPosition[i] + this.currentRelativePosition[i];
-        if(this.currentWayLength >= this.wayLength)
-            this.onTheRun = false;
+        if(this.currentWayLength < 0) this.onTheRun = false;
+        else {
+            for(int i=0; i<ControllerSettings.DIM;i++)
+                this.currentAbsolutePositiom[i] = this.absoluteStartPosition[i] + this.currentRelativePosition[i];
+        }
     }
 
     abstract void onPositionChange();
