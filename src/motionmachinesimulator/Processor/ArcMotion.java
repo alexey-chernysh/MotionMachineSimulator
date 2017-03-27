@@ -100,10 +100,10 @@ public class ArcMotion extends Motion {
             int y1 = Math.min(p1[1],p2[1]);
             int x2 = Math.max(p1[0],p2[0]) - x1;
             int y2 = Math.max(p1[1],p2[1]) - y1;
-            g.setColor(TrajectoryView.color2);
-            g.drawArc(x1, y1, x2, y2, rad2grad(startAngle), rad2grad(angle));
             g.setColor(TrajectoryView.color1);
             g.drawArc(x1, y1, x2, y2, rad2grad(startAngle), rad2grad(angleChange));
+            g.setColor(TrajectoryView.color2);
+            g.drawArc(x1, y1, x2, y2, rad2grad(startAngle+angleChange), rad2grad(angle-angleChange));
             return endPoint;
         } catch (Exception e) {
             e.printStackTrace();

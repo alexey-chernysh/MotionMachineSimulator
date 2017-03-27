@@ -25,21 +25,30 @@ public class MotionController extends ControllerState {
     private MotionController() {
         super();
         // debug sequence
-        double[] point1 = { 0.0,   0.055, 0.0};
-        double[] point2 = { 0.05,  0.0,   0.0};
-        double[] point3 = { 0.0,  -0.05,  0.0};
-        double[] point4 = {-0.055, 0.0,   0.0};
-        double[] center1 = {0.025, 0.00, 0.0};
+        double[] point1 = { 0.0, 0.045, 0.0};
+        double[] point2 = { 0.01, 0.01, 0.0};
+        double[] center1 = {0.01, 0.00, 0.0};
+        double[] point3 = { 0.03,  0.0, 0.0};
+        double[] point4 = { 0.01, -0.01, 0.0};
+        double[] center2 = {0.00, -0.01, 0.0};
+        double[] point5 = {0.00, -0.03, 0.0};
+        double[] point6 = {-0.01, -0.01, 0.0};
+        double[] center3 = {-0.01, 0.0, 0.0};
+        double[] point7 = {-0.045, 0.0, 0.0};
         try {
             StraightMotion straightMotion1 = new StraightMotion(point1);
             currentTask.addLast(straightMotion1);
-            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CCW);
+            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW);
             currentTask.addLast(arcMotion1);
-//            StraightMotion straightMotion2 = new StraightMotion(point2);
-//            currentTask.addLast(straightMotion2);
-            StraightMotion straightMotion3 = new StraightMotion(point3);
+            StraightMotion straightMotion2 = new StraightMotion(point3);
+            currentTask.addLast(straightMotion2);
+            ArcMotion arcMotion2 = new ArcMotion(point4, center2, ArcMotion.DIRECTION.CW);
+            currentTask.addLast(arcMotion2);
+            StraightMotion straightMotion3 = new StraightMotion(point5);
             currentTask.addLast(straightMotion3);
-            StraightMotion straightMotion4 = new StraightMotion(point4);
+            ArcMotion arcMotion3 = new ArcMotion(point6, center3, ArcMotion.DIRECTION.CW);
+            currentTask.addLast(arcMotion3);
+            StraightMotion straightMotion4 = new StraightMotion(point7);
             currentTask.addLast(straightMotion4);
         } catch (Exception e) {
             e.printStackTrace();

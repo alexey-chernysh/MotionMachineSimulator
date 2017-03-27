@@ -18,10 +18,10 @@ public class ControllerSettings {
     public static final double maxPulseFrequency = 200000; // 200KHz
     public static final double freqRatio = fastTimerClock /maxPulseFrequency;
 
-    public static final double rackModule = 3.14; // mm/tooth
+    public static final double rackModule = 3.14; // module 1 = mm/tooth
     public static final int toothPerRevolution = 15;
     public static final double mmPerGearRevolution = rackModule*toothPerRevolution;
-    public static final double gearBoxRatio = 5.0; // no gear box
+    public static final double gearBoxRatio = 5.0;
     public static final double mmPerMotorRevolution = mmPerGearRevolution/gearBoxRatio;
 
     public static final int stepPerMotorRevolution = 200; // 2-pole step motor
