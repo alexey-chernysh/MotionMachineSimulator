@@ -96,11 +96,13 @@ public class MotionController extends ControllerState {
                         motion.onFastTimerForwardTick(stepSize);
                     else
                         motion.onFastTimerBackwardTick(stepSize);
+
                     try {
                         Thread.sleep(1);
                     } catch (InterruptedException ie) {
                         ie.printStackTrace();
                     }
+
                 } else {
                     System.out.println(" Motion controller empty run ");
                 }
@@ -108,6 +110,45 @@ public class MotionController extends ControllerState {
         }
         MotionController.setTaskState(TASK_STATE.PAUSED);
         resetTask();
+    }
+
+    private boolean taskStarted = false;
+    private Motion currentMotion;
+
+    public void go(){
+        do{
+            currentMotion = currentTask.getFirst();
+            while((!endOfLastReached()||(!rewindedToStartOfFirst()))){
+                taskStarted = true;
+
+            }
+            if(taskEjected()) break;
+        }while(true);
+
+    }
+
+    private boolean rewindedToStartOfFirst() {
+        if(currentMotion != null) {
+            Motion firstMotion = currentTask.getFirst();
+            return currentMotion.equals(firstMotion) && taskStarted && !currentMotion.isOnTheRun();
+        } else return false;
+    }
+
+    private boolean endOfLastReached() {
+        if(currentMotion != null) {
+            Motion lastMotion = currentTask.getLast();
+            return currentMotion.equals(lastMotion) && taskStarted && !currentMotion.isOnTheRun();
+        } else return false;
+    }
+
+    private boolean ejectFlag = false;
+
+    public void ejectTask(){
+        ejectFlag = true;
+    }
+
+    private boolean taskEjected() {
+        return ejectFlag;
     }
 
     private void resetTask(){
