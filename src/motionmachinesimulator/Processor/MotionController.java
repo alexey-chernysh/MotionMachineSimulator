@@ -50,6 +50,7 @@ public class MotionController extends ControllerState {
             currentTask.addLast(arcMotion3);
             StraightMotion straightMotion4 = new StraightMotion(point7);
             currentTask.addLast(straightMotion4);
+            this.setTaskState(TASK_STATE.READY_TO_START);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +64,7 @@ public class MotionController extends ControllerState {
             controllerThread = new Thread(this);
             controllerThread.start();
         }
-        MotionController.setTaskState(TASK_STATE.STARTED);
+        this.setTaskState(TASK_STATE.ON_THE_RUN);
     }
 
     public void resumeBackwardExecution() {
@@ -72,13 +73,13 @@ public class MotionController extends ControllerState {
             controllerThread = new Thread(this);
             controllerThread.start();
         }
-        MotionController.setTaskState(TASK_STATE.STARTED);
+        this.setTaskState(TASK_STATE.ON_THE_RUN);
     }
 
     private double stepSize = 0.005/1000.0;
 
     public void pauseExecution() {
-        MotionController.setTaskState(TASK_STATE.PAUSED);
+        this.setTaskState(TASK_STATE.PAUSED);
     }
     public void velocityUp() {
         stepSize = stepSize * 1.1;
@@ -91,7 +92,7 @@ public class MotionController extends ControllerState {
     public void run() {
         for(Motion motion: currentTask){
             do{
-                if(MotionController.getTaskState() == TASK_STATE.STARTED){
+                if(this.getTaskState() == TASK_STATE.ON_THE_RUN){
                     if(this.forwardDirection)
                         motion.onFastTimerForwardTick(stepSize);
                     else
@@ -108,7 +109,7 @@ public class MotionController extends ControllerState {
                 }
             }while(motion.isOnTheRun());
         }
-        MotionController.setTaskState(TASK_STATE.PAUSED);
+        this.setTaskState(TASK_STATE.FINISHED);
         resetTask();
     }
 
@@ -155,7 +156,7 @@ public class MotionController extends ControllerState {
         for(Motion motion: currentTask){
             motion.setPhaseStateNotExecuted();
         }
-        ControllerState.resetCurrentPosition();
+        CurrentPosition.reset();
     }
 
     public LinkedList<Motion> getCurrentTask() {

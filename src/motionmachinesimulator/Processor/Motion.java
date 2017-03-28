@@ -42,13 +42,13 @@ public abstract class Motion {
     void onFastTimerForwardTick(double dl){
         if(!this.onTheRun){
             this.onTheRun = true;
-            this.absoluteStartPosition = MotionController.getCurrentPosition();
+            this.absoluteStartPosition = CurrentPosition.get();
         }
         this.currentWayLength += dl;
         onPositionChange();
         for(int i=0; i<ControllerSettings.DIM;i++)
             this.currentAbsolutePositiom[i] = this.absoluteStartPosition[i] + this.currentRelativePosition[i];
-        MotionController.setCurrentPosition(this.currentAbsolutePositiom);
+        CurrentPosition.set(this.currentAbsolutePositiom);
         if(this.currentWayLength >= this.wayLength)
             this.onTheRun = false;
     };

@@ -1,9 +1,6 @@
 package motionmachinesimulator.Views;
 
-import motionmachinesimulator.Processor.Motion;
-import motionmachinesimulator.Processor.ControllerSettings;
-import motionmachinesimulator.Processor.MotionController;
-import motionmachinesimulator.Processor.StraightMotion;
+import motionmachinesimulator.Processor.*;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -43,7 +40,7 @@ public class TrajectoryView {
             startPoint = currentMotion.paint(g, startPoint);
         }
         // draw current position
-        double[] currentPosition = MotionController.getCurrentPosition();
+        double[] currentPosition = CurrentPosition.get();
         int[] x = new int[0];
         try {
             x = TrajectoryView.transfer(currentPosition);

@@ -2,50 +2,41 @@ package motionmachinesimulator.Processor;
 
 public class ControllerState extends Thread {
 
-    private static double[] currentPosition = new double[ControllerSettings.DIM];
-
-    public ControllerState() {
-        resetCurrentPosition();
+    ControllerState() {
     }
 
-    public static double[] getCurrentPosition() {
-        return ControllerState.currentPosition;
-    }
-    public static void setCurrentPosition(double[] newPosition) {
-        ControllerState.currentPosition = newPosition;
-    }
-    public static void resetCurrentPosition(){
-        for(int i = 0; i< ControllerSettings.DIM; i++) currentPosition[i] = 0.0;
-    }
+    private TASK_STATE taskState = TASK_STATE.EMPTY;
 
-    private static TASK_STATE taskState = TASK_STATE.PAUSED;
-
-    static TASK_STATE getTaskState() {
-        return taskState;
+    TASK_STATE getTaskState() {
+        return this.taskState;
     }
-    static void setTaskState(TASK_STATE newState) {
-        taskState = newState;
+    void setTaskState(TASK_STATE newState) {
+        this.taskState = newState;
     }
 
     enum TASK_STATE {
-        STARTED,
+        EMPTY,
+        READY_TO_START,
+        ACCELERATING,
+        ON_THE_RUN,
+        DEACCELERATED,
         PAUSED,
+        FINISHED
     }
-/*
-    private static DIRECTION_STATE directionState = DIRECTION_STATE.FORWARD;
 
-    public static DIRECTION_STATE getDirectionState() {
-        return directionState;
+    private DIRECTION_STATE directionState = DIRECTION_STATE.FORWARD;
+
+    DIRECTION_STATE getDirectionState() {
+        return this.directionState;
     }
-    public static void setDirectionState(DIRECTION_STATE newDirectionState) {
-        ControllerState.directionState = newDirectionState;
+    void setDirectionState(DIRECTION_STATE newDirectionState) {
+        this.directionState = newDirectionState;
     }
 
     enum DIRECTION_STATE {
         FORWARD,
         BACKWARD
     }
-    */
 /*
     private static VELOCITY_STATE velocityState = VELOCITY_STATE.CONSTANT;
 
