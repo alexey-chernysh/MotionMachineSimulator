@@ -18,8 +18,11 @@ public class StraightMotion extends Motion {
     //general vars
     private double[] K = new double[ControllerSettings.DIM];
 
-    StraightMotion(double[] change) throws Exception {
-        super(change);
+    StraightMotion(double[] change,
+                   double motionVelocity,
+                   double startVel,
+                   double endVel) throws Exception {
+        super(change, motionVelocity, startVel, endVel);
 
         this.wayLengthXY = Math.sqrt(this.relativeEndPoint[0]*this.relativeEndPoint[0] +
                                         +this.relativeEndPoint[1]*this.relativeEndPoint[1]);

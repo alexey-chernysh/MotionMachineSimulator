@@ -23,8 +23,13 @@ public class ArcMotion extends Motion {
 
     private static final double twoPi = 2.0*Math.PI;
 
-    public ArcMotion(double[] change, double[] center, ArcMotion.DIRECTION dir) throws Exception {
-        super(change);
+    public ArcMotion(double[] change,
+                     double[] center,
+                     ArcMotion.DIRECTION dir,
+                     double motionVelocity,
+                     double startVel,
+                     double endVel) throws Exception {
+        super(change, motionVelocity, startVel, endVel);
 
         this.centerOffset = center; // should be non zero for arc motion
         this.direction = dir;
