@@ -1,6 +1,6 @@
 package motionmachinesimulator.Processor;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 /**
  * Created by Sales on 16.02.2017.
@@ -12,7 +12,7 @@ import java.util.LinkedList;
  */
 public class MotionController extends ControllerState {
 
-    private LinkedList<Motion> currentTask = new LinkedList<Motion>();
+    private ArrayList<Motion> currentTask = new ArrayList<Motion>();
     private Thread controllerThread;
     private boolean forwardDirection = true;
 
@@ -37,19 +37,19 @@ public class MotionController extends ControllerState {
         double[] point7 = {-0.045, 0.0, 0.0};
         try {
             StraightMotion straightMotion1 = new StraightMotion(point1);
-            currentTask.addLast(straightMotion1);
+            currentTask.add(straightMotion1);
             ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW);
-            currentTask.addLast(arcMotion1);
+            currentTask.add(arcMotion1);
             StraightMotion straightMotion2 = new StraightMotion(point3);
-            currentTask.addLast(straightMotion2);
+            currentTask.add(straightMotion2);
             ArcMotion arcMotion2 = new ArcMotion(point4, center2, ArcMotion.DIRECTION.CW);
-            currentTask.addLast(arcMotion2);
+            currentTask.add(arcMotion2);
             StraightMotion straightMotion3 = new StraightMotion(point5);
-            currentTask.addLast(straightMotion3);
+            currentTask.add(straightMotion3);
             ArcMotion arcMotion3 = new ArcMotion(point6, center3, ArcMotion.DIRECTION.CW);
-            currentTask.addLast(arcMotion3);
+            currentTask.add(arcMotion3);
             StraightMotion straightMotion4 = new StraightMotion(point7);
-            currentTask.addLast(straightMotion4);
+            currentTask.add(straightMotion4);
             this.setTaskState(TASK_STATE.READY_TO_START);
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,78 +88,71 @@ public class MotionController extends ControllerState {
         stepSize = stepSize * 0.9;
     }
 
-    @Override
-    public void run() {
-        for(Motion motion: currentTask){
-            do{
-                if(this.getTaskState() == TASK_STATE.ON_THE_RUN){
-                    if(this.forwardDirection)
-                        motion.onFastTimerForwardTick(stepSize);
-                    else
-                        motion.onFastTimerBackwardTick(stepSize);
-
-                    try {
-                        Thread.sleep(1);
-                    } catch (InterruptedException ie) {
-                        ie.printStackTrace();
-                    }
-
-                } else {
-                    System.out.println(" Motion controller empty run ");
-                }
-            }while(motion.isOnTheRun());
-        }
-        this.setTaskState(TASK_STATE.FINISHED);
-        resetTask();
-    }
-
-    private boolean taskStarted = false;
     private Motion currentMotion;
 
-    public void go(){
+    @Override
+    public void run() {
+        double[] relPos = new double[ControllerSettings.DIM];
+        final int taskSize = currentTask.size();
+        double[][] startPos = new double[taskSize][ControllerSettings.DIM];
+        double[] currentAbsPos = new double[ControllerSettings.DIM];
         do{
-            currentMotion = currentTask.getFirst();
-            while((!endOfLastReached()||(!rewindedToStartOfFirst()))){
-                taskStarted = true;
+            int currentMotionNum = 0;
+            while((currentMotionNum>=0)&&(currentMotionNum<taskSize)){
+                currentMotion = currentTask.get(currentMotionNum);
+                if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
+                double targetWayLength = currentMotion.wayLength;
+                double currentWayLength;
+                System.out.println(" Motion num =  " + currentMotionNum);
+                do{
+                    if(taskShouldBeEjected()) break;
+                    if(this.getTaskState() == TASK_STATE.ON_THE_RUN){
+                        if(this.forwardDirection) relPos = currentMotion.onFastTimerTick(stepSize);
+                        else relPos = currentMotion.onFastTimerTick(-stepSize);
+                        for(int i=0; i<ControllerSettings.DIM;i++){
+                            currentAbsPos[i] = startPos[currentMotionNum][i] + relPos[i];
+                        }
+                        CurrentPosition.set(currentAbsPos);
+                        try {
+                            Thread.sleep(1);
+                        } catch (InterruptedException ie) {
+                            ie.printStackTrace();
+                        }
 
+                    } else System.out.println(" Motion controller empty run ");
+                    currentWayLength = currentMotion.currentWayLength;
+                } while ((currentWayLength>=0.0)&&(currentWayLength<=targetWayLength));
+                if(this.forwardDirection) {
+                    currentMotion.currentWayLength = currentMotion.wayLength;
+                    currentMotionNum++;
+                } else {
+                    currentMotion.currentWayLength = 0.0;
+                    currentMotionNum--;
+                }
             }
-            if(taskEjected()) break;
+            this.setTaskState(TASK_STATE.READY_TO_START);
+            resetTask();
         }while(true);
-
     }
 
-    private boolean rewindedToStartOfFirst() {
-        if(currentMotion != null) {
-            Motion firstMotion = currentTask.getFirst();
-            return currentMotion.equals(firstMotion) && taskStarted && !currentMotion.isOnTheRun();
-        } else return false;
-    }
-
-    private boolean endOfLastReached() {
-        if(currentMotion != null) {
-            Motion lastMotion = currentTask.getLast();
-            return currentMotion.equals(lastMotion) && taskStarted && !currentMotion.isOnTheRun();
-        } else return false;
-    }
-
-    private boolean ejectFlag = false;
-
+    private static boolean ejectFlag = false;
     public void ejectTask(){
         ejectFlag = true;
     }
-
-    private boolean taskEjected() {
+    private boolean taskShouldBeEjected() {
+        boolean result = ejectFlag;
+        ejectFlag = false;
         return ejectFlag;
     }
 
     private void resetTask(){
         for(Motion motion: currentTask){
-            motion.setPhaseStateNotExecuted();
+            motion.currentWayLength = 0.0;
         }
         CurrentPosition.reset();
     }
 
-    public LinkedList<Motion> getCurrentTask() {
+    public ArrayList<Motion> getCurrentTask() {
         return currentTask;
     }
 

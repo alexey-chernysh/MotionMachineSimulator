@@ -6,15 +6,11 @@ public abstract class Motion {
 
     // general params
     protected double[] positionChange; // all in meters
-    protected double[] absoluteStartPosition;
     protected double[] currentRelativePosition;
-    protected double[] currentAbsolutePositiom;
 
     protected double wayLength; // all in meters
     protected double wayLengthXY;
     protected double currentWayLength;
-
-    protected boolean onTheRun;
 
     /**
      * @param change - relative position chenge after motion
@@ -30,48 +26,14 @@ public abstract class Motion {
         } else throw new Exception("Null motion not supported");
 
         this.currentRelativePosition = new double[ControllerSettings.DIM];
-        this.currentAbsolutePositiom = new double[ControllerSettings.DIM];
         for(int i=0; i<ControllerSettings.DIM;i++)
             this.currentRelativePosition[i] = 0.0;
 
         this.currentWayLength = 0.0;
-        this.setPhaseStateNotExecuted();
-        this.onTheRun = false;
     }
 
-    void onFastTimerForwardTick(double dl){
-        if(!this.onTheRun){
-            this.onTheRun = true;
-            this.absoluteStartPosition = CurrentPosition.get();
-        }
-        this.currentWayLength += dl;
-        onPositionChange();
-        for(int i=0; i<ControllerSettings.DIM;i++)
-            this.currentAbsolutePositiom[i] = this.absoluteStartPosition[i] + this.currentRelativePosition[i];
-        CurrentPosition.set(this.currentAbsolutePositiom);
-        if(this.currentWayLength >= this.wayLength)
-            this.onTheRun = false;
-    };
-
-    void onFastTimerBackwardTick(double dl){
-        this.onTheRun = true;
-        this.currentWayLength -= dl;
-        onPositionChange();
-        if(this.currentWayLength < 0) this.onTheRun = false;
-        else {
-            for(int i=0; i<ControllerSettings.DIM;i++)
-                this.currentAbsolutePositiom[i] = this.absoluteStartPosition[i] + this.currentRelativePosition[i];
-        }
-    }
-
-    abstract void onPositionChange();
+    abstract double[] onFastTimerTick(double dl); //return new relative position
 
     public abstract double[] paint(Graphics g, double[] fromPoint);
-
-    public void setPhaseStateNotExecuted() {
-        this.currentWayLength = 0.0;
-    }
-
-    public boolean isOnTheRun(){ return onTheRun; }
 
 }

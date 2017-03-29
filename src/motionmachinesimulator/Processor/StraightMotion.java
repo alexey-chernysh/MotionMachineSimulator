@@ -64,9 +64,11 @@ public class StraightMotion extends Motion {
     }
 
     @Override
-    void onPositionChange() {
+    double[] onFastTimerTick(double dl) {
+        this.currentWayLength += dl;
         for(int i = 0; i< ControllerSettings.DIM; i++){
             this.currentRelativePosition[i] = this.currentWayLength * this.K[i];
         }
+        return this.currentRelativePosition;
     }
 }

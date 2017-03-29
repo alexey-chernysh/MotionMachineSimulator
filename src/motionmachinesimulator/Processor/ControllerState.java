@@ -24,16 +24,16 @@ public class ControllerState extends Thread {
         FINISHED
     }
 
-    private DIRECTION_STATE directionState = DIRECTION_STATE.FORWARD;
+    private MOTION_DIRECTION direction = MOTION_DIRECTION.FORWARD;
 
-    DIRECTION_STATE getDirectionState() {
-        return this.directionState;
+    MOTION_DIRECTION getDirection() {
+        return this.direction;
     }
-    void setDirectionState(DIRECTION_STATE newDirectionState) {
-        this.directionState = newDirectionState;
+    void setDirection(MOTION_DIRECTION newDirectionState) {
+        this.direction = newDirectionState;
     }
 
-    enum DIRECTION_STATE {
+    enum MOTION_DIRECTION {
         FORWARD,
         BACKWARD
     }

@@ -72,13 +72,15 @@ public class ArcMotion extends Motion {
     }
 
     @Override
-    void onPositionChange() {
+    double[] onFastTimerTick(double dl) {
+        this.currentWayLength += dl;
         double angleChange = this.currentWayLength/this.radius;
         if(this.direction == DIRECTION.CW) angleChange = - angleChange;
         this.currentAngle = this.startAngle + angleChange;
         this.currentRelativePosition[0] = this.centerOffset[0] + this.radius * Math.cos(this.currentAngle);
         this.currentRelativePosition[1] = this.centerOffset[1] + this.radius * Math.sin(this.currentAngle);
         this.currentRelativePosition[2] = this.currentWayLength * this.Kz;
+        return this.currentRelativePosition;
     }
 
     @Override

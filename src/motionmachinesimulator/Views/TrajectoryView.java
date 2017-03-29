@@ -3,7 +3,7 @@ package motionmachinesimulator.Views;
 import motionmachinesimulator.Processor.*;
 
 import java.awt.*;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class TrajectoryView {
 
@@ -33,7 +33,7 @@ public class TrajectoryView {
 
     public static void paint(Graphics g){
         MotionController mc = MotionController.getInstance();
-        LinkedList<Motion> task = mc.getCurrentTask();
+        ArrayList<Motion> task = mc.getCurrentTask();
         //  draw trajectory
         double[] startPoint = {0.0, 0.0, 0.0};
         for(Motion currentMotion : task){
