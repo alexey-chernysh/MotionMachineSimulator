@@ -113,6 +113,7 @@ public class MotionController extends ControllerState {
                             currentAbsPos[i] = startPos[currentMotionNum][i] + relPos[i];
                         }
                         CurrentPosition.set(currentAbsPos);
+
                         try {
                             Thread.sleep(1);
                         } catch (InterruptedException ie) {

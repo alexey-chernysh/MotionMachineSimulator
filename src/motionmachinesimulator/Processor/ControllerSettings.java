@@ -31,14 +31,26 @@ public class ControllerSettings {
 
     public static final double stepSize // mm per microstep
             = mmPerMotorRevolution/microstepPerMotorRevolution;
+
     public static final double maxVelocityReachable = 60*stepSize*maxPulseFrequency/1000.0;
-    
+
+    private static double freeRunVelocity = 5.0; // m/sec
+    public static double getFreeRunVelocity() {
+        return freeRunVelocity;
+    }
+    private static double workingVelocity = 2.0; // m/sec
+    public static double getWorkingVelocity() {
+        return workingVelocity;
+    }
+    private static double acceleration = 0.5; // m/sec/sec
+    public static double getAcceleration() {
+        return acceleration;
+    }
+
     public static final int stepPulseBitNumber = 33;
     public static final long stepPulseBitMask = 1L<<(stepPulseBitNumber-1);
     
-    public static final short NofAxis = 3;
-    
-    public static final String gear_state = 
+    public static final String gear_state =
              "MM per motor shaft revolution = "
              + ControllerSettings.mmPerMotorRevolution
              + ";  MicroStep per motor shaft revolution = "

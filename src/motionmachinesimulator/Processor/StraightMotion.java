@@ -21,20 +21,20 @@ public class StraightMotion extends Motion {
     StraightMotion(double[] change) throws Exception {
         super(change);
 
-        this.wayLengthXY = Math.sqrt(this.positionChange[0]*this.positionChange[0] +
-                                        +this.positionChange[1]*this.positionChange[1]);
-        this.wayLength = Math.sqrt(this.positionChange[2]*this.positionChange[2]
+        this.wayLengthXY = Math.sqrt(this.relativeEndPoint[0]*this.relativeEndPoint[0] +
+                                        +this.relativeEndPoint[1]*this.relativeEndPoint[1]);
+        this.wayLength = Math.sqrt(this.relativeEndPoint[2]*this.relativeEndPoint[2]
                                  + this.wayLengthXY*this.wayLengthXY);
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
         for(int i = 0; i< ControllerSettings.DIM; i++)
-            this.K[i] = this.positionChange[i]/this.wayLength;
+            this.K[i] = this.relativeEndPoint[i]/this.wayLength;
 
         System.out.print("StraightMotion:");
-        System.out.print(" dX = " + this.positionChange[0]);
-        System.out.print(" dY = " + this.positionChange[1]);
+        System.out.print(" dX = " + this.relativeEndPoint[0]);
+        System.out.print(" dY = " + this.relativeEndPoint[1]);
         System.out.println(" wayLength = " + this.wayLength);
     }
 
@@ -45,7 +45,7 @@ public class StraightMotion extends Motion {
             double[]   endPoint = new double[ControllerSettings.DIM];
             double phase = this.currentWayLength/this.wayLength;
             for (int i = 0; i< ControllerSettings.DIM; i++) {
-                double change = this.positionChange[i];
+                double change = this.relativeEndPoint[i];
                 innerPoint[i] = fromPoint[i] + phase*change;
                 endPoint[i] = fromPoint[i] + change;
             }

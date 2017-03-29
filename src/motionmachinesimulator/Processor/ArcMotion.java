@@ -37,7 +37,7 @@ public class ArcMotion extends Motion {
             if(this.radius <= 0.0) throw new Exception("Zero radius arc not supported");
             this.startAngle = Math.atan2(-this.centerOffset[1],-this.centerOffset[0]);
             this.currentAngle = this.startAngle;
-            this.endAngle = Math.atan2(this.positionChange[1]-this.centerOffset[1],this.positionChange[0]-this.centerOffset[0]);
+            this.endAngle = Math.atan2(this.relativeEndPoint[1]-this.centerOffset[1],this.relativeEndPoint[0]-this.centerOffset[0]);
             switch (this.direction){
                 case CW:
                     while(this.endAngle >= this.startAngle ) this.endAngle -= twoPi;
@@ -54,17 +54,17 @@ public class ArcMotion extends Motion {
         }
 
         this.wayLengthXY = this.radius *this.angle;
-        this.wayLength = Math.sqrt(this.positionChange[2]*this.positionChange[2]
+        this.wayLength = Math.sqrt(this.relativeEndPoint[2]*this.relativeEndPoint[2]
                 + this.wayLengthXY*this.wayLengthXY);
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
-        this.Kz = this.positionChange[2]/this.wayLength;
+        this.Kz = this.relativeEndPoint[2]/this.wayLength;
 
         System.out.print("ArcMotion:");
-        System.out.print(" dX = " + this.positionChange[0]);
-        System.out.print(" dY = " + this.positionChange[1]);
+        System.out.print(" dX = " + this.relativeEndPoint[0]);
+        System.out.print(" dY = " + this.relativeEndPoint[1]);
         System.out.print(" startAngle = " + this.startAngle);
         System.out.print(" endAngle = " + this.endAngle);
         System.out.print(" angle = " + this.angle);
@@ -92,7 +92,7 @@ public class ArcMotion extends Motion {
             for (int i = 0; i< ControllerSettings.DIM; i++) {
                 tmpPoint1[i] = fromPoint[i] + centerOffset[i] - radius;
                 tmpPoint2[i] = fromPoint[i] + centerOffset[i] + radius;
-                endPoint[i]  = fromPoint[i] + positionChange[i];
+                endPoint[i]  = fromPoint[i] + relativeEndPoint[i];
             }
             double angleChange = this.currentWayLength/this.radius;
             if(this.direction == DIRECTION.CW) angleChange = - angleChange;

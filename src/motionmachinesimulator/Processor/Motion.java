@@ -5,22 +5,31 @@ import java.awt.*;
 public abstract class Motion {
 
     // general params
-    protected double[] positionChange; // all in meters
+    protected double[] relativeEndPoint; // all in meters
     protected double[] currentRelativePosition;
 
     protected double wayLength; // all in meters
     protected double wayLengthXY;
     protected double currentWayLength;
 
-    /**
-     * @param change - relative position chenge after motion
-     * @throws Exception
-     */
-    Motion(double[] change) throws Exception {
-        this.positionChange = change;
+    private double targetVelocity;
+    private double startVelocity;
+    private double endVelocity;
 
-        if (this.positionChange != null) {
-            if (this.positionChange.length != ControllerSettings.DIM) {
+    /**
+     * @param endPoint - relative position change after motion
+     */
+    Motion(double[] endPoint,
+           double motionVelocity,
+           double startVel,
+           double endVel) throws Exception {
+        this.relativeEndPoint = endPoint;
+        this.targetVelocity = motionVelocity;
+        this.startVelocity = startVel;
+        this.endVelocity = endVel;
+
+        if (this.relativeEndPoint != null) {
+            if (this.relativeEndPoint.length != ControllerSettings.DIM) {
                 throw new Exception("Position change X, Y, Z coordinates needed only");
             }
         } else throw new Exception("Null motion not supported");
