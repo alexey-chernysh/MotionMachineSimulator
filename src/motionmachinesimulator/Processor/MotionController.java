@@ -36,19 +36,20 @@ public class MotionController extends ControllerState {
         double[] center3 = {-0.01, 0.0, 0.0};
         double[] point7 = {-0.045, 0.0, 0.0};
         try {
-            StraightMotion straightMotion1 = new StraightMotion(point1);
+            double v = ControllerSettings.getWorkingVelocity();
+            StraightMotion straightMotion1 = new StraightMotion(point1, v, v, v);
             currentTask.add(straightMotion1);
-            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW);
+            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW, v, v, v);
             currentTask.add(arcMotion1);
-            StraightMotion straightMotion2 = new StraightMotion(point3);
+            StraightMotion straightMotion2 = new StraightMotion(point3, v, v, v);
             currentTask.add(straightMotion2);
-            ArcMotion arcMotion2 = new ArcMotion(point4, center2, ArcMotion.DIRECTION.CW);
+            ArcMotion arcMotion2 = new ArcMotion(point4, center2, ArcMotion.DIRECTION.CW, v, v, v);
             currentTask.add(arcMotion2);
-            StraightMotion straightMotion3 = new StraightMotion(point5);
+            StraightMotion straightMotion3 = new StraightMotion(point5, v, v, v);
             currentTask.add(straightMotion3);
-            ArcMotion arcMotion3 = new ArcMotion(point6, center3, ArcMotion.DIRECTION.CW);
+            ArcMotion arcMotion3 = new ArcMotion(point6, center3, ArcMotion.DIRECTION.CW, v, v, v);
             currentTask.add(arcMotion3);
-            StraightMotion straightMotion4 = new StraightMotion(point7);
+            StraightMotion straightMotion4 = new StraightMotion(point7, v, v, v);
             currentTask.add(straightMotion4);
             this.setTaskState(TASK_STATE.READY_TO_START);
         } catch (Exception e) {
@@ -76,7 +77,9 @@ public class MotionController extends ControllerState {
         this.setTaskState(TASK_STATE.ON_THE_RUN);
     }
 
-    private double stepSize = 0.005/1000.0;
+    private int intervalInMillis = 1; // min available
+    private double stepSize = getStep4Velocity(2.0/60.0, // 2000 mm/min
+                                              (intervalInMillis/1000.0));
 
     public void pauseExecution() {
         this.setTaskState(TASK_STATE.PAUSED);
@@ -115,7 +118,7 @@ public class MotionController extends ControllerState {
                         CurrentPosition.set(currentAbsPos);
 
                         try {
-                            Thread.sleep(1);
+                            Thread.sleep(intervalInMillis);
                         } catch (InterruptedException ie) {
                             ie.printStackTrace();
                         }
@@ -157,4 +160,25 @@ public class MotionController extends ControllerState {
         return currentTask;
     }
 
+    public static double getStep4Velocity(double velocity, double timeInterval){
+        return velocity*timeInterval;
+    }
+
+    public static double getStepIncrement4Acceleration(double acceleration, double timeInterval){
+        double velocityIncrement = acceleration * timeInterval;
+        return (velocityIncrement*timeInterval);
+    }
+
+    public static double getVelocityChangeTimeLinear(double velocity1, double velocity2, double acceleration){
+        return Math.abs((velocity1 - velocity2)/acceleration);
+    }
+
+    public static double getVelocityChangeDistanceLinear(double velocity1, double velocity2, double acceleration){
+        double time = getVelocityChangeTimeLinear(velocity1, velocity2, acceleration);
+        if(velocity1 < velocity2){ // acceleration
+            return (velocity1*time + acceleration * time * time / 2.0);
+        } else { // deceleration
+            return (velocity1*time - acceleration * time * time / 2.0);
+        }
+    }
 }
