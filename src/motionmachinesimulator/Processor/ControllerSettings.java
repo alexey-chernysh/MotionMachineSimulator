@@ -34,15 +34,15 @@ public class ControllerSettings {
 
     public static final double maxVelocityReachable = 60*stepSize*maxPulseFrequency/1000.0;
 
-    private static double freeRunVelocity = 5.0; // m/sec
+    private static double freeRunVelocity = 5.0/60.0; // m/sec for 5.0 m/min
     public static double getFreeRunVelocity() {
         return freeRunVelocity;
     }
-    private static double workingVelocity = 2.0; // m/sec
+    private static double workingVelocity = 1.0/60.0; // m/sec for 1.0 m/min
     public static double getWorkingVelocity() {
         return workingVelocity;
     }
-    private static double acceleration = 0.5; // m/sec/sec
+    private static double acceleration = 0.5/60.0; // m/sec/sec
     public static double getAcceleration() {
         return acceleration;
     }

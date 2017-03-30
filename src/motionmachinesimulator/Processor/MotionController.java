@@ -78,7 +78,7 @@ public class MotionController extends ControllerState {
     }
 
     private int intervalInMillis = 1; // min available
-    private double stepSize = getStep4Velocity(2.0/60.0, // 2000 mm/min
+    private double stepSize = getStep4Velocity(ControllerSettings.getWorkingVelocity(),
                                               (intervalInMillis/1000.0));
 
     public void pauseExecution() {
@@ -107,7 +107,7 @@ public class MotionController extends ControllerState {
                 double targetWayLength = currentMotion.wayLength;
                 double currentWayLength;
                 System.out.println(" Motion num =  " + currentMotionNum);
-                do{
+                do{ // linear velocity phase
                     if(taskShouldBeEjected()) break;
                     if(this.getTaskState() == TASK_STATE.ON_THE_RUN){
                         if(this.forwardDirection) relPos = currentMotion.onFastTimerTick(stepSize);
