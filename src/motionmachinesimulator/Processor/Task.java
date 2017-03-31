@@ -4,10 +4,11 @@ import java.util.ArrayList;
 
 class Task extends ArrayList<Motion> {
 
-    private TASK_STATE state = TASK_STATE.EMPTY;
+    private TASK_STATE state;
 
     Task(){
         fillDebugTask();
+        state = TASK_STATE.EMPTY;
     }
 
     private void fillDebugTask(){
@@ -38,6 +39,7 @@ class Task extends ArrayList<Motion> {
             this.add(arcMotion3);
             StraightMotion straightMotion4 = new StraightMotion(point7, v, v, v);
             this.add(straightMotion4);
+            this.setState(TASK_STATE.READY_TO_START);
         } catch (Exception e) {
             e.printStackTrace();
         }

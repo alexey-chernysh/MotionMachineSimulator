@@ -28,27 +28,27 @@ public class MotionController extends ControllerState {
         super();
         ejectFlag = new EjectFlag();
         currentTask = new Task();
-        this.currentTask.setState(Task.TASK_STATE.READY_TO_START);
         controllerThread = new Thread(this);
         controllerThread.start();
     }
 
     public void resumeForwardExecution() {
         forwardDirection = true;
-        if(!controllerThread.isAlive()) {
-            controllerThread = new Thread(this);
-            controllerThread.start();
-        }
+        checkThresdState();
         this.currentTask.setState(Task.TASK_STATE.ON_THE_RUN);
     }
 
     public void resumeBackwardExecution() {
         forwardDirection = false;
+        checkThresdState();
+        this.currentTask.setState(Task.TASK_STATE.ON_THE_RUN);
+    }
+
+    private void checkThresdState(){
         if(!controllerThread.isAlive()) {
             controllerThread = new Thread(this);
             controllerThread.start();
         }
-        this.currentTask.setState(Task.TASK_STATE.ON_THE_RUN);
     }
 
     private int intervalInMillis = 1; // min available
