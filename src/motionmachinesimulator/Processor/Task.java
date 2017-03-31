@@ -2,12 +2,11 @@ package motionmachinesimulator.Processor;
 
 import java.util.ArrayList;
 
-/**
- * Created by Sales on 31.03.2017.
- */
-public class Task extends ArrayList<Motion> {
+class Task extends ArrayList<Motion> {
 
-    public Task(){
+    private TASK_STATE state = TASK_STATE.EMPTY;
+
+    Task(){
         fillDebugTask();
     }
 
@@ -44,6 +43,9 @@ public class Task extends ArrayList<Motion> {
         }
     }
 
+    /**
+     * @return sum of length for all motions in task
+     */
     double getWayLength(){
         double taskWayLength = 0.0;
         for(Motion motion: this){
@@ -57,6 +59,24 @@ public class Task extends ArrayList<Motion> {
             motion.currentWayLength = 0.0;
         }
         CurrentPosition.reset();
+    }
+
+    TASK_STATE getState() {
+        return this.state;
+    }
+
+    void setState(TASK_STATE newState) {
+        this.state = newState;
+    }
+
+    enum TASK_STATE {
+        EMPTY,
+        READY_TO_START,
+        ACCELERATING,
+        ON_THE_RUN,
+        DECELERATED,
+        PAUSED,
+        FINISHED
     }
 
 }

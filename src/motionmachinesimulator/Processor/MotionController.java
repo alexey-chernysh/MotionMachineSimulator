@@ -28,7 +28,7 @@ public class MotionController extends ControllerState {
         super();
         ejectFlag = new EjectFlag();
         currentTask = new Task();
-        this.setTaskState(ControllerState.TASK_STATE.READY_TO_START);
+        this.currentTask.setState(Task.TASK_STATE.READY_TO_START);
         controllerThread = new Thread(this);
         controllerThread.start();
     }
@@ -39,7 +39,7 @@ public class MotionController extends ControllerState {
             controllerThread = new Thread(this);
             controllerThread.start();
         }
-        this.setTaskState(TASK_STATE.ON_THE_RUN);
+        this.currentTask.setState(Task.TASK_STATE.ON_THE_RUN);
     }
 
     public void resumeBackwardExecution() {
@@ -48,7 +48,7 @@ public class MotionController extends ControllerState {
             controllerThread = new Thread(this);
             controllerThread.start();
         }
-        this.setTaskState(TASK_STATE.ON_THE_RUN);
+        this.currentTask.setState(Task.TASK_STATE.ON_THE_RUN);
     }
 
     private int intervalInMillis = 1; // min available
@@ -56,7 +56,7 @@ public class MotionController extends ControllerState {
                                               (intervalInMillis/1000.0));
 
     public void pauseExecution() {
-        this.setTaskState(TASK_STATE.PAUSED);
+        this.currentTask.setState(Task.TASK_STATE.PAUSED);
     }
     public void velocityUp() {
         stepSize = stepSize * 1.1;
@@ -85,7 +85,7 @@ public class MotionController extends ControllerState {
                     currentMotionNum--;
                 }
             }
-            this.setTaskState(TASK_STATE.READY_TO_START);
+            this.currentTask.setState(Task.TASK_STATE.READY_TO_START);
             currentTask.reset();
         }while(true);
     }
@@ -97,7 +97,7 @@ public class MotionController extends ControllerState {
         do{ // linear velocity phase
             if(ejectFlag.taskShouldBeEjected()) break;
             double[] relPos;
-            if(this.getTaskState() == TASK_STATE.ON_THE_RUN){
+            if(this.currentTask.getState() == Task.TASK_STATE.ON_THE_RUN){
                 if(this.forwardDirection) relPos = motion.onFastTimerTick(stepSize);
                 else relPos = motion.onFastTimerTick(-stepSize);
                 for(int i=0; i<ControllerSettings.DIM;i++){
