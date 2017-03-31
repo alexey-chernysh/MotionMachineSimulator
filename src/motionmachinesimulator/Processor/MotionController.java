@@ -10,6 +10,7 @@ import java.util.ArrayList;
  *  direction change (forward/backward)
  *  velocity change (acceleration/deceleration)
  */
+
 public class MotionController extends ControllerState {
 
     private ArrayList<Motion> currentTask = new ArrayList<Motion>();
@@ -91,41 +92,18 @@ public class MotionController extends ControllerState {
         stepSize = stepSize * 0.9;
     }
 
-    private Motion currentMotion;
-
     @Override
     public void run() {
-        double[] relPos = new double[ControllerSettings.DIM];
         final int taskSize = currentTask.size();
+        Motion currentMotion;
         double[][] startPos = new double[taskSize][ControllerSettings.DIM];
-        double[] currentAbsPos = new double[ControllerSettings.DIM];
         do{
             int currentMotionNum = 0;
             while((currentMotionNum>=0)&&(currentMotionNum<taskSize)){
+                System.out.println(" Motion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
-                double targetWayLength = currentMotion.wayLength;
-                double currentWayLength;
-                System.out.println(" Motion num =  " + currentMotionNum);
-                do{ // linear velocity phase
-                    if(taskShouldBeEjected()) break;
-                    if(this.getTaskState() == TASK_STATE.ON_THE_RUN){
-                        if(this.forwardDirection) relPos = currentMotion.onFastTimerTick(stepSize);
-                        else relPos = currentMotion.onFastTimerTick(-stepSize);
-                        for(int i=0; i<ControllerSettings.DIM;i++){
-                            currentAbsPos[i] = startPos[currentMotionNum][i] + relPos[i];
-                        }
-                        CurrentPosition.set(currentAbsPos);
-
-                        try {
-                            Thread.sleep(intervalInMillis);
-                        } catch (InterruptedException ie) {
-                            ie.printStackTrace();
-                        }
-
-                    } else System.out.println(" Motion controller empty run ");
-                    currentWayLength = currentMotion.currentWayLength;
-                } while ((currentWayLength>=0.0)&&(currentWayLength<=targetWayLength));
+                motionRun(currentMotion, startPos[currentMotionNum]);
                 if(this.forwardDirection) {
                     currentMotion.currentWayLength = currentMotion.wayLength;
                     currentMotionNum++;
@@ -139,6 +117,32 @@ public class MotionController extends ControllerState {
         }while(true);
     }
 
+    void motionRun(Motion motion, double[] startPos){
+//        double currentStepSize = stepSize;
+        double currentDistanceToTarget = Double.MAX_VALUE;
+        double[] currentAbsPos = new double[ControllerSettings.DIM];
+        do{ // linear velocity phase
+            if(taskShouldBeEjected()) break;
+            double[] relPos;
+            if(this.getTaskState() == TASK_STATE.ON_THE_RUN){
+                if(this.forwardDirection) relPos = motion.onFastTimerTick(stepSize);
+                else relPos = motion.onFastTimerTick(-stepSize);
+                for(int i=0; i<ControllerSettings.DIM;i++){
+                    currentAbsPos[i] = startPos[i] + relPos[i];
+                }
+                CurrentPosition.set(currentAbsPos);
+                currentDistanceToTarget = this.forwardDirection ?
+                        motion.wayLength - motion.currentWayLength :
+                        motion.currentWayLength;
+                try {
+                    Thread.sleep(intervalInMillis);
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            } else System.out.print("+");
+        } while (Math.abs(currentDistanceToTarget) > stepSize);
+    }
+
     private static boolean ejectFlag = false;
     public void ejectTask(){
         ejectFlag = true;
@@ -146,7 +150,7 @@ public class MotionController extends ControllerState {
     private boolean taskShouldBeEjected() {
         boolean result = ejectFlag;
         ejectFlag = false;
-        return ejectFlag;
+        return result;
     }
 
     private void resetTask(){
@@ -160,25 +164,25 @@ public class MotionController extends ControllerState {
         return currentTask;
     }
 
-    public static double getStep4Velocity(double velocity, double timeInterval){
+    static double getStep4Velocity(double velocity, double timeInterval){
         return velocity*timeInterval;
     }
 
-    public static double getStepIncrement4Acceleration(double acceleration, double timeInterval){
+    static double getStepIncrement(double acceleration, double timeInterval){
         double velocityIncrement = acceleration * timeInterval;
         return (velocityIncrement*timeInterval);
     }
 
-    public static double getVelocityChangeTimeLinear(double velocity1, double velocity2, double acceleration){
-        return Math.abs((velocity1 - velocity2)/acceleration);
+    double getTaskWayLength(){
+        double taskWayLength = 0.0;
+        for(Motion motion: currentTask){
+            taskWayLength += motion.wayLength;
+        }
+        return taskWayLength;
     }
 
-    public static double getVelocityChangeDistanceLinear(double velocity1, double velocity2, double acceleration){
-        double time = getVelocityChangeTimeLinear(velocity1, velocity2, acceleration);
-        if(velocity1 < velocity2){ // acceleration
-            return (velocity1*time + acceleration * time * time / 2.0);
-        } else { // deceleration
-            return (velocity1*time - acceleration * time * time / 2.0);
-        }
+    public double getCurrentVelocity() {
+        double velMeterPerSec = stepSize/(intervalInMillis/1000.0);
+        return velMeterPerSec*60*1000; // mm in min
     }
 }

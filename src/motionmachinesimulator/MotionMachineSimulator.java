@@ -6,6 +6,7 @@
 package motionmachinesimulator;
 
 import motionmachinesimulator.Processor.ControllerSettings;
+import motionmachinesimulator.Processor.CurrentPosition;
 import motionmachinesimulator.Processor.MotionController;
 import motionmachinesimulator.Views.TrajectoryView;
 
@@ -27,14 +28,21 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     private JPanel viewPane;
     private JPanel motionPane;
     private JPanel positionPane;
+    private JPanel InfoPanel;
+    private JLabel velocityHeader;
+    private JTextField textVelocity;
+    private JTextField textPositionX;
+    private JTextField textPositionY;
+    private JLabel PositionX;
+    private JLabel PositionY;
 
     Timer timer;
 
     public MotionMachineSimulator() {
         $$$setupUI$$$();
 
-        timer = new Timer(200, this);
-        timer.setInitialDelay(190);
+        timer = new Timer(100, this);
+        timer.setInitialDelay(100);
         timer.start();
 
         setContentPane(contentPane);
@@ -81,6 +89,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
     }
 
     private void createUIComponents() {
@@ -109,22 +118,33 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
     public static void main(String[] args) {
 
-        logSettings();
-
         MotionMachineSimulator dialog = new MotionMachineSimulator();
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
     }
 
-    private static void logSettings() {
-        System.out.println(ControllerSettings.gear_state);
-        System.out.println(ControllerSettings.step_state);
-        System.out.println(ControllerSettings.accuracy_state);
+    public void displayVelocity(int value) {
+        this.textVelocity.setText((new Integer(value)).toString());
+    }
+
+    public void displayPositionX(double value) {
+        this.textPositionX.setText((new Double(value)).toString());
+    }
+
+    public void displayPositionY(double value) {
+        this.textPositionY.setText((new Double(value)).toString());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        int currentVelocity = (int) MotionController.getInstance().getCurrentVelocity();
+        this.displayVelocity(currentVelocity);
+        double[] position = CurrentPosition.get();
+        int x = (int) (position[0] * 1000000.0);
+        int y = (int) (position[1] * 1000000.0);
+        this.displayPositionX(x / 1000.0);
+        this.displayPositionY(y / 1000.0);
         repaint();
     }
 
@@ -173,14 +193,39 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         buttonStop.setText("Stop");
         panel1.add(buttonStop, new com.intellij.uiDesigner.core.GridConstraints(0, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         viewPane = new JPanel();
-        viewPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        viewPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(viewPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         motionPane.setBackground(new Color(-1));
-        viewPane.add(motionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(600, 200), null, null, 1, false));
+        viewPane.add(motionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(600, 200), null, null, 1, false));
         motionPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
         positionPane.setBackground(new Color(-1));
         viewPane.add(positionPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, new Dimension(200, 200), null, null, 1, false));
         positionPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(new Color(-16777216)), null));
+        InfoPanel = new JPanel();
+        InfoPanel.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        viewPane.add(InfoPanel, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        velocityHeader = new JLabel();
+        velocityHeader.setText("Vel");
+        InfoPanel.add(velocityHeader, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(40, -1), null, 0, false));
+        PositionX = new JLabel();
+        PositionX.setText("X, mm");
+        InfoPanel.add(PositionX, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        PositionY = new JLabel();
+        PositionY.setText("Y, mm");
+        InfoPanel.add(PositionY, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        textPositionY = new JTextField();
+        textPositionY.setEditable(false);
+        textPositionY.setText("");
+        InfoPanel.add(textPositionY, new com.intellij.uiDesigner.core.GridConstraints(2, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(60, -1), null, 0, false));
+        textPositionX = new JTextField();
+        textPositionX.setEditable(false);
+        textPositionX.setText("");
+        InfoPanel.add(textPositionX, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_WEST, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(60, -1), null, 0, false));
+        textVelocity = new JTextField();
+        textVelocity.setEditable(false);
+        textVelocity.setHorizontalAlignment(0);
+        textVelocity.setText("");
+        InfoPanel.add(textVelocity, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(60, -1), null, 0, false));
     }
 
     /**
