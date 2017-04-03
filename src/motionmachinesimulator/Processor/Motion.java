@@ -45,4 +45,31 @@ public abstract class Motion {
 
     public abstract double[] paint(Graphics g, double[] fromPoint);
 
+    public void run(double[] startPos){
+        double currentDistanceToTarget = Double.MAX_VALUE;
+        double[] currentAbsPos = new double[ControllerSettings.DIM];
+        MotionController controller = MotionController.getInstance();
+        Task currentTask = MotionController.getInstance().getCurrentTask();
+        double stepSize = MotionController.getInstance().getStepSize();
+        do{ // linear velocity phase
+            if(EjectFlag.taskShouldBeEjected()) break;
+            double[] relPos;
+            if(currentTask.getState() == Task.TASK_STATE.ON_THE_RUN){
+                if(controller.isForwardDirection()) relPos = this.onFastTimerTick(stepSize);
+                else relPos = this.onFastTimerTick(-stepSize);
+                for(int i=0; i<ControllerSettings.DIM;i++){
+                    currentAbsPos[i] = startPos[i] + relPos[i];
+                }
+                CurrentPosition.set(currentAbsPos);
+                currentDistanceToTarget = controller.isForwardDirection() ?
+                        this.wayLength - this.currentWayLength :
+                        this.currentWayLength;
+                try {
+                    Thread.sleep(MotionController.getInstance().getIntervalInMillis());
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            } else System.out.print("+");
+        } while (Math.abs(currentDistanceToTarget) > stepSize);
+    }
 }

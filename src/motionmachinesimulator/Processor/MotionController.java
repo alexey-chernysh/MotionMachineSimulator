@@ -76,7 +76,7 @@ public class MotionController extends ControllerState {
                 System.out.println(" Motion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
-                motionRun(currentMotion, startPos[currentMotionNum]);
+                currentMotion.run(startPos[currentMotionNum]);
                 if(this.forwardDirection) {
                     currentMotion.currentWayLength = currentMotion.wayLength;
                     currentMotionNum++;
@@ -88,32 +88,6 @@ public class MotionController extends ControllerState {
             this.currentTask.setState(Task.TASK_STATE.READY_TO_START);
             currentTask.reset();
         }while(true);
-    }
-
-    void motionRun(Motion motion, double[] startPos){
-//        double currentStepSize = stepSize;
-        double currentDistanceToTarget = Double.MAX_VALUE;
-        double[] currentAbsPos = new double[ControllerSettings.DIM];
-        do{ // linear velocity phase
-            if(ejectFlag.taskShouldBeEjected()) break;
-            double[] relPos;
-            if(this.currentTask.getState() == Task.TASK_STATE.ON_THE_RUN){
-                if(this.forwardDirection) relPos = motion.onFastTimerTick(stepSize);
-                else relPos = motion.onFastTimerTick(-stepSize);
-                for(int i=0; i<ControllerSettings.DIM;i++){
-                    currentAbsPos[i] = startPos[i] + relPos[i];
-                }
-                CurrentPosition.set(currentAbsPos);
-                currentDistanceToTarget = this.forwardDirection ?
-                        motion.wayLength - motion.currentWayLength :
-                        motion.currentWayLength;
-                try {
-                    Thread.sleep(intervalInMillis);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
-            } else System.out.print("+");
-        } while (Math.abs(currentDistanceToTarget) > stepSize);
     }
 
     public Task getCurrentTask() {
@@ -133,4 +107,17 @@ public class MotionController extends ControllerState {
         double velMeterPerSec = stepSize/(intervalInMillis/1000.0);
         return velMeterPerSec*60*1000; // mm in min
     }
+
+    public boolean isForwardDirection() {
+        return forwardDirection;
+    }
+
+    public int getIntervalInMillis() {
+        return intervalInMillis;
+    }
+
+    public double getStepSize() {
+        return stepSize;
+    }
+
 }

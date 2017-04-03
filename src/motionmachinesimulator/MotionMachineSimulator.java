@@ -7,6 +7,7 @@ package motionmachinesimulator;
 
 import motionmachinesimulator.Processor.ControllerSettings;
 import motionmachinesimulator.Processor.CurrentPosition;
+import motionmachinesimulator.Processor.EjectFlag;
 import motionmachinesimulator.Processor.MotionController;
 import motionmachinesimulator.Views.TrajectoryView;
 
@@ -35,6 +36,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     private JTextField textPositionY;
     private JLabel PositionX;
     private JLabel PositionY;
+    private JButton buttonEject;
 
     Timer timer;
 
@@ -72,6 +74,12 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         buttonVelocityDown.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 MotionController.getInstance().velocityDown();
+            }
+        });
+        buttonEject.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EjectFlag.set();
             }
         });
 

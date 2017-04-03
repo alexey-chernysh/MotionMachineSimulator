@@ -1,17 +1,12 @@
 package motionmachinesimulator.Processor;
 
-/**
- * Created by Sales on 31.03.2017.
- */
 public class EjectFlag {
 
-    boolean flag = false;
+    private static boolean flag = false;
 
-    EjectFlag(){}
+    public static void set(){ flag = true;}
 
-    void set(){ flag = true;}
-
-    boolean taskShouldBeEjected(){
+    static boolean taskShouldBeEjected(){
         boolean result = flag;
         flag = false;
         return result;
