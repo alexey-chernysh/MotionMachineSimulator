@@ -56,7 +56,9 @@ public class ControllerSettings {
     public final static double intervalInSec = intervalInMillis/1000.0;
 
     private static double freeRunVelocity = 5.0/60.0; // m/sec for 5.0 m/min
-
+    private static double getStepSizeFreeRun() {
+        return getStep4Velocity(freeRunVelocity);
+    }
     public static double getFreeRunVelocity() {
         return freeRunVelocity;
     }
@@ -74,6 +76,13 @@ public class ControllerSettings {
         return velMeterPerSec*60*1000; // mm in min
     }
 
+    public static double getStepSize(Motion.MOTION_TYPE motion_type) {
+        switch (motion_type){
+            case FREE_RUN: return getStepSizeFreeRun();
+            case WORKING: return getStepSizeWorking();
+            default: return 0.0;
+        }
+    }
     private static double currentStepSIze = 0.0;
     public static void setCurrentStepSIze(double currentStepSIze) {
         ControllerSettings.currentStepSIze = currentStepSIze;

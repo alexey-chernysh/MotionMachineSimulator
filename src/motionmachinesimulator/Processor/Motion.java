@@ -64,7 +64,7 @@ public abstract class Motion {
                 if(controller.isForwardDirection()) relPos = this.onFastTimerTick(currentStepSize);
                 else relPos = this.onFastTimerTick(-currentStepSize);
                 ControllerSettings.setCurrentStepSIze(currentStepSize);
-                double targetStepSize = ControllerSettings.getStepSizeWorking();
+                double targetStepSize = ControllerSettings.getStepSize(motion_type);
                 if(currentStepSize < targetStepSize){
                     currentStepSize += currentStepIncrement;
                     if(currentStepSize > targetStepSize) currentStepSize = targetStepSize;
