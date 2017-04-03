@@ -61,8 +61,10 @@ public abstract class Motion {
             if(EjectFlag.taskShouldBeEjected()) break;
             double[] relPos;
             if(MotionController.getInstance().getCurrentTask().getState() == Task.TASK_STATE.ON_THE_RUN){
+
                 if(controller.isForwardDirection()) relPos = this.onFastTimerTick(currentStepSize);
                 else relPos = this.onFastTimerTick(-currentStepSize);
+
                 ControllerSettings.setCurrentStepSIze(currentStepSize);
                 double targetStepSize = ControllerSettings.getStepSize(motion_type);
                 if(currentStepSize < targetStepSize){
@@ -73,6 +75,7 @@ public abstract class Motion {
                     currentStepSize -= currentStepIncrement;
                     if(currentStepSize < targetStepSize) currentStepSize = targetStepSize;
                 }
+
                 for(int i=0; i<ControllerSettings.DIM;i++){
                     currentAbsPos[i] = startPos[i] + relPos[i];
                 }
@@ -80,12 +83,14 @@ public abstract class Motion {
                 currentDistanceToTarget = controller.isForwardDirection() ?
                         this.wayLength - this.currentWayLength :
                         this.currentWayLength;
-                try {
-                    Thread.sleep(ControllerSettings.intervalInMillis);
-                } catch (InterruptedException ie) {
-                    ie.printStackTrace();
-                }
             } else System.out.print("+");
+
+            try {
+                Thread.sleep(ControllerSettings.intervalInMillis);
+            } catch (InterruptedException ie) {
+                ie.printStackTrace();
+            }
+
         } while (Math.abs(currentDistanceToTarget) > currentStepSize);
         return currentStepSize;
     }
