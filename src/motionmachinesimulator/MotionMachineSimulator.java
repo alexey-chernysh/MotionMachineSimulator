@@ -146,7 +146,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int currentVelocity = (int) MotionController.getInstance().getCurrentVelocity();
+        int currentVelocity = (int) ControllerSettings.getWorkingVelocityMMinMin();
         this.displayVelocity(currentVelocity);
         double[] position = CurrentPosition.get();
         int x = (int) (position[0] * 1000000.0);
@@ -200,6 +200,11 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         buttonStop.setForeground(new Color(-1));
         buttonStop.setText("Stop");
         panel1.add(buttonStop, new com.intellij.uiDesigner.core.GridConstraints(0, 5, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        buttonEject = new JButton();
+        buttonEject.setBackground(new Color(-65536));
+        buttonEject.setForeground(new Color(-1));
+        buttonEject.setText("Button");
+        panel1.add(buttonEject, new com.intellij.uiDesigner.core.GridConstraints(0, 4, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         viewPane = new JPanel();
         viewPane.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         contentPane.add(viewPane, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));

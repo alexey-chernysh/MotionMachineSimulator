@@ -16,17 +16,25 @@ public class MotionController extends ControllerState {
     private Task currentTask;
     private Thread controllerThread;
     private boolean forwardDirection = true;
-    public EjectFlag ejectFlag;
+
+    public void pauseExecution() {
+        this.currentTask.setState(Task.TASK_STATE.PAUSED);
+    }
+    public void velocityUp() {
+        double tmpVelocity = ControllerSettings.getWorkingVelocity();
+        ControllerSettings.setWorkingVelocity(tmpVelocity * 1.1);
+    }
+    public void velocityDown() {
+        double tmpVelocity = ControllerSettings.getWorkingVelocity();
+        ControllerSettings.setWorkingVelocity(tmpVelocity * 0.9);
+    }
 
     private static MotionController ourInstance = new MotionController();
-
     public static MotionController getInstance() {
         return ourInstance;
     }
-
     private MotionController() {
         super();
-        ejectFlag = new EjectFlag();
         currentTask = new Task();
         controllerThread = new Thread(this);
         controllerThread.start();
@@ -51,24 +59,11 @@ public class MotionController extends ControllerState {
         }
     }
 
-    private int intervalInMillis = 1; // min available
-    private double stepSize = getStep4Velocity(ControllerSettings.getWorkingVelocity(),
-                                              (intervalInMillis/1000.0));
-
-    public void pauseExecution() {
-        this.currentTask.setState(Task.TASK_STATE.PAUSED);
-    }
-    public void velocityUp() {
-        stepSize = stepSize * 1.1;
-    }
-    public void velocityDown() {
-        stepSize = stepSize * 0.9;
-    }
-
     @Override
     public void run() {
         final int taskSize = currentTask.size();
         double[][] startPos = new double[taskSize][ControllerSettings.DIM];
+        double stepSize = 0;
         do{
             Motion currentMotion;
             int currentMotionNum = 0;
@@ -76,7 +71,7 @@ public class MotionController extends ControllerState {
                 System.out.println(" Motion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
-                currentMotion.run(startPos[currentMotionNum]);
+                stepSize = currentMotion.run(startPos[currentMotionNum], stepSize);
                 if(this.forwardDirection) {
                     currentMotion.currentWayLength = currentMotion.wayLength;
                     currentMotionNum++;
@@ -94,30 +89,9 @@ public class MotionController extends ControllerState {
         return currentTask;
     }
 
-    static double getStep4Velocity(double velocity, double timeInterval){
-        return velocity*timeInterval;
-    }
-
-    static double getStepIncrement(double acceleration, double timeInterval){
-        double velocityIncrement = acceleration * timeInterval;
-        return (velocityIncrement*timeInterval);
-    }
-
-    public double getCurrentVelocity() {
-        double velMeterPerSec = stepSize/(intervalInMillis/1000.0);
-        return velMeterPerSec*60*1000; // mm in min
-    }
 
     public boolean isForwardDirection() {
-        return forwardDirection;
-    }
-
-    public int getIntervalInMillis() {
-        return intervalInMillis;
-    }
-
-    public double getStepSize() {
-        return stepSize;
+        return this.forwardDirection;
     }
 
 }
