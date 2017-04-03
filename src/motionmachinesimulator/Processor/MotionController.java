@@ -1,7 +1,5 @@
 package motionmachinesimulator.Processor;
 
-import java.util.ArrayList;
-
 /**
  * Created by Sales on 16.02.2017.
  * Functions needed to be implemented:
@@ -17,18 +15,6 @@ public class MotionController extends ControllerState {
     private Thread controllerThread;
     private boolean forwardDirection = true;
 
-    public void pauseExecution() {
-        this.currentTask.setState(Task.TASK_STATE.PAUSED);
-    }
-    public void velocityUp() {
-        double tmpVelocity = ControllerSettings.getWorkingVelocity();
-        ControllerSettings.setWorkingVelocity(tmpVelocity * 1.1);
-    }
-    public void velocityDown() {
-        double tmpVelocity = ControllerSettings.getWorkingVelocity();
-        ControllerSettings.setWorkingVelocity(tmpVelocity * 0.9);
-    }
-
     private static MotionController ourInstance = new MotionController();
     public static MotionController getInstance() {
         return ourInstance;
@@ -40,19 +26,38 @@ public class MotionController extends ControllerState {
         controllerThread.start();
     }
 
+    public void pauseExecution() {
+        this.currentTask.setState(Task.TASK_STATE.PAUSED);
+    }
+
+    public Task getCurrentTask() {
+        return currentTask;
+    }
+
+    public boolean isForwardDirection() {
+        return this.forwardDirection;
+    }
+
+    public void velocityUp() {
+        double tmpVelocity = ControllerSettings.getWorkingVelocity();
+        ControllerSettings.setWorkingVelocity(tmpVelocity * 1.1);
+    }
+    public void velocityDown() {
+        double tmpVelocity = ControllerSettings.getWorkingVelocity();
+        ControllerSettings.setWorkingVelocity(tmpVelocity * 0.9);
+    }
+
     public void resumeForwardExecution() {
         forwardDirection = true;
-        checkThresdState();
+        checkThreadState();
         this.currentTask.setState(Task.TASK_STATE.ON_THE_RUN);
     }
-
     public void resumeBackwardExecution() {
         forwardDirection = false;
-        checkThresdState();
+        checkThreadState();
         this.currentTask.setState(Task.TASK_STATE.ON_THE_RUN);
     }
-
-    private void checkThresdState(){
+    private void checkThreadState(){
         if(!controllerThread.isAlive()) {
             controllerThread = new Thread(this);
             controllerThread.start();
@@ -83,15 +88,6 @@ public class MotionController extends ControllerState {
             this.currentTask.setState(Task.TASK_STATE.READY_TO_START);
             currentTask.reset();
         }while(true);
-    }
-
-    public Task getCurrentTask() {
-        return currentTask;
-    }
-
-
-    public boolean isForwardDirection() {
-        return this.forwardDirection;
     }
 
 }

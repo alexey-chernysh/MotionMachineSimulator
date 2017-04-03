@@ -146,7 +146,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int currentVelocity = (int) ControllerSettings.getWorkingVelocityMMinMin();
+        int currentVelocity = (int) ControllerSettings.getCurrentVelocityMMinMin();
         this.displayVelocity(currentVelocity);
         double[] position = CurrentPosition.get();
         int x = (int) (position[0] * 1000000.0);

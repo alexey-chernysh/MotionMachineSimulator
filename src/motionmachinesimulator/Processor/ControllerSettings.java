@@ -56,6 +56,7 @@ public class ControllerSettings {
     public final static double intervalInSec = intervalInMillis/1000.0;
 
     private static double freeRunVelocity = 5.0/60.0; // m/sec for 5.0 m/min
+
     public static double getFreeRunVelocity() {
         return freeRunVelocity;
     }
@@ -69,8 +70,21 @@ public class ControllerSettings {
         return getStep4Velocity(workingVelocity);
     }
     public static double getWorkingVelocityMMinMin() {
-        double velMeterPerSec = ControllerSettings.getWorkingVelocity();
+        double velMeterPerSec = getWorkingVelocity();
         return velMeterPerSec*60*1000; // mm in min
+    }
+
+    private static double currentStepSIze = 0.0;
+    public static void setCurrentStepSIze(double currentStepSIze) {
+        ControllerSettings.currentStepSIze = currentStepSIze;
+    }
+
+    public static double getCurrentVelocity() {
+        return getVelocity4Step(currentStepSIze);
+    }
+    public static double getCurrentVelocityMMinMin() {
+        double velMeterPerSec = ControllerSettings.getCurrentVelocity();
+        return velMeterPerSec * 60 * 1000; // mm in min
     }
 
     private static double acceleration = 0.5/60.0; // m/sec/sec
@@ -87,6 +101,9 @@ public class ControllerSettings {
 
     public static double getStep4Velocity(double velocity){
         return velocity*intervalInSec;
+    }
+    private static double getVelocity4Step(double stepSIze) {
+        return stepSIze/intervalInSec;
     }
 
 }
