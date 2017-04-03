@@ -23,22 +23,29 @@ class Task extends ArrayList<Motion> {
         double[] point6 = {-0.01, -0.01, 0.0};
         double[] center3 = {-0.01, 0.0, 0.0};
         double[] point7 = {-0.045, 0.0, 0.0};
+        double[] point8 = {0.005, -0.005, 0.0};
+
+        Motion.MOTION_TYPE t1 = Motion.MOTION_TYPE.WORKING;
+        Motion.MOTION_TYPE t2 = Motion.MOTION_TYPE.FREE_RUN;
+
         try {
             double v = ControllerSettings.getWorkingVelocity();
-            StraightMotion straightMotion1 = new StraightMotion(point1, v, v, v);
+            StraightMotion straightMotion1 = new StraightMotion(point1, t1, v, v);
             this.add(straightMotion1);
-            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW, v, v, v);
+            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW, t1, v, v);
             this.add(arcMotion1);
-            StraightMotion straightMotion2 = new StraightMotion(point3, v, v, v);
+            StraightMotion straightMotion2 = new StraightMotion(point3, t1, v, v);
             this.add(straightMotion2);
-            ArcMotion arcMotion2 = new ArcMotion(point4, center2, ArcMotion.DIRECTION.CW, v, v, v);
+            ArcMotion arcMotion2 = new ArcMotion(point4, center2, ArcMotion.DIRECTION.CW, t1, v, v);
             this.add(arcMotion2);
-            StraightMotion straightMotion3 = new StraightMotion(point5, v, v, v);
+            StraightMotion straightMotion3 = new StraightMotion(point5, t1, v, v);
             this.add(straightMotion3);
-            ArcMotion arcMotion3 = new ArcMotion(point6, center3, ArcMotion.DIRECTION.CW, v, v, v);
+            ArcMotion arcMotion3 = new ArcMotion(point6, center3, ArcMotion.DIRECTION.CW, t1, v, v);
             this.add(arcMotion3);
-            StraightMotion straightMotion4 = new StraightMotion(point7, v, v, v);
+            StraightMotion straightMotion4 = new StraightMotion(point7, t1, v, v);
             this.add(straightMotion4);
+            StraightMotion straightMotion5 = new StraightMotion(point8, t2, v, v);
+            this.add(straightMotion5);
             this.setState(TASK_STATE.READY_TO_START);
         } catch (Exception e) {
             e.printStackTrace();

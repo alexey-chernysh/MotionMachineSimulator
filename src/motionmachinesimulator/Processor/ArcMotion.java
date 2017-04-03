@@ -26,10 +26,10 @@ public class ArcMotion extends Motion {
     public ArcMotion(double[] change,
                      double[] center,
                      ArcMotion.DIRECTION dir,
-                     double motionVelocity,
+                     MOTION_TYPE type,
                      double startVel,
                      double endVel) throws Exception {
-        super(change, motionVelocity, startVel, endVel);
+        super(change, type, startVel, endVel);
 
         this.centerOffset = center; // should be non zero for arc motion
         this.direction = dir;

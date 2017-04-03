@@ -12,6 +12,7 @@ public abstract class Motion {
     protected double wayLengthXY;
     protected double currentWayLength;
 
+    private MOTION_TYPE motion_type;
     private double startVelocity;
     private double endVelocity;
 
@@ -19,7 +20,7 @@ public abstract class Motion {
      * @param endPoint - relative position change after motion
      */
     Motion(double[] endPoint,
-           double motionVelocity,
+           MOTION_TYPE type,
            double startVel,
            double endVel) throws Exception {
         this.relativeEndPoint = endPoint;
@@ -35,6 +36,8 @@ public abstract class Motion {
             this.currentRelativePosition[i] = 0.0;
 
         this.currentWayLength = 0.0;
+
+        this.motion_type = type;
 
         if(startVel >= 0.0) this.startVelocity = startVel;
         else throw new Exception("Velocity should be positive");
@@ -85,5 +88,10 @@ public abstract class Motion {
             } else System.out.print("+");
         } while (Math.abs(currentDistanceToTarget) > currentStepSize);
         return currentStepSize;
+    }
+
+    enum MOTION_TYPE {
+        FREE_RUN,
+        WORKING
     }
 }
