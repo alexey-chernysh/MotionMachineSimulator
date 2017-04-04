@@ -115,4 +115,14 @@ public class ControllerSettings {
         return stepSIze/intervalInSec;
     }
 
+    public static double getWayLength4StepChange(double stepSize1, double stepSize2) {
+        double stepDifference = stepSize1 - stepSize2;
+        double stepIncrement = 1.0; //getStepIncrement4Acceleration();
+        /*
+            sum of i for i from 1 to N is N*(N+1)/2
+         */
+        double nStep = stepDifference/stepIncrement;
+        double result = stepSize1 * (Math.abs(nStep) + 1) + stepIncrement*nStep*nStep/2;
+        return result;
+    }
 }

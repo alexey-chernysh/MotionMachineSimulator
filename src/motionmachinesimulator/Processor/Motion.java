@@ -13,8 +13,10 @@ public abstract class Motion {
     protected double currentWayLength;
 
     private MOTION_TYPE motion_type;
-    private double startVelocity;
-    private double endVelocity;
+    private double startStepSize;
+    private double startAccelerationWayLength;
+    private double endStepSize;
+    private double endDecelerationWayLength;
 
     /**
      * @param endPoint - relative position change after motion
@@ -39,10 +41,13 @@ public abstract class Motion {
 
         this.motion_type = type;
 
-        if(startVel >= 0.0) this.startVelocity = startVel;
+        if(startVel >= 0.0) this.startStepSize = ControllerSettings.getStep4Velocity(startVel);
         else throw new Exception("Velocity should be positive");
 
-        if(endVel >= 0.0) this.endVelocity = endVel;
+        if(endVel >= 0.0){
+            this.endStepSize = ControllerSettings.getStep4Velocity(endVel);
+            this.endDecelerationWayLength = ControllerSettings.getWayLength4StepChange(ControllerSettings.getStepSize(this.motion_type), this.endStepSize);
+        }
         else throw new Exception("Velocity should be positive");
 
     }

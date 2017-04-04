@@ -1,8 +1,9 @@
+/*
+ * Copyright (c) 2017. Alexey Chernysh, Russia, Krasnoyarsk
+ */
+
 package motionmachinesimulator.Processor;
 
-/**
- * Created by Sales on 28.03.2017.
- */
 public class CurrentPosition {
 
     private static double x;
