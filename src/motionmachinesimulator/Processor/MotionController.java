@@ -68,7 +68,6 @@ public class MotionController extends ControllerState {
     public void run() {
         final int taskSize = currentTask.size();
         double[][] startPos = new double[taskSize][ControllerSettings.DIM];
-        double stepSize = 0;
         do{
             Motion currentMotion;
             int currentMotionNum = 0;
@@ -76,7 +75,7 @@ public class MotionController extends ControllerState {
                 System.out.println(" Motion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
-                stepSize = currentMotion.run(startPos[currentMotionNum], stepSize);
+                currentMotion.run(startPos[currentMotionNum]);
                 if(this.forwardDirection) {
                     currentMotion.currentWayLength = currentMotion.wayLength;
                     currentMotionNum++;

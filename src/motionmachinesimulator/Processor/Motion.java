@@ -57,21 +57,25 @@ public abstract class Motion {
 
     public abstract double[] paint(Graphics g, double[] fromPoint);
 
-    public double run(double[] startPos, double initialStepSize){
+    public void run(double[] startPos){
         double currentDistanceToTarget = Double.MAX_VALUE;
         double[] currentAbsPos = new double[ControllerSettings.DIM];
         MotionController controller = MotionController.getInstance();
-        double currentStepSize = initialStepSize;
+        double currentStepSize = controller.isForwardDirection() ? this.startStepSize : this.endStepSize;
         double currentStepIncrement = ControllerSettings.getStepIncrement4Acceleration();
         do{ // linear velocity phase
-            if(EjectFlag.taskShouldBeEjected()) break;
+            if(EjectFlag.taskShouldBeEjected()) break;  // TODO change EjectFlag algorithm. wrong operation
             double[] relPos;
             if(MotionController.getInstance().getCurrentTask().getState() == Task.TASK_STATE.ON_THE_RUN){
 
                 if(controller.isForwardDirection()) relPos = this.onFastTimerTick(currentStepSize);
                 else relPos = this.onFastTimerTick(-currentStepSize);
-
+                for(int i=0; i<ControllerSettings.DIM;i++){
+                    currentAbsPos[i] = startPos[i] + relPos[i];
+                }
+                CurrentPosition.set(currentAbsPos);
                 ControllerSettings.setCurrentStepSIze(currentStepSize);
+
                 double targetStepSize = ControllerSettings.getStepSize(motion_type);
                 if(currentStepSize < targetStepSize){
                     currentStepSize += currentStepIncrement;
@@ -82,13 +86,11 @@ public abstract class Motion {
                     if(currentStepSize < targetStepSize) currentStepSize = targetStepSize;
                 }
 
-                for(int i=0; i<ControllerSettings.DIM;i++){
-                    currentAbsPos[i] = startPos[i] + relPos[i];
-                }
-                CurrentPosition.set(currentAbsPos);
-                currentDistanceToTarget = controller.isForwardDirection() ?
-                        this.wayLength - this.currentWayLength :
-                        this.currentWayLength;
+                if(controller.isForwardDirection()){
+                    currentDistanceToTarget = this.wayLength - this.currentWayLength;
+                } else {
+                    currentDistanceToTarget = this.currentWayLength;
+                };
             } else System.out.print("+");
 
             try {
@@ -98,7 +100,6 @@ public abstract class Motion {
             }
 
         } while (Math.abs(currentDistanceToTarget) > currentStepSize);
-        return currentStepSize;
     }
 
     enum MOTION_TYPE {

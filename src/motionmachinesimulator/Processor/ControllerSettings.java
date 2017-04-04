@@ -117,7 +117,8 @@ public class ControllerSettings {
 
     public static double getWayLength4StepChange(double stepSize1, double stepSize2) {
         double stepDifference = stepSize2 - stepSize1;
-        double stepIncrement = 1.0; //getStepIncrement4Acceleration();
+        double stepIncrement = getStepIncrement4Acceleration();
+//        double stepIncrement = 1.0;   // for junit test1 only
         /*
             sum of i for i from 1 to N is N*(N+1)/2
          */
