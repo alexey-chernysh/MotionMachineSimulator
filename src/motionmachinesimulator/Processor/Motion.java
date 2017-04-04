@@ -41,14 +41,15 @@ public abstract class Motion {
 
         this.motion_type = type;
 
-        if(startVel >= 0.0) this.startStepSize = ControllerSettings.getStep4Velocity(startVel);
-        else throw new Exception("Velocity should be positive");
+        if(startVel >= 0.0){
+            this.startStepSize = ControllerSettings.getStep4Velocity(startVel);
+            this.startAccelerationWayLength = ControllerSettings.getWayLength4StepChange(ControllerSettings.getStepSize(this.motion_type), startVel);
+        } else throw new Exception("Velocity should be positive");
 
         if(endVel >= 0.0){
             this.endStepSize = ControllerSettings.getStep4Velocity(endVel);
-            this.endDecelerationWayLength = ControllerSettings.getWayLength4StepChange(ControllerSettings.getStepSize(this.motion_type), this.endStepSize);
-        }
-        else throw new Exception("Velocity should be positive");
+            this.endDecelerationWayLength = ControllerSettings.getWayLength4StepChange(ControllerSettings.getStepSize(this.motion_type), endVel);
+        } else throw new Exception("Velocity should be positive");
 
     }
 
