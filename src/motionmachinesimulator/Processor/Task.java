@@ -81,9 +81,7 @@ class Task extends ArrayList<Motion> {
     enum TASK_STATE {
         EMPTY,
         READY_TO_START,
-        ACCELERATING,
         ON_THE_RUN,
-        DECELERATING,
         PAUSED,
         FINISHED
     }
