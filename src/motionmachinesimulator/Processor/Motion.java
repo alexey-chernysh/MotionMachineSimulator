@@ -57,6 +57,8 @@ public abstract class Motion {
             System.out.println("End deceleration way length = " + this.endDecelerationWayLength + " m.");
         } else throw new Exception("Velocity should be positive");
 
+        this.phase = MOTION_PHASE.START_VELOCITY_CHANGE;
+
     }
 
     abstract double[] onFastTimerTick(double dl); //return new relative position
@@ -73,10 +75,8 @@ public abstract class Motion {
         double targetStepSize = ControllerSettings.getStepSize(motion_type);
         double currentStepSize;
         if(controller.isForwardDirection()){
-            this.phase = MOTION_PHASE.START_VELOCITY_CHANGE;
             currentStepSize =  this.startStepSize;
         } else {
-            this.phase = MOTION_PHASE.END_VELOCITY_CHANGE;
             currentStepSize = this.endStepSize;
         }
         do{
@@ -115,7 +115,6 @@ public abstract class Motion {
                             targetStepSize = this.startStepSize;
                             if(currentStepSize <= targetStepSize){
                                 currentStepSize = targetStepSize;
-                                currentStepIncrement = 0.0;
                             }
                         }
                         break;
@@ -138,7 +137,6 @@ public abstract class Motion {
                             targetStepSize = this.endStepSize;
                             if(currentStepSize >= targetStepSize){
                                 currentStepSize = targetStepSize;
-                                currentStepIncrement = 0.0;
                             }
                         } else {
                             targetStepSize = ControllerSettings.getStepSize(motion_type);
@@ -150,6 +148,7 @@ public abstract class Motion {
                         break;
                     default:
                 }
+
             } else System.out.print("+");
 
             try {

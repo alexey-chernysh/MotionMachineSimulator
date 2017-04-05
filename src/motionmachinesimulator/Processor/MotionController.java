@@ -15,6 +15,9 @@ public class MotionController extends Thread {
     private Thread controllerThread;
     private boolean forwardDirection = true;
 
+    private double currentStepSize;
+    private double targetStepSize;
+
     private static MotionController ourInstance = new MotionController();
 
     public static MotionController getInstance() {
