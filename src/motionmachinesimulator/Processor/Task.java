@@ -29,7 +29,7 @@ class Task extends ArrayList<Motion> {
         Motion.MOTION_TYPE t2 = Motion.MOTION_TYPE.FREE_RUN;
 
         try {
-            double v = 0.1/60.0;
+            double v = ControllerSettings.getStartVelocity();
             StraightMotion straightMotion1 = new StraightMotion(point1, t1, v, v);
             this.add(straightMotion1);
             ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW, t1, v, v);

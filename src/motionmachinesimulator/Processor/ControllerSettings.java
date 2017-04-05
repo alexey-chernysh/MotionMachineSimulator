@@ -55,8 +55,11 @@ public class ControllerSettings {
     public final static int intervalInMillis = 1; // min available
     public final static double intervalInSec = intervalInMillis/1000.0;
 
+    private static double startVelocity = 0.1/60.0; // m/sec 100 mm in  min
+    public static double getStartVelocity(){ return startVelocity; }
+
     private static double freeRunVelocity = 5.0/60.0; // m/sec for 5.0 m/min
-    private static double getStepSizeFreeRun() {
+    public static double getStepSizeFreeRun() {
         return getStep4Velocity(freeRunVelocity);
     }
     public static double getFreeRunVelocity() {
@@ -96,9 +99,12 @@ public class ControllerSettings {
         return velMeterPerSec * 60 * 1000; // mm in min
     }
 
-    private static double acceleration = 0.35/60.0; // m/sec/sec
+    private static double acceleration = 0.01; // m/sec/sec
     public static double getAcceleration() {
         return acceleration;
+    }
+    public static void setAcceleration(double value) {
+        acceleration = value;
     }
     public static double getStepIncrement4Acceleration(){
         double velocityIncrement = acceleration * intervalInSec;
