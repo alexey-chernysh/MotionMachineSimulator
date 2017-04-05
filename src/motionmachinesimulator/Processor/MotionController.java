@@ -9,13 +9,14 @@ package motionmachinesimulator.Processor;
  *  velocity change (acceleration/deceleration)
  */
 
-public class MotionController extends ControllerState {
+public class MotionController extends Thread {
 
     private Task currentTask;
     private Thread controllerThread;
     private boolean forwardDirection = true;
 
     private static MotionController ourInstance = new MotionController();
+
     public static MotionController getInstance() {
         return ourInstance;
     }
@@ -26,16 +27,8 @@ public class MotionController extends ControllerState {
         controllerThread.start();
     }
 
-    public void pauseExecution() {
-        this.currentTask.setState(Task.TASK_STATE.PAUSED);
-    }
-
     public Task getCurrentTask() {
         return currentTask;
-    }
-
-    public boolean isForwardDirection() {
-        return this.forwardDirection;
     }
 
     public void velocityUp() {
@@ -47,6 +40,9 @@ public class MotionController extends ControllerState {
         ControllerSettings.setWorkingVelocity(tmpVelocity * 0.9);
     }
 
+    public void pauseExecution() {
+        this.currentTask.setState(Task.TASK_STATE.PAUSED);
+    }
     public void resumeForwardExecution() {
         forwardDirection = true;
         checkThreadState();
@@ -87,6 +83,10 @@ public class MotionController extends ControllerState {
             this.currentTask.setState(Task.TASK_STATE.READY_TO_START);
             currentTask.reset();
         }while(true);
+    }
+
+    public boolean isForwardDirection() {
+        return this.forwardDirection;
     }
 
 }

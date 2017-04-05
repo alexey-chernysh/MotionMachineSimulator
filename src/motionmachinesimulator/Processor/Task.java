@@ -9,7 +9,7 @@ class Task extends ArrayList<Motion> {
     Task(){
         fillDebugTask();
         state = TASK_STATE.EMPTY;
-    }
+        System.out.println("Task way length = " + this.getWayLength() + " m.");    }
 
     private void fillDebugTask(){
         // debug sequence
@@ -55,7 +55,7 @@ class Task extends ArrayList<Motion> {
     /**
      * @return sum of length for all motions in task
      */
-    double getWayLength(){
+    private double getWayLength(){
         double taskWayLength = 0.0;
         for(Motion motion: this){
             taskWayLength += motion.wayLength;
@@ -82,8 +82,7 @@ class Task extends ArrayList<Motion> {
         EMPTY,
         READY_TO_START,
         ON_THE_RUN,
-        PAUSED,
-        FINISHED
+        PAUSED
     }
 
 }
