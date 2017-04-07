@@ -3,6 +3,12 @@ package motionmachinesimulator.Processor;
 import java.awt.*;
 
 public abstract class Motion {
+    // environment access
+    private MotionController controller;
+    private Task task;
+
+    // global constants
+    private double systemStepIncrement;
 
     // general params
     protected double[] relativeEndPoint; // all in meters
@@ -46,14 +52,14 @@ public abstract class Motion {
         if(startVel >= 0.0){
             this.startStepSize = ControllerSettings.getStep4Velocity(startVel);
             this.startAccelerationWayLength
-                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getStepSize(this.motion_type), startStepSize);
+                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getTargetStepSize(this.motion_type), startStepSize);
             System.out.println("Start acceleration way length = " + this.startAccelerationWayLength + " m.");
         } else throw new Exception("Velocity should be positive");
 
         if(endVel >= 0.0){
             this.endStepSize = ControllerSettings.getStep4Velocity(endVel);
             this.endDecelerationWayLength
-                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getStepSize(this.motion_type), endStepSize);
+                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getTargetStepSize(this.motion_type), endStepSize);
             System.out.println("End deceleration way length = " + this.endDecelerationWayLength + " m.");
         } else throw new Exception("Velocity should be positive");
 
@@ -66,19 +72,21 @@ public abstract class Motion {
     public abstract double[] paint(Graphics g, double[] fromPoint);
 
     public void run(double[] startPos){
-        final MotionController controller = MotionController.getInstance();
-        final Task task = controller.getCurrentTask();
+        controller = MotionController.getInstance();
+        task = controller.getCurrentTask();
+        systemStepIncrement = ControllerSettings.getStepIncrement4Acceleration();
+
         double currentDistanceToTarget = Double.MAX_VALUE;
         double[] currentAbsPos = new double[ControllerSettings.DIM];
-        final double systemStepIncrement = ControllerSettings.getStepIncrement4Acceleration();
-        double currentStepIncrement = systemStepIncrement;
-        double targetStepSize = ControllerSettings.getStepSize(motion_type);
+        double targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
         double currentStepSize;
+
         if(controller.isForwardDirection()){
             currentStepSize =  this.startStepSize;
         } else {
             currentStepSize = this.endStepSize;
         }
+
         do{
             if(EjectFlag.taskShouldBeEjected()) break;  // TODO change EjectFlag algorithm. wrong operation
             double[] relPos;
@@ -98,15 +106,15 @@ public abstract class Motion {
                     currentDistanceToTarget = this.currentWayLength;
                 };
 
-                if(currentStepSize < targetStepSize) currentStepSize += currentStepIncrement;
-                if(currentStepSize > targetStepSize) currentStepSize -= currentStepIncrement;
+                if(currentStepSize < targetStepSize) currentStepSize += systemStepIncrement;
+                if(currentStepSize > targetStepSize) currentStepSize -= systemStepIncrement;
 
                 switch (this.phase){
                     case PAUSED:
                         break;
                     case START_VELOCITY_CHANGE:
                         if(controller.isForwardDirection()){
-                            targetStepSize = ControllerSettings.getStepSize(motion_type);
+                            targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
                             if(currentStepSize >= targetStepSize){
                                 currentStepSize = targetStepSize;
                                 this.phase = MOTION_PHASE.CONSTANT_VELOCITY;
@@ -119,7 +127,7 @@ public abstract class Motion {
                         }
                         break;
                     case CONSTANT_VELOCITY:
-                        targetStepSize = ControllerSettings.getStepSize(motion_type);
+                        targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
                         if(controller.isForwardDirection()){
                             if(currentDistanceToTarget <= endDecelerationWayLength){
                                 this.phase = MOTION_PHASE.END_VELOCITY_CHANGE;
@@ -139,7 +147,7 @@ public abstract class Motion {
                                 currentStepSize = targetStepSize;
                             }
                         } else {
-                            targetStepSize = ControllerSettings.getStepSize(motion_type);
+                            targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
                             if(currentStepSize <= targetStepSize){
                                 currentStepSize = targetStepSize;
                                 this.phase = MOTION_PHASE.CONSTANT_VELOCITY;

@@ -11,12 +11,9 @@ package motionmachinesimulator.Processor;
 
 public class MotionController extends Thread {
 
-    private Task currentTask;
+    private final Task currentTask;
     private Thread controllerThread;
     private boolean forwardDirection = true;
-
-    private double currentStepSize;
-    private double targetStepSize;
 
     private static MotionController ourInstance = new MotionController();
 
@@ -35,12 +32,10 @@ public class MotionController extends Thread {
     }
 
     public void velocityUp() {
-        double tmpVelocity = ControllerSettings.getWorkingVelocity();
-        ControllerSettings.setWorkingVelocity(tmpVelocity * 1.1);
+        ControllerSettings.setWorkingVelocity(ControllerSettings.getWorkingVelocity() * 1.05);
     }
     public void velocityDown() {
-        double tmpVelocity = ControllerSettings.getWorkingVelocity();
-        ControllerSettings.setWorkingVelocity(tmpVelocity * 0.9);
+        ControllerSettings.setWorkingVelocity(ControllerSettings.getWorkingVelocity() * 0.95);
     }
 
     public void pauseExecution() {
@@ -71,19 +66,13 @@ public class MotionController extends Thread {
             Motion currentMotion;
             int currentMotionNum = 0;
             while((currentMotionNum>=0)&&(currentMotionNum<taskSize)){
-                System.out.println(" Motion num =  " + currentMotionNum);
+                System.out.println("Debug message: Motion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
                 currentMotion.run(startPos[currentMotionNum]);
-                if(this.forwardDirection) {
-                    currentMotion.currentWayLength = currentMotion.wayLength;
-                    currentMotionNum++;
-                } else {
-                    currentMotion.currentWayLength = 0.0;
-                    currentMotionNum--;
-                }
+                if(this.forwardDirection) currentMotionNum++;
+                else currentMotionNum--;
             }
-            this.currentTask.setState(Task.TASK_STATE.READY_TO_START);
             currentTask.reset();
         }while(true);
     }

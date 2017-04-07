@@ -68,6 +68,7 @@ class Task extends ArrayList<Motion> {
             motion.currentWayLength = 0.0;
         }
         CurrentPosition.reset();
+        this.setState(Task.TASK_STATE.READY_TO_START);
     }
 
     TASK_STATE getState() {

@@ -79,7 +79,7 @@ public class ControllerSettings {
         return velMeterPerSec*60*1000; // mm in min
     }
 
-    public static double getStepSize(Motion.MOTION_TYPE motion_type) {
+    public static double getTargetStepSize(Motion.MOTION_TYPE motion_type) {
         switch (motion_type){
             case FREE_RUN: return getStepSizeFreeRun();
             case WORKING: return getStepSizeWorking();
