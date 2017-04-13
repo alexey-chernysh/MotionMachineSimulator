@@ -2,7 +2,7 @@ package motionmachinesimulator.Processor;
 
 import java.util.ArrayList;
 
-class Task extends ArrayList<Motion> {
+class Task extends ArrayList<CNCMotion> {
 
     private TASK_STATE state;
 
@@ -25,26 +25,26 @@ class Task extends ArrayList<Motion> {
         double[] point7 = {-0.045, 0.0, 0.0};
         double[] point8 = {0.005, -0.005, 0.0};
 
-        Motion.MOTION_TYPE t1 = Motion.MOTION_TYPE.WORKING;
-        Motion.MOTION_TYPE t2 = Motion.MOTION_TYPE.FREE_RUN;
+        CNCMotion.MOTION_TYPE t1 = CNCMotion.MOTION_TYPE.WORKING;
+        CNCMotion.MOTION_TYPE t2 = CNCMotion.MOTION_TYPE.FREE_RUN;
 
         try {
             double v = ControllerSettings.getStartVelocity();
-            StraightMotion straightMotion1 = new StraightMotion(point1, t1, v, v);
+            CNCMotionStraight straightMotion1 = new CNCMotionStraight(point1, t1, v, v);
             this.add(straightMotion1);
-            ArcMotion arcMotion1 = new ArcMotion(point2, center1, ArcMotion.DIRECTION.CW, t1, v, v);
+            CNCMotionArc arcMotion1 = new CNCMotionArc(point2, center1, CNCMotionArc.DIRECTION.CW, t1, v, v);
             this.add(arcMotion1);
-            StraightMotion straightMotion2 = new StraightMotion(point3, t1, v, v);
+            CNCMotionStraight straightMotion2 = new CNCMotionStraight(point3, t1, v, v);
             this.add(straightMotion2);
-            ArcMotion arcMotion2 = new ArcMotion(point4, center2, ArcMotion.DIRECTION.CW, t1, v, v);
+            CNCMotionArc arcMotion2 = new CNCMotionArc(point4, center2, CNCMotionArc.DIRECTION.CW, t1, v, v);
             this.add(arcMotion2);
-            StraightMotion straightMotion3 = new StraightMotion(point5, t1, v, v);
+            CNCMotionStraight straightMotion3 = new CNCMotionStraight(point5, t1, v, v);
             this.add(straightMotion3);
-            ArcMotion arcMotion3 = new ArcMotion(point6, center3, ArcMotion.DIRECTION.CW, t1, v, v);
+            CNCMotionArc arcMotion3 = new CNCMotionArc(point6, center3, CNCMotionArc.DIRECTION.CW, t1, v, v);
             this.add(arcMotion3);
-            StraightMotion straightMotion4 = new StraightMotion(point7, t1, v, v);
+            CNCMotionStraight straightMotion4 = new CNCMotionStraight(point7, t1, v, v);
             this.add(straightMotion4);
-            StraightMotion straightMotion5 = new StraightMotion(point8, t2, v, v);
+            CNCMotionStraight straightMotion5 = new CNCMotionStraight(point8, t2, v, v);
             this.add(straightMotion5);
             this.setState(TASK_STATE.READY_TO_START);
         } catch (Exception e) {
@@ -57,14 +57,14 @@ class Task extends ArrayList<Motion> {
      */
     private double getWayLength(){
         double taskWayLength = 0.0;
-        for(Motion motion: this){
+        for(CNCMotion motion: this){
             taskWayLength += motion.wayLength;
         }
         return taskWayLength;
     }
 
     void reset(){
-        for(Motion motion: this){
+        for(CNCMotion motion: this){
             motion.currentWayLength = 0.0;
         }
         CurrentPosition.reset();

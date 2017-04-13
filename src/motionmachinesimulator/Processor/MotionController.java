@@ -63,10 +63,10 @@ public class MotionController extends Thread {
         final int taskSize = currentTask.size();
         double[][] startPos = new double[taskSize][ControllerSettings.DIM];
         do{
-            Motion currentMotion;
+            CNCMotion currentMotion;
             int currentMotionNum = 0;
             while((currentMotionNum>=0)&&(currentMotionNum<taskSize)){
-                System.out.println("Debug message: Motion num =  " + currentMotionNum);
+                System.out.println("Debug message: CNCMotion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
                 currentMotion.run(startPos[currentMotionNum]);

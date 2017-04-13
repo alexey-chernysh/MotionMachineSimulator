@@ -33,10 +33,10 @@ public class TrajectoryView {
 
     public static void paint(Graphics g){
         MotionController mc = MotionController.getInstance();
-        ArrayList<Motion> task = mc.getCurrentTask();
+        ArrayList<CNCMotion> task = mc.getCurrentTask();
         //  draw trajectory
         double[] startPoint = {0.0, 0.0, 0.0};
-        for(Motion currentMotion : task){
+        for(CNCMotion currentMotion : task){
             startPoint = currentMotion.paint(g, startPoint);
         }
         // draw current position

@@ -7,7 +7,6 @@ package motionmachinesimulator;
 
 import motionmachinesimulator.Processor.ControllerSettings;
 import motionmachinesimulator.Processor.CurrentPosition;
-import motionmachinesimulator.Processor.EjectFlag;
 import motionmachinesimulator.Processor.MotionController;
 import motionmachinesimulator.Views.TrajectoryView;
 
@@ -79,7 +78,6 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         buttonEject.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                EjectFlag.set();
             }
         });
 

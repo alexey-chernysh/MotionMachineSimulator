@@ -13,15 +13,15 @@ import java.awt.*;
  * @author alexey
  */
 
-public class StraightMotion extends Motion {
+public class CNCMotionStraight extends CNCMotion {
 
     //general vars
     private double[] K = new double[ControllerSettings.DIM];
 
-    StraightMotion(double[] change,
-                   MOTION_TYPE type,
-                   double startVel,
-                   double endVel) throws Exception {
+    CNCMotionStraight(double[] change,
+                      MOTION_TYPE type,
+                      double startVel,
+                      double endVel) throws Exception {
         super(change, type, startVel, endVel);
 
         this.wayLengthXY = Math.sqrt(this.relativeEndPoint[0]*this.relativeEndPoint[0] +
@@ -35,7 +35,7 @@ public class StraightMotion extends Motion {
         for(int i = 0; i< ControllerSettings.DIM; i++)
             this.K[i] = this.relativeEndPoint[i]/this.wayLength;
 
-        System.out.print("StraightMotion:");
+        System.out.print("CNCMotionStraight:");
         System.out.print(" dX = " + this.relativeEndPoint[0]);
         System.out.print(" dY = " + this.relativeEndPoint[1]);
         System.out.println(" wayLength = " + this.wayLength);

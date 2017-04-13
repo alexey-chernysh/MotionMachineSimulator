@@ -8,12 +8,12 @@ import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
 
-public class ArcMotion extends Motion {
+public class CNCMotionArc extends CNCMotion {
 
 
     // arc params
     private double[] centerOffset;
-    private ArcMotion.DIRECTION direction;
+    private CNCMotionArc.DIRECTION direction;
 
     //arc vars
     private double radius;
@@ -27,12 +27,12 @@ public class ArcMotion extends Motion {
 
     private static final double twoPi = 2.0*Math.PI;
 
-    public ArcMotion(double[] change,
-                     double[] center,
-                     ArcMotion.DIRECTION dir,
-                     MOTION_TYPE type,
-                     double startVel,
-                     double endVel) throws Exception {
+    public CNCMotionArc(double[] change,
+                        double[] center,
+                        CNCMotionArc.DIRECTION dir,
+                        MOTION_TYPE type,
+                        double startVel,
+                        double endVel) throws Exception {
         super(change, type, startVel, endVel);
 
         this.centerOffset = center; // should be non zero for arc motion
@@ -71,7 +71,7 @@ public class ArcMotion extends Motion {
 
         this.Kz = this.relativeEndPoint[2]/this.wayLength;
 
-        System.out.print("ArcMotion:");
+        System.out.print("CNCMotionArc:");
         System.out.print(" dX = " + this.relativeEndPoint[0]);
         System.out.print(" dY = " + this.relativeEndPoint[1]);
         System.out.print(" startAngle = " + this.startAngle);

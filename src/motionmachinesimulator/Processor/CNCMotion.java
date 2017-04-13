@@ -2,7 +2,7 @@ package motionmachinesimulator.Processor;
 
 import java.awt.*;
 
-public abstract class Motion {
+public abstract class CNCMotion extends CNCAction {
     // environment access
     private MotionController controller;
     private Task task;
@@ -29,10 +29,10 @@ public abstract class Motion {
     /**
      * @param endPoint - relative position change after motion
      */
-    Motion(double[] endPoint,
-           MOTION_TYPE type,
-           double startVel,
-           double endVel) throws Exception {
+    CNCMotion(double[] endPoint,
+              MOTION_TYPE type,
+              double startVel,
+              double endVel) throws Exception {
         this.relativeEndPoint = endPoint;
 
         if (this.relativeEndPoint != null) {
@@ -88,7 +88,6 @@ public abstract class Motion {
         }
 
         do{
-            if(EjectFlag.taskShouldBeEjected()) break;  // TODO change EjectFlag algorithm. wrong operation
             double[] relPos;
             if(task.getState() == Task.TASK_STATE.ON_THE_RUN){
 
@@ -178,5 +177,11 @@ public abstract class Motion {
         START_VELOCITY_CHANGE,
         CONSTANT_VELOCITY,
         END_VELOCITY_CHANGE,
+    }
+
+    enum VELOCITY_STATE {
+        ACCELERATING,
+        DECELERATING,
+        CONSTANT
     }
 }
