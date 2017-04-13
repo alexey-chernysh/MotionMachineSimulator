@@ -6,6 +6,7 @@ package motionmachinesimulator.Tests;
 
 import org.junit.jupiter.api.Test;
 
+import static motionmachinesimulator.LongInt.Trigonometric.my_sin_double;
 import static motionmachinesimulator.Processor.ControllerSettings.*;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
@@ -58,6 +59,14 @@ public class ControllerSettingsTest {
         double changeTime  = velChange/accel;
         double wayLength = changeTime*(startVel + endVel)/2.0;
         return wayLength;
+    }
+
+    @Test
+    public void test3() throws Exception {
+        double x = 1.2;
+        double y = my_sin_double(x);
+        // Assert
+        assertThat(y, equalTo(Math.sin(x)));
     }
 
 }
