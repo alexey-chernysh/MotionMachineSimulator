@@ -68,7 +68,7 @@ public class MotionController extends Thread {
             while((currentMotionNum>=0)&&(currentMotionNum<taskSize)){
                 System.out.println("Debug message: CNCMotion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
-                if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.get();
+                if(this.forwardDirection) startPos[currentMotionNum] = CurrentPosition.getInstance().get();
                 currentMotion.run(startPos[currentMotionNum]);
                 if(this.forwardDirection) currentMotionNum++;
                 else currentMotionNum--;

@@ -67,7 +67,7 @@ class Task extends ArrayList<CNCMotion> {
         for(CNCMotion motion: this){
             motion.currentWayLength = 0.0;
         }
-        CurrentPosition.reset();
+        CurrentPosition.getInstance().reset();
         this.setState(Task.TASK_STATE.READY_TO_START);
     }
 

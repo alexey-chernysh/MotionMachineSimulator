@@ -57,7 +57,7 @@ public class CNCMotionArc extends CNCMotion {
             this.angle = this.endAngle - this.startAngle;
         }
 
-        this.wayLength = this.radius * this.angle;
+        this.wayLength = Math.abs(this.radius * this.angle);
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");

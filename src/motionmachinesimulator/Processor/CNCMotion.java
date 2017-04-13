@@ -88,7 +88,7 @@ public abstract class CNCMotion extends CNCAction {
                 if(controller.isForwardDirection()) relPos = this.onFastTimerTick(currentStepSize);
                 else relPos = this.onFastTimerTick(-currentStepSize);
                 currentAbsPos = startPos.add(relPos);
-                CurrentPosition.set(currentAbsPos);
+                CurrentPosition.getInstance().set(currentAbsPos);
                 ControllerSettings.setCurrentStepSIze(currentStepSize);
 
                 if(controller.isForwardDirection()){
