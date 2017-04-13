@@ -8,22 +8,20 @@ import java.util.ArrayList;
 public class TrajectoryView {
 
     private static double scale = 3000.0;
-    private static double[][] rotationMatrix = {{1.0, 0.0, 0.0},{0.0,-1.0, 0.0},{0.0, 0.0, 0.0}};
-    private static double[] offsetVector = {0.008,0.062, 0.0};
+    private static double[][] rotationMatrix = {{1.0, 0.0},{0.0,-1.0}};
+    private static double[] offsetVector = {0.008,0.062};
 
     public static final Color color1 = new Color(255,0,0);
     public static final Color color2 = new Color(0,0,255);
 
-    public static int[] transfer(double[] input) throws Exception {
+    public static int[] transfer(CNCPoint2D input) throws Exception {
+        double[] inputVector = {input.x,input.y};
         if(input != null){
-            if(input.length != ControllerSettings.DIM){
-                throw new Exception("Point X, Y and Z coordinates needed only");
-            }
-            int[] result = new int[ControllerSettings.DIM];
-            for (int i = 0; i< ControllerSettings.DIM; i++){
+            int[] result = new int[2];
+            for (int i = 0; i< 2; i++){
                 double tmp = offsetVector[i];
-                for(int j = 0; j< ControllerSettings.DIM; j++){
-                    tmp += input[j]*rotationMatrix[i][j];
+                for(int j = 0; j< 2; j++){
+                    tmp += inputVector[j]*rotationMatrix[i][j];
                 }
                 result[i] = (int)(scale*tmp);
             }
@@ -35,13 +33,13 @@ public class TrajectoryView {
         MotionController mc = MotionController.getInstance();
         ArrayList<CNCMotion> task = mc.getCurrentTask();
         //  draw trajectory
-        double[] startPoint = {0.0, 0.0, 0.0};
+        CNCPoint2D startPoint = new CNCPoint2D();
         for(CNCMotion currentMotion : task){
             startPoint = currentMotion.paint(g, startPoint);
         }
         // draw current position
-        double[] currentPosition = CurrentPosition.get();
-        int[] x = new int[0];
+        CNCPoint2D currentPosition = CurrentPosition.get();
+        int[] x;
         try {
             x = TrajectoryView.transfer(currentPosition);
             g.setColor(TrajectoryView.color1);

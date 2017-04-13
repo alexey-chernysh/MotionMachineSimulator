@@ -6,12 +6,12 @@ package motionmachinesimulator.Processor;
 
 public class CurrentPosition {
 
-    private static double x;
-    private static double y;
+    private static CNCPoint2D position;
 
     private static CurrentPosition ourInstance = new CurrentPosition();
 
     public static CurrentPosition getInstance() {
+        position = new CNCPoint2D();
         return ourInstance;
     }
 
@@ -19,18 +19,18 @@ public class CurrentPosition {
         reset();
     }
 
-    public static double[] get() {
-        return new double[]{x,y,0.0};
+    public static CNCPoint2D get() {
+        return new CNCPoint2D(position.x, position.y);
     }
 
-    public static void set(double[] newPosition) {
-        x = newPosition[0];
-        y = newPosition[1];
+    public static void set(CNCPoint2D newPosition) {
+        position.x = newPosition.x;
+        position.y = newPosition.y;
     }
 
     public static void reset(){
-        x = 0.0;
-        y = 0.0;
+        position.x = 0.0;
+        position.y = 0.0;
     }
 
 }

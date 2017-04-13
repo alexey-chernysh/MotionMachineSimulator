@@ -11,11 +11,10 @@ public abstract class CNCMotion extends CNCAction {
     private double systemStepIncrement;
 
     // general params
-    protected double[] relativeEndPoint; // all in meters
-    protected double[] currentRelativePosition;
+    protected final CNCPoint2D relativeEndPoint; // all in meters
+    protected CNCPoint2D currentRelativePosition;
 
     protected double wayLength; // all in meters
-    protected double wayLengthXY;
     protected double currentWayLength;
 
     private MOTION_PHASE phase;
@@ -29,21 +28,16 @@ public abstract class CNCMotion extends CNCAction {
     /**
      * @param endPoint - relative position change after motion
      */
-    CNCMotion(double[] endPoint,
+    CNCMotion(CNCPoint2D endPoint,
               MOTION_TYPE type,
               double startVel,
               double endVel) throws Exception {
         this.relativeEndPoint = endPoint;
 
-        if (this.relativeEndPoint != null) {
-            if (this.relativeEndPoint.length != ControllerSettings.DIM) {
-                throw new Exception("Position change X, Y, Z coordinates needed only");
-            }
-        } else throw new Exception("Null motion not supported");
+        if (this.relativeEndPoint == null)
+            throw new Exception("Null motion not supported");
 
-        this.currentRelativePosition = new double[ControllerSettings.DIM];
-        for(int i=0; i<ControllerSettings.DIM;i++)
-            this.currentRelativePosition[i] = 0.0;
+        this.currentRelativePosition = new CNCPoint2D();
 
         this.currentWayLength = 0.0;
 
@@ -67,17 +61,17 @@ public abstract class CNCMotion extends CNCAction {
 
     }
 
-    abstract double[] onFastTimerTick(double dl); //return new relative position
+    abstract CNCPoint2D onFastTimerTick(double dl); //return new relative position
 
-    public abstract double[] paint(Graphics g, double[] fromPoint);
+    public abstract CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint);
 
-    public void run(double[] startPos){
+    public void run(CNCPoint2D startPos){
         controller = MotionController.getInstance();
         task = controller.getCurrentTask();
         systemStepIncrement = ControllerSettings.getStepIncrement4Acceleration();
 
         double currentDistanceToTarget = Double.MAX_VALUE;
-        double[] currentAbsPos = new double[ControllerSettings.DIM];
+        CNCPoint2D currentAbsPos = new CNCPoint2D();
         double targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
         double currentStepSize;
 
@@ -88,14 +82,12 @@ public abstract class CNCMotion extends CNCAction {
         }
 
         do{
-            double[] relPos;
+            CNCPoint2D relPos;
             if(task.getState() == Task.TASK_STATE.ON_THE_RUN){
 
                 if(controller.isForwardDirection()) relPos = this.onFastTimerTick(currentStepSize);
                 else relPos = this.onFastTimerTick(-currentStepSize);
-                for(int i=0; i<ControllerSettings.DIM;i++){
-                    currentAbsPos[i] = startPos[i] + relPos[i];
-                }
+                currentAbsPos = startPos.add(relPos);
                 CurrentPosition.set(currentAbsPos);
                 ControllerSettings.setCurrentStepSIze(currentStepSize);
 

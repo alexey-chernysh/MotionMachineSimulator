@@ -16,42 +16,35 @@ import java.awt.*;
 public class CNCMotionStraight extends CNCMotion {
 
     //general vars
-    private double[] K = new double[ControllerSettings.DIM];
+    private double Kx;
+    private double Ky;
 
-    CNCMotionStraight(double[] change,
+    CNCMotionStraight(CNCPoint2D change,
                       MOTION_TYPE type,
                       double startVel,
                       double endVel) throws Exception {
         super(change, type, startVel, endVel);
 
-        this.wayLengthXY = Math.sqrt(this.relativeEndPoint[0]*this.relativeEndPoint[0] +
-                                        +this.relativeEndPoint[1]*this.relativeEndPoint[1]);
-        this.wayLength = Math.sqrt(this.relativeEndPoint[2]*this.relativeEndPoint[2]
-                                 + this.wayLengthXY*this.wayLengthXY);
+        this.wayLength = change.distance();
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
-        for(int i = 0; i< ControllerSettings.DIM; i++)
-            this.K[i] = this.relativeEndPoint[i]/this.wayLength;
+        this.Kx = this.relativeEndPoint.x/this.wayLength;
+        this.Ky = this.relativeEndPoint.y/this.wayLength;
 
         System.out.print("CNCMotionStraight:");
-        System.out.print(" dX = " + this.relativeEndPoint[0]);
-        System.out.print(" dY = " + this.relativeEndPoint[1]);
+        System.out.print(" dX = " + this.relativeEndPoint.x);
+        System.out.print(" dY = " + this.relativeEndPoint.y);
         System.out.println(" wayLength = " + this.wayLength);
     }
 
     @Override
-    public double[] paint(Graphics g, double[] fromPoint) {
+    public CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint) {
         try {
-            double[] innerPoint = new double[ControllerSettings.DIM];
-            double[]   endPoint = new double[ControllerSettings.DIM];
             double phase = this.currentWayLength/this.wayLength;
-            for (int i = 0; i< ControllerSettings.DIM; i++) {
-                double change = this.relativeEndPoint[i];
-                innerPoint[i] = fromPoint[i] + phase*change;
-                endPoint[i] = fromPoint[i] + change;
-            }
+            CNCPoint2D innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
+            CNCPoint2D   endPoint = relativeEndPoint.add(fromPoint);;
             int[] p1 = TrajectoryView.transfer(fromPoint);
             int[] p2 = TrajectoryView.transfer(innerPoint);
             int[] p3 = TrajectoryView.transfer(endPoint);
@@ -67,11 +60,10 @@ public class CNCMotionStraight extends CNCMotion {
     }
 
     @Override
-    double[] onFastTimerTick(double dl) {
+    CNCPoint2D onFastTimerTick(double dl) {
         this.currentWayLength += dl;
-        for(int i = 0; i< ControllerSettings.DIM; i++){
-            this.currentRelativePosition[i] = this.currentWayLength * this.K[i];
-        }
+        this.currentRelativePosition.x = this.currentWayLength * this.Kx;
+        this.currentRelativePosition.y = this.currentWayLength * this.Ky;
         return this.currentRelativePosition;
     }
 }

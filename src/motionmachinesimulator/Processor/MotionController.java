@@ -61,7 +61,7 @@ public class MotionController extends Thread {
     @Override
     public void run() {
         final int taskSize = currentTask.size();
-        double[][] startPos = new double[taskSize][ControllerSettings.DIM];
+        CNCPoint2D[] startPos = new CNCPoint2D[taskSize];
         do{
             CNCMotion currentMotion;
             int currentMotionNum = 0;

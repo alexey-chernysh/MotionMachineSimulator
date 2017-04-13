@@ -12,7 +12,7 @@ public class CNCMotionArc extends CNCMotion {
 
 
     // arc params
-    private double[] centerOffset;
+    private CNCPoint2D centerOffset;
     private CNCMotionArc.DIRECTION direction;
 
     //arc vars
@@ -22,13 +22,10 @@ public class CNCMotionArc extends CNCMotion {
     private double     endAngle;
     private double currentAngle;
 
-    //general vars
-    protected double Kz;
-
     private static final double twoPi = 2.0*Math.PI;
 
-    public CNCMotionArc(double[] change,
-                        double[] center,
+    public CNCMotionArc(CNCPoint2D change,
+                        CNCPoint2D center,
                         CNCMotionArc.DIRECTION dir,
                         MOTION_TYPE type,
                         double startVel,
@@ -39,14 +36,12 @@ public class CNCMotionArc extends CNCMotion {
         this.direction = dir;
 
         if(this.centerOffset != null){
-            if(this.centerOffset.length != ControllerSettings.DIM) {
-                throw new Exception("Arc center offset's X & Y coordinates needed only");
-            }
-            this.radius = Math.sqrt(this.centerOffset[0]*this.centerOffset[0] + this.centerOffset[1]*this.centerOffset[1]);
+            this.radius = this.centerOffset.distance();
             if(this.radius <= 0.0) throw new Exception("Zero radius arc not supported");
-            this.startAngle = Math.atan2(-this.centerOffset[1],-this.centerOffset[0]);
+            this.startAngle = Math.atan2(-this.centerOffset.y,-this.centerOffset.x);
             this.currentAngle = this.startAngle;
-            this.endAngle = Math.atan2(this.relativeEndPoint[1]-this.centerOffset[1],this.relativeEndPoint[0]-this.centerOffset[0]);
+            this.endAngle = Math.atan2(this.relativeEndPoint.y - this.centerOffset.y,
+                                       this.relativeEndPoint.x - this.centerOffset.x);
             switch (this.direction){
                 case CW:
                     while(this.endAngle >= this.startAngle ) this.endAngle -= twoPi;
@@ -62,18 +57,14 @@ public class CNCMotionArc extends CNCMotion {
             this.angle = this.endAngle - this.startAngle;
         }
 
-        this.wayLengthXY = this.radius *this.angle;
-        this.wayLength = Math.sqrt(this.relativeEndPoint[2]*this.relativeEndPoint[2]
-                + this.wayLengthXY*this.wayLengthXY);
+        this.wayLength = this.radius * this.angle;
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
-        this.Kz = this.relativeEndPoint[2]/this.wayLength;
-
         System.out.print("CNCMotionArc:");
-        System.out.print(" dX = " + this.relativeEndPoint[0]);
-        System.out.print(" dY = " + this.relativeEndPoint[1]);
+        System.out.print(" dX = " + this.relativeEndPoint.x);
+        System.out.print(" dY = " + this.relativeEndPoint.y);
         System.out.print(" startAngle = " + this.startAngle);
         System.out.print(" endAngle = " + this.endAngle);
         System.out.print(" angle = " + this.angle);
@@ -81,32 +72,29 @@ public class CNCMotionArc extends CNCMotion {
     }
 
     @Override
-    double[] onFastTimerTick(double dl) {
+    CNCPoint2D onFastTimerTick(double dl) {
         this.currentWayLength += dl;
         double angleChange = this.currentWayLength/this.radius;
         if(this.direction == DIRECTION.CW) angleChange = - angleChange;
         this.currentAngle = this.startAngle + angleChange;
-        this.currentRelativePosition[0] = this.centerOffset[0] + this.radius * Math.cos(this.currentAngle);
-        this.currentRelativePosition[1] = this.centerOffset[1] + this.radius * Math.sin(this.currentAngle);
-        this.currentRelativePosition[2] = this.currentWayLength * this.Kz;
+        this.currentRelativePosition.x = this.centerOffset.x + this.radius * Math.cos(this.currentAngle);
+        this.currentRelativePosition.y = this.centerOffset.y + this.radius * Math.sin(this.currentAngle);
         return this.currentRelativePosition;
     }
 
     @Override
-    public double[] paint(Graphics g, double[] fromPoint) {
+    public CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint) {
         try {
-            double[]  tmpPoint1 = new double[ControllerSettings.DIM];
-            double[]  tmpPoint2 = new double[ControllerSettings.DIM];
-            double[]  endPoint  = new double[ControllerSettings.DIM];
-            for (int i = 0; i< ControllerSettings.DIM; i++) {
-                tmpPoint1[i] = fromPoint[i] + centerOffset[i] - radius;
-                tmpPoint2[i] = fromPoint[i] + centerOffset[i] + radius;
-                endPoint[i]  = fromPoint[i] + relativeEndPoint[i];
-            }
+            CNCPoint2D radiusOffset = new CNCPoint2D(radius, radius);
+            CNCPoint2D  leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
+            CNCPoint2D  rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
+
+            CNCPoint2D  endPoint  = fromPoint.add(relativeEndPoint);
+
             double angleChange = this.currentWayLength/this.radius;
             if(this.direction == DIRECTION.CW) angleChange = - angleChange;
-            int[] p1 = TrajectoryView.transfer(tmpPoint1);
-            int[] p2 = TrajectoryView.transfer(tmpPoint2);
+            int[] p1 = TrajectoryView.transfer(leftBottomPoint);
+            int[] p2 = TrajectoryView.transfer(rightTopPoint);
             int x1 = Math.min(p1[0],p2[0]);
             int y1 = Math.min(p1[1],p2[1]);
             int x2 = Math.max(p1[0],p2[0]) - x1;
