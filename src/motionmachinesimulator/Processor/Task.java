@@ -13,17 +13,17 @@ class Task extends ArrayList<CNCMotion> {
 
     private void fillDebugTask(){
         // debug sequence
-        double[] point1 = { 0.0, 0.045, 0.0};
-        double[] point2 = { 0.01, 0.01, 0.0};
-        double[] center1 = {0.01, 0.00, 0.0};
-        double[] point3 = { 0.03,  0.0, 0.0};
-        double[] point4 = { 0.01, -0.01, 0.0};
-        double[] center2 = {0.00, -0.01, 0.0};
-        double[] point5 = {0.00, -0.03, 0.0};
-        double[] point6 = {-0.01, -0.01, 0.0};
-        double[] center3 = {-0.01, 0.0, 0.0};
-        double[] point7 = {-0.045, 0.0, 0.0};
-        double[] point8 = {0.005, -0.005, 0.0};
+        CNCPoint2D point1 = new CNCPoint2D( 0.0, 0.045);
+        CNCPoint2D point2 = new CNCPoint2D( 0.01, 0.01);
+        CNCPoint2D center1 = new CNCPoint2D(0.01, 0.00);
+        CNCPoint2D point3 = new CNCPoint2D( 0.03,  0.0);
+        CNCPoint2D point4 = new CNCPoint2D( 0.01, -0.01);
+        CNCPoint2D center2 = new CNCPoint2D(0.00, -0.01);
+        CNCPoint2D point5 = new CNCPoint2D(0.00, -0.03);
+        CNCPoint2D point6 = new CNCPoint2D(-0.01, -0.01);
+        CNCPoint2D center3 = new CNCPoint2D(-0.01, 0.0);
+        CNCPoint2D point7 = new CNCPoint2D(-0.045, 0.0);
+        CNCPoint2D point8 = new CNCPoint2D(0.005, -0.005);
 
         CNCMotion.MOTION_TYPE t1 = CNCMotion.MOTION_TYPE.WORKING;
         CNCMotion.MOTION_TYPE t2 = CNCMotion.MOTION_TYPE.FREE_RUN;

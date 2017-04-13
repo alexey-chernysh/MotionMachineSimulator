@@ -5,6 +5,7 @@
  */
 package motionmachinesimulator;
 
+import motionmachinesimulator.Processor.CNCPoint2D;
 import motionmachinesimulator.Processor.ControllerSettings;
 import motionmachinesimulator.Processor.CurrentPosition;
 import motionmachinesimulator.Processor.MotionController;
@@ -146,9 +147,9 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         int currentVelocity = (int) ControllerSettings.getCurrentVelocityMMinMin();
         this.displayVelocity(currentVelocity);
-        double[] position = CurrentPosition.get();
-        int x = (int) (position[0] * 1000000.0);
-        int y = (int) (position[1] * 1000000.0);
+        CNCPoint2D position = CurrentPosition.get();
+        int x = (int) (position.x * 1000000.0);
+        int y = (int) (position.y * 1000000.0);
         this.displayPositionX(x / 1000.0);
         this.displayPositionY(y / 1000.0);
         repaint();
