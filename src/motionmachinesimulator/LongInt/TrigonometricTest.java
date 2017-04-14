@@ -43,8 +43,8 @@ public class TrigonometricTest {
         System.out.println("z = " + z);
         System.out.println("MEASUREMENT: " + N + " calculation of Math.sin() took " + time1 + " MilliSeconds");
         double oneSin1 = ((double)time1)*1000/N;
-        System.out.println("MEASUREMENT: calculation of ONE Math.sin() took " + oneSin1 + " microsec");
-        System.out.println("MEASUREMENT: it means, that it can be executed " + 1.0/oneSin1 + " times in microsec");
+        System.out.println("MEASUREMENT: calculation of ONE Math.sin() took " + oneSin1 + " MicroSeconds");
+        System.out.println("MEASUREMENT: it means, that it can be executed " + 1.0/oneSin1 + " times in MicroSeconds");
         System.out.println();
         // measurement 2
         x = 0.0;
@@ -60,9 +60,9 @@ public class TrigonometricTest {
         System.out.println("z = " + z);
         System.out.println("MEASUREMENT: " + N + " calculation of my sin() took " + time2 + " MilliSeconds");
         double oneSin2 = ((double)time2)*1000/N;
-        System.out.println("MEASUREMENT: calculation of ONE my sin() took " + oneSin2 + " microsec");
-        System.out.println("MEASUREMENT: it means, that it can be executed " + 1.0/oneSin2 + " times in microsec");
-        System.out.println("MEASUREMENT: acceleration in " + oneSin1/oneSin2 + " times");
+        System.out.println("MEASUREMENT: calculation of ONE my sin() took " + oneSin2 + " MicroSeconds");
+        System.out.println("MEASUREMENT: it means, that it can be executed " + 1.0/oneSin2 + " times in MicroSeconds");
+        System.out.println("MEASUREMENT: acceleration in near " + oneSin1/oneSin2 + " times");
         System.out.println();
     }
 

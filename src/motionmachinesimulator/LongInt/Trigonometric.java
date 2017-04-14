@@ -45,14 +45,15 @@ public class Trigonometric {
             - 1.66666515202236230156e-01x^3
             + 9.99999982782301183838e-01x}
     */
-    private final static double b1 =  0.999999982782301183838;
-    private final static double b3 = -0.166666515202236230156;
-    private final static double b5 =  0.00833296401821855059586;
-    private final static double b7 = -0.000198047553009241346906;
-    private final static double b9 =  0.00000259811044408555809666;
+    private final static double b1  =  0.999999999919514177715;
+    private final static double b3  = -0.166666665687003985588;
+    private final static double b5  =  0.00833332995329348954259;
+    private final static double b7  = -0.000198407729337123660700;
+    private final static double b9  =  0.00000275219407638750246502;
+    private final static double b11 = -0.0000000238436840799723029176;
 
     public static double my_sin_double2(double x) {
         double x2 = x * x;
-        return x * (b1 + x2 * (b3 + x2 * (b5 + x2 * (b7 + x2 * b9))));
+        return x * (b1 + x2 * (b3 + x2 * (b5 + x2 * (b7 + x2 * (b9 + x2 * b11)))));
     }
 }
