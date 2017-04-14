@@ -6,7 +6,9 @@ class Task extends ArrayList<CNCMotion> {
 
     Task(){
         fillDebugTask();
-        System.out.println("Task way length = " + this.getWayLength() + " m.");    }
+        this.buildAllVelocityPlans();
+        System.out.println("Task way length = " + this.getWayLength() + " m.");
+    }
 
     private void fillDebugTask(){
         // debug sequence
@@ -60,9 +62,15 @@ class Task extends ArrayList<CNCMotion> {
         return taskWayLength;
     }
 
+    public void buildAllVelocityPlans(){
+        for(CNCMotion motion: this){
+            motion.buildVelocityPlan();
+        }
+    }
+
     void reset(){
         for(CNCMotion motion: this){
-            motion.currentWayLength = 0.0;
+            motion.wayLengthCurrent = 0.0;
         }
         CurrentPosition.getInstance().reset();
         ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);

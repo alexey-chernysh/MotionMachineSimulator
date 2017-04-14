@@ -42,7 +42,7 @@ public class CNCMotionStraight extends CNCMotion {
     @Override
     public CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint) {
         try {
-            double phase = this.currentWayLength/this.wayLength;
+            double phase = this.wayLengthCurrent /this.wayLength;
             CNCPoint2D innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
             CNCPoint2D   endPoint = relativeEndPoint.add(fromPoint);;
             int[] p1 = TrajectoryView.transfer(fromPoint);
@@ -61,9 +61,9 @@ public class CNCMotionStraight extends CNCMotion {
 
     @Override
     CNCPoint2D onFastTimerTick(double dl) {
-        this.currentWayLength += dl;
-        this.currentRelativePosition.x = this.currentWayLength * this.Kx;
-        this.currentRelativePosition.y = this.currentWayLength * this.Ky;
+        this.wayLengthCurrent += dl;
+        this.currentRelativePosition.x = this.wayLengthCurrent * this.Kx;
+        this.currentRelativePosition.y = this.wayLengthCurrent * this.Ky;
         return this.currentRelativePosition;
     }
 }

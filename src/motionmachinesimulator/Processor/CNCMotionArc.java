@@ -73,8 +73,8 @@ public class CNCMotionArc extends CNCMotion {
 
     @Override
     CNCPoint2D onFastTimerTick(double dl) {
-        this.currentWayLength += dl;
-        double angleChange = this.currentWayLength/this.radius;
+        this.wayLengthCurrent += dl;
+        double angleChange = this.wayLengthCurrent /this.radius;
         if(this.direction == DIRECTION.CW) angleChange = - angleChange;
         this.currentAngle = this.startAngle + angleChange;
         this.currentRelativePosition.x = this.centerOffset.x + this.radius * Math.cos(this.currentAngle);
@@ -91,7 +91,7 @@ public class CNCMotionArc extends CNCMotion {
 
             CNCPoint2D  endPoint  = fromPoint.add(relativeEndPoint);
 
-            double angleChange = this.currentWayLength/this.radius;
+            double angleChange = this.wayLengthCurrent /this.radius;
             if(this.direction == DIRECTION.CW) angleChange = - angleChange;
             int[] p1 = TrajectoryView.transfer(leftBottomPoint);
             int[] p2 = TrajectoryView.transfer(rightTopPoint);
