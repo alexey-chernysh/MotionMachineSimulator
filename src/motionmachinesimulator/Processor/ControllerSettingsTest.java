@@ -2,7 +2,7 @@
  * Copyright (c) 2017. Alexey Chernysh, Russia, Krasnoyarsk
  */
 
-package motionmachinesimulator.Tests;
+package motionmachinesimulator.Processor;
 
 import org.junit.jupiter.api.Test;
 

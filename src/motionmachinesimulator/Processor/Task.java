@@ -4,11 +4,8 @@ import java.util.ArrayList;
 
 class Task extends ArrayList<CNCMotion> {
 
-    private TASK_STATE state;
-
     Task(){
         fillDebugTask();
-        state = TASK_STATE.EMPTY;
         System.out.println("Task way length = " + this.getWayLength() + " m.");    }
 
     private void fillDebugTask(){
@@ -46,7 +43,7 @@ class Task extends ArrayList<CNCMotion> {
             this.add(straightMotion4);
             CNCMotionStraight straightMotion5 = new CNCMotionStraight(point8, t2, v, v);
             this.add(straightMotion5);
-            this.setState(TASK_STATE.READY_TO_START);
+            ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -68,22 +65,7 @@ class Task extends ArrayList<CNCMotion> {
             motion.currentWayLength = 0.0;
         }
         CurrentPosition.getInstance().reset();
-        this.setState(Task.TASK_STATE.READY_TO_START);
-    }
-
-    TASK_STATE getState() {
-        return this.state;
-    }
-
-    void setState(TASK_STATE newState) {
-        this.state = newState;
-    }
-
-    enum TASK_STATE {
-        EMPTY,
-        READY_TO_START,
-        ON_THE_RUN,
-        PAUSED
+        ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);
     }
 
 }

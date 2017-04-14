@@ -4,26 +4,25 @@ import java.awt.*;
 
 public abstract class CNCMotion extends CNCAction {
     // environment access
-    private MotionController controller;
-    private Task task;
+    private ExecutionDirection executionDirection;
+    private ExecutionState executionState;
 
-    // global constants
-    private double systemStepIncrement;
+    private MOTION_PHASE phase;
+    private MOTION_TYPE motion_type;
 
-    // general params
+    private final double stepSizeBeforeAcceleration;
+    private final double stepSizeAfterDeceleration;
+    private final double stepSizeConstantVelocity;
+    private final double stepSizeIncrement;
+
     protected final CNCPoint2D relativeEndPoint; // all in meters
     protected CNCPoint2D currentRelativePosition;
 
     protected double wayLength; // all in meters
     protected double currentWayLength;
-
-    private MOTION_PHASE phase;
-
-    private MOTION_TYPE motion_type;
-    private double startStepSize;
-    private double startAccelerationWayLength;
-    private double endStepSize;
-    private double endDecelerationWayLength;
+    private double wayLengthAcceleration;
+    private double wayLengthDeceleration;
+    protected double wayLengthConstantVelocity;
 
     /**
      * @param endPoint - relative position change after motion
@@ -44,21 +43,25 @@ public abstract class CNCMotion extends CNCAction {
         this.motion_type = type;
 
         if(startVel >= 0.0){
-            this.startStepSize = ControllerSettings.getStep4Velocity(startVel);
-            this.startAccelerationWayLength
-                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getTargetStepSize(this.motion_type), startStepSize);
-            System.out.println("Start acceleration way length = " + this.startAccelerationWayLength + " m.");
+            this.stepSizeBeforeAcceleration = ControllerSettings.getStep4Velocity(startVel);
+            this.wayLengthAcceleration
+                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getTargetStepSize(this.motion_type), stepSizeBeforeAcceleration);
+            System.out.println("Start acceleration way length = " + this.wayLengthAcceleration + " m.");
         } else throw new Exception("Velocity should be positive");
 
         if(endVel >= 0.0){
-            this.endStepSize = ControllerSettings.getStep4Velocity(endVel);
-            this.endDecelerationWayLength
-                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getTargetStepSize(this.motion_type), endStepSize);
-            System.out.println("End deceleration way length = " + this.endDecelerationWayLength + " m.");
+            this.stepSizeAfterDeceleration = ControllerSettings.getStep4Velocity(endVel);
+            this.wayLengthDeceleration
+                    = ControllerSettings.getWayLength4StepChange(ControllerSettings.getTargetStepSize(this.motion_type), stepSizeAfterDeceleration);
+            System.out.println("End deceleration way length = " + this.wayLengthDeceleration + " m.");
         } else throw new Exception("Velocity should be positive");
 
-        this.phase = MOTION_PHASE.START_VELOCITY_CHANGE;
+        this.stepSizeConstantVelocity = ControllerSettings.getTargetStepSize(this.motion_type);
 
+        this.stepSizeIncrement = ControllerSettings.getStepIncrement4Acceleration();
+        this.phase = MOTION_PHASE.START_VELOCITY_CHANGE;
+        this.executionDirection = ExecutionDirection.getInstance();
+        this.executionState = ExecutionState.getInstance();
     }
 
     abstract CNCPoint2D onFastTimerTick(double dl); //return new relative position
@@ -66,52 +69,48 @@ public abstract class CNCMotion extends CNCAction {
     public abstract CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint);
 
     public void run(CNCPoint2D startPos){
-        controller = MotionController.getInstance();
-        task = controller.getCurrentTask();
-        systemStepIncrement = ControllerSettings.getStepIncrement4Acceleration();
-
         double currentDistanceToTarget = Double.MAX_VALUE;
         CNCPoint2D currentAbsPos = new CNCPoint2D();
         double targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
         double currentStepSize;
 
-        if(controller.isForwardDirection()){
-            currentStepSize =  this.startStepSize;
+        if(executionDirection.isForward()){
+            currentStepSize =  this.stepSizeBeforeAcceleration;
         } else {
-            currentStepSize = this.endStepSize;
+            currentStepSize = this.stepSizeAfterDeceleration;
         }
 
         do{
             CNCPoint2D relPos;
-            if(task.getState() == Task.TASK_STATE.ON_THE_RUN){
+            if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN){
 
-                if(controller.isForwardDirection()) relPos = this.onFastTimerTick(currentStepSize);
+                if(executionDirection.isForward()) relPos = this.onFastTimerTick(currentStepSize);
                 else relPos = this.onFastTimerTick(-currentStepSize);
                 currentAbsPos = startPos.add(relPos);
                 CurrentPosition.getInstance().set(currentAbsPos);
                 ControllerSettings.setCurrentStepSIze(currentStepSize);
 
-                if(controller.isForwardDirection()){
+                if(executionDirection.isForward()){
                     currentDistanceToTarget = this.wayLength - this.currentWayLength;
                 } else {
                     currentDistanceToTarget = this.currentWayLength;
                 };
 
-                if(currentStepSize < targetStepSize) currentStepSize += systemStepIncrement;
-                if(currentStepSize > targetStepSize) currentStepSize -= systemStepIncrement;
+                if(currentStepSize < targetStepSize) currentStepSize += stepSizeIncrement;
+                if(currentStepSize > targetStepSize) currentStepSize -= stepSizeIncrement;
 
                 switch (this.phase){
                     case PAUSED:
                         break;
                     case START_VELOCITY_CHANGE:
-                        if(controller.isForwardDirection()){
+                        if(executionDirection.isForward()){
                             targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
                             if(currentStepSize >= targetStepSize){
                                 currentStepSize = targetStepSize;
                                 this.phase = MOTION_PHASE.CONSTANT_VELOCITY;
                             }
                         } else {
-                            targetStepSize = this.startStepSize;
+                            targetStepSize = this.stepSizeBeforeAcceleration;
                             if(currentStepSize <= targetStepSize){
                                 currentStepSize = targetStepSize;
                             }
@@ -119,21 +118,21 @@ public abstract class CNCMotion extends CNCAction {
                         break;
                     case CONSTANT_VELOCITY:
                         targetStepSize = ControllerSettings.getTargetStepSize(motion_type);
-                        if(controller.isForwardDirection()){
-                            if(currentDistanceToTarget <= endDecelerationWayLength){
+                        if(executionDirection.isForward()){
+                            if(currentDistanceToTarget <= wayLengthDeceleration){
                                 this.phase = MOTION_PHASE.END_VELOCITY_CHANGE;
-                                targetStepSize = this.endStepSize;
+                                targetStepSize = this.stepSizeAfterDeceleration;
                             }
                         } else {
-                            if(currentDistanceToTarget <= startAccelerationWayLength){
+                            if(currentDistanceToTarget <= wayLengthAcceleration){
                                 this.phase = MOTION_PHASE.END_VELOCITY_CHANGE;
-                                targetStepSize = this.startStepSize;
+                                targetStepSize = this.stepSizeBeforeAcceleration;
                             }
                         }
                         break;
                     case END_VELOCITY_CHANGE:
-                        if(controller.isForwardDirection()){
-                            targetStepSize = this.endStepSize;
+                        if(executionDirection.isForward()){
+                            targetStepSize = this.stepSizeAfterDeceleration;
                             if(currentStepSize >= targetStepSize){
                                 currentStepSize = targetStepSize;
                             }

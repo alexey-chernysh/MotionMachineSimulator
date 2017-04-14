@@ -6,7 +6,7 @@ package motionmachinesimulator.LongInt;
 
 import org.junit.Test;
 
-import static motionmachinesimulator.LongInt.Trigonometric.my_sin_double2;
+import static motionmachinesimulator.LongInt.Trigonometric.my_sin_double;
 
 /**
  * Created by Sales on 14.04.2017.
@@ -16,7 +16,7 @@ public class TrigonometricTest {
     public void error_estimation() {
         // error measurement
         double x = 1.2;
-        double y = my_sin_double2(x);
+        double y = my_sin_double(x);
         double z = Math.sin(x);
         double error = Math.abs((y-z)/z);
         System.out.println("ERROR MEASUREMENT: " + error);
@@ -51,7 +51,7 @@ public class TrigonometricTest {
         z = 0.0;
         start = System.currentTimeMillis();
         for(int i=0; i<N; i++){
-            y = my_sin_double2(x);
+            y = my_sin_double(x);
             z += y;
             x += dx;
         }

@@ -11,7 +11,6 @@ package motionmachinesimulator.Processor;
  */
 public class ControllerSettings {
 
-//    public static final int DIM = 3;
 /*
     public static final double maxVelocityRequired = 30000; // 30 m/min
     public static final double fastTimerClock = 10000000; // 10MHz
