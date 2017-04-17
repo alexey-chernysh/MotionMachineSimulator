@@ -5,11 +5,10 @@
  */
 package motionmachinesimulator;
 
-import motionmachinesimulator.Processor.CNCPoint2D;
-import motionmachinesimulator.Processor.ControllerSettings;
-import motionmachinesimulator.Processor.CurrentPosition;
-import motionmachinesimulator.Processor.MotionController;
+import motionmachinesimulator.Processor.*;
 import motionmachinesimulator.Views.TrajectoryView;
+import motionmachinesimulator.Views.VelocityHistory;
+import motionmachinesimulator.Views.VelocityView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,6 +33,10 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     private JTextField textPositionY;
     private JLabel PositionX;
     private JLabel PositionY;
+
+    private CNCTask task = MotionController.getInstance().getCurrentTask();
+    private VelocityHistory history = VelocityHistory.getInstance();
+    private double wayLengthForTask = task.getWayLength();
 
     Timer timer;
 
@@ -93,10 +96,9 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         motionPane = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
-                int width = getWidth();
-                int height = getHeight();
-                g.setColor(new Color(255, 0, 0));
-                g.drawLine(0, 0, width, height);
+                int w = getWidth();
+                int h = getHeight();
+                VelocityView.paint(g, w, h);
             }
         };
     }
@@ -127,8 +129,11 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int currentVelocity = (int) ControllerSettings.getCurrentVelocityMMinMin();
-        this.displayVelocity(currentVelocity);
+
+        double currentVelocity = (int) ControllerSettings.getCurrentVelocityMMinMin();
+        double wayLengthCurrent = task.getWayLengthCurrent();
+        history.addVelocity(currentVelocity, wayLengthCurrent / wayLengthForTask);
+        this.displayVelocity((int) currentVelocity);
         CNCPoint2D position = CurrentPosition.getInstance().get();
         int x = (int) (position.x * 1000000.0);
         int y = (int) (position.y * 1000000.0);

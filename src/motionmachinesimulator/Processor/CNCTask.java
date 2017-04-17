@@ -2,12 +2,12 @@ package motionmachinesimulator.Processor;
 
 import java.util.ArrayList;
 
-class Task extends ArrayList<CNCMotion> {
+public class CNCTask extends ArrayList<CNCMotion> {
 
-    Task(){
+    CNCTask(){
         fillDebugTask();
         this.buildAllVelocityPlans();
-        System.out.println("Task way length = " + this.getWayLength() + " m.");
+        System.out.println("CNCTask way length = " + this.getWayLength() + " m.");
     }
 
     private void fillDebugTask(){
@@ -54,7 +54,7 @@ class Task extends ArrayList<CNCMotion> {
     /**
      * @return sum of length for all motions in task
      */
-    private double getWayLength(){
+    public double getWayLength(){
         double taskWayLength = 0.0;
         for(CNCMotion motion: this){
             taskWayLength += motion.wayLength;
@@ -76,4 +76,10 @@ class Task extends ArrayList<CNCMotion> {
         ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);
     }
 
+    public double getWayLengthCurrent(){
+        double result = 0.0;
+        for(CNCMotion motion:this)
+            result += motion.wayLengthCurrent;
+        return result;
+    }
 }

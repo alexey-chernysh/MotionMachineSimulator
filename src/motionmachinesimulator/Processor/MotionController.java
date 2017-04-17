@@ -11,7 +11,7 @@ package motionmachinesimulator.Processor;
 
 public class MotionController extends Thread {
 
-    private final Task currentTask;
+    private final CNCTask currentTask;
     private Thread controllerThread;
     private ExecutionDirection executionDirection;
     private ExecutionState executionState;
@@ -23,14 +23,14 @@ public class MotionController extends Thread {
     }
     private MotionController() {
         super();
-        currentTask = new Task();
+        currentTask = new CNCTask();
         controllerThread = new Thread(this);
         executionDirection = ExecutionDirection.getInstance();
         executionState = ExecutionState.getInstance();
         controllerThread.start();
     }
 
-    public Task getCurrentTask() {
+    public CNCTask getCurrentTask() {
         return currentTask;
     }
 

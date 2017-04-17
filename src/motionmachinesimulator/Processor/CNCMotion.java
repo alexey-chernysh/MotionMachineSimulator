@@ -60,11 +60,10 @@ public abstract class CNCMotion extends CNCAction {
 
         wayLengthConstantVelocity = wayLength - wayLengthAcceleration - stepSizeAfterDeceleration;
         if(wayLengthConstantVelocity < 0.0){
-            // motion too short
+            // motion too short, processing without constant velocity state
+            wayLengthAcceleration += wayLengthConstantVelocity/2;
+            wayLengthDeceleration += wayLengthConstantVelocity/2;
             wayLengthConstantVelocity = 0.0;
-            // TODO accurate wayLengths calculation needed
-            wayLengthAcceleration = wayLength/2;
-            wayLengthDeceleration = wayLength/2;
         }
 
     }
