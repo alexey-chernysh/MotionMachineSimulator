@@ -98,7 +98,7 @@ public class ControllerSettings {
         return velMeterPerSec * 60 * 1000; // mm in min
     }
 
-    private static double acceleration = 0.01; // m/sec/sec
+    private static double acceleration = 0.02; // m/sec/sec
     public static double getAcceleration() {
         return acceleration;
     }

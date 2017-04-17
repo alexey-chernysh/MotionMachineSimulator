@@ -96,14 +96,15 @@ public abstract class CNCMotion extends CNCAction {
                         break;
                     case ACCELERATION:
                         if(executionDirection.isForward()){
-                            if(stepSizeCurrent >= stepSizeConstantVelocity){
+                            if(stepSizeCurrent < stepSizeConstantVelocity){
+                                stepSizeCurrent += stepSizeIncrement;
+                            } else {
                                 stepSizeCurrent = stepSizeConstantVelocity;
                                 phase = MOTION_PHASE.CONSTANT_VELOCITY;
-                            } else stepSizeCurrent += stepSizeIncrement;
+                            }
                         } else {
-                            if(stepSizeCurrent <= stepSizeBeforeAcceleration){
-                                stepSizeCurrent = stepSizeBeforeAcceleration;
-                            } else stepSizeCurrent -= stepSizeIncrement;
+                            if(stepSizeCurrent > stepSizeBeforeAcceleration) stepSizeCurrent -= stepSizeIncrement;
+                            else stepSizeCurrent = stepSizeBeforeAcceleration;
                         }
                         break;
                     case CONSTANT_VELOCITY:
@@ -111,14 +112,15 @@ public abstract class CNCMotion extends CNCAction {
                         break;
                     case DECELERATION:
                         if(executionDirection.isForward()){
-                            if(stepSizeCurrent <= stepSizeAfterDeceleration){
-                                stepSizeCurrent = stepSizeAfterDeceleration;
-                            } else stepSizeCurrent -= stepSizeIncrement;
+                            if(stepSizeCurrent > stepSizeAfterDeceleration) stepSizeCurrent -= stepSizeIncrement;
+                            else stepSizeCurrent = stepSizeAfterDeceleration;
                         } else {
-                            if(stepSizeCurrent >= stepSizeConstantVelocity){
+                            if(stepSizeCurrent < stepSizeConstantVelocity)stepSizeCurrent += stepSizeIncrement;
+                            else {
                                 stepSizeCurrent = stepSizeConstantVelocity;
                                 phase = MOTION_PHASE.CONSTANT_VELOCITY;
-                            } else stepSizeCurrent += stepSizeIncrement;
+                            }
+
                         }
                         break;
                     default:
