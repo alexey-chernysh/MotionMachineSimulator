@@ -7,6 +7,8 @@ package motionmachinesimulator.LongInt;
 import org.junit.Test;
 
 import static motionmachinesimulator.LongInt.Trigonometric.my_sin_double;
+import static motionmachinesimulator.LongInt.Trigonometric.scale;
+import static motionmachinesimulator.LongInt.Trigonometric.sin_int32;
 
 /**
  * Created by Sales on 14.04.2017.
@@ -15,11 +17,17 @@ public class TrigonometricTest {
     @Test
     public void error_estimation() {
         // error measurement
-        double x = 1.2;
-        double y = my_sin_double(x);
-        double z = Math.sin(x);
-        double error = Math.abs((y-z)/z);
-        System.out.println("ERROR MEASUREMENT: " + error);
+        double x1 = Math.PI/6.0;
+        System.out.println("x = " + x1);
+        double y1 = my_sin_double(x1);
+        System.out.println("sin = " + y1);
+        double z = Math.sin(x1);
+        double error1 = Math.abs((y1-z)/z);
+        System.out.println("ERROR MEASUREMENT: " + error1);
+        double y2 = sin_int32((int)(x1*scale))/((double)(scale));
+        System.out.println("sin32 = " + y2);
+        double error2 = Math.abs((y2-z)/z);
+        System.out.println("ERROR MEASUREMENT: " + error2);
     }
 
     @Test
@@ -46,6 +54,7 @@ public class TrigonometricTest {
         System.out.println("MEASUREMENT: calculation of ONE Math.sin() took " + oneSin1 + " MicroSeconds");
         System.out.println("MEASUREMENT: it means, that it can be executed " + 1.0/oneSin1 + " times in MicroSeconds");
         System.out.println();
+
         // measurement 2
         x = 0.0;
         z = 0.0;
@@ -64,6 +73,25 @@ public class TrigonometricTest {
         System.out.println("MEASUREMENT: it means, that it can be executed " + 1.0/oneSin2 + " times in MicroSeconds");
         System.out.println("MEASUREMENT: acceleration in near " + oneSin1/oneSin2 + " times");
         System.out.println();
+
+        // measurement 3
+        long lz = 0;
+        int ly;
+        start = System.currentTimeMillis();
+        for(int i=0; i<N; i++){
+            ly = sin_int32(i);
+            lz += ly;
+        }
+        end = System.currentTimeMillis();
+        long time3 = end - start;
+        System.out.println("z = " + lz);
+        System.out.println("MEASUREMENT: " + N + " calculation of my sin() took " + time3 + " MilliSeconds");
+        double oneSin3 = ((double)time3)*1000/N;
+        System.out.println("MEASUREMENT: calculation of ONE my sin() took " + oneSin3 + " MicroSeconds");
+        System.out.println("MEASUREMENT: it means, that it can be executed " + 1.0/oneSin3 + " times in MicroSeconds");
+        System.out.println("MEASUREMENT: acceleration in near " + oneSin1/oneSin3 + " times");
+        System.out.println();
+
     }
 
 }
