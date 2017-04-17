@@ -50,7 +50,7 @@ public abstract class CNCMotion extends CNCAction {
 
         currentRelativePosition = new CNCPoint2D();
 
-        phase = MOTION_PHASE.START_VELOCITY_CHANGE;
+        phase = MOTION_PHASE.ACCELERATION;
     }
 
     public void buildVelocityPlan() {
@@ -91,51 +91,47 @@ public abstract class CNCMotion extends CNCAction {
                 currentPosition.set(currentAbsPos);
                 ControllerSettings.setCurrentStepSIze(stepSizeCurrent);
 
-                if(executionDirection.isForward()) currentDistanceToTarget = wayLength - wayLengthCurrent;
-                else currentDistanceToTarget = wayLengthCurrent;
-
-                if(stepSizeCurrent < stepSizeConstantVelocity) stepSizeCurrent += stepSizeIncrement;
-                if(stepSizeCurrent > stepSizeConstantVelocity) stepSizeCurrent -= stepSizeIncrement;
-
                 switch (phase){
                     case PAUSED:
                         break;
-                    case START_VELOCITY_CHANGE:
+                    case ACCELERATION:
                         if(executionDirection.isForward()){
                             if(stepSizeCurrent >= stepSizeConstantVelocity){
                                 stepSizeCurrent = stepSizeConstantVelocity;
                                 phase = MOTION_PHASE.CONSTANT_VELOCITY;
-                            }
+                            } else stepSizeCurrent += stepSizeIncrement;
                         } else {
                             if(stepSizeCurrent <= stepSizeBeforeAcceleration){
                                 stepSizeCurrent = stepSizeBeforeAcceleration;
-                            }
+                            } else stepSizeCurrent -= stepSizeIncrement;
                         }
                         break;
                     case CONSTANT_VELOCITY:
-                        if(executionDirection.isForward()){
-                            if(currentDistanceToTarget <= wayLengthDeceleration){
-                                phase = MOTION_PHASE.END_VELOCITY_CHANGE;
-                            }
-                        } else {
-                            if(currentDistanceToTarget <= wayLengthAcceleration){
-                                phase = MOTION_PHASE.START_VELOCITY_CHANGE;
-                            }
-                        }
+                            stepSizeCurrent = stepSizeConstantVelocity;
                         break;
-                    case END_VELOCITY_CHANGE:
+                    case DECELERATION:
                         if(executionDirection.isForward()){
                             if(stepSizeCurrent <= stepSizeAfterDeceleration){
                                 stepSizeCurrent = stepSizeAfterDeceleration;
-                            }
+                            } else stepSizeCurrent -= stepSizeIncrement;
                         } else {
                             if(stepSizeCurrent >= stepSizeConstantVelocity){
                                 stepSizeCurrent = stepSizeConstantVelocity;
                                 phase = MOTION_PHASE.CONSTANT_VELOCITY;
-                            }
+                            } else stepSizeCurrent += stepSizeIncrement;
                         }
                         break;
                     default:
+                }
+
+                if(executionDirection.isForward()){
+                    currentDistanceToTarget = wayLength - wayLengthCurrent;
+                    if(currentDistanceToTarget<wayLengthDeceleration)
+                        phase = MOTION_PHASE.DECELERATION;
+                } else {
+                    currentDistanceToTarget = wayLengthCurrent;
+                    if(currentDistanceToTarget<wayLengthAcceleration)
+                        phase = MOTION_PHASE.ACCELERATION;
                 }
 
             }; // else System.out.print("+");
@@ -156,14 +152,9 @@ public abstract class CNCMotion extends CNCAction {
 
     enum MOTION_PHASE {
         PAUSED,
-        START_VELOCITY_CHANGE,
+        ACCELERATION,
         CONSTANT_VELOCITY,
-        END_VELOCITY_CHANGE,
+        DECELERATION,
     }
 
-    enum VELOCITY_STATE {
-        ACCELERATING,
-        DECELERATING,
-        CONSTANT
-    }
 }
