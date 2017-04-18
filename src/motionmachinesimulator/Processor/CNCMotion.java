@@ -58,7 +58,7 @@ public abstract class CNCMotion extends CNCAction {
         wayLengthAcceleration = ControllerSettings.getWayLength4StepChange(stepSizeConstantVelocity, stepSizeBeforeAcceleration);
         wayLengthDeceleration = ControllerSettings.getWayLength4StepChange(stepSizeConstantVelocity, stepSizeAfterDeceleration);
 
-        wayLengthConstantVelocity = wayLength - wayLengthAcceleration - stepSizeAfterDeceleration;
+        wayLengthConstantVelocity = wayLength - wayLengthAcceleration - wayLengthDeceleration;
         if(wayLengthConstantVelocity < 0.0){
             // motion too short, processing without constant velocity state
             wayLengthAcceleration += wayLengthConstantVelocity/2;
