@@ -6,9 +6,7 @@ package motionmachinesimulator.LongInt;
 
 import org.junit.Test;
 
-import static motionmachinesimulator.LongInt.Trigonometric.my_sin_double;
-import static motionmachinesimulator.LongInt.Trigonometric.scale;
-import static motionmachinesimulator.LongInt.Trigonometric.sin_int32;
+import static motionmachinesimulator.LongInt.Trigonometric.*;
 
 /**
  * Created by Sales on 14.04.2017.
@@ -19,14 +17,14 @@ public class TrigonometricTest {
         // error measurement
         double x1 = Math.PI/6.0;
         System.out.println("x = " + x1);
-        double y1 = my_sin_double(x1);
-        System.out.println("sin = " + y1);
+        double y1 = sinDouble11(x1);
+        System.out.println("sin_dbl = " + y1);
         double z = Math.sin(x1);
-        double error1 = Math.abs((y1-z)/z);
+        double error1 = Math.abs(y1-z);
         System.out.println("ERROR MEASUREMENT: " + error1);
-        double y2 = sin_int32((int)(x1*scale))/((double)(scale));
-        System.out.println("sin32 = " + y2);
-        double error2 = Math.abs((y2-z)/z);
+        double y2 = sinInt9((int)(x1*scale))/((double)(scale));
+        System.out.println("sin_int = " + y2);
+        double error2 = Math.abs(y2-z);
         System.out.println("ERROR MEASUREMENT: " + error2);
     }
 
@@ -60,7 +58,7 @@ public class TrigonometricTest {
         z = 0.0;
         start = System.currentTimeMillis();
         for(int i=0; i<N; i++){
-            y = my_sin_double(x);
+            y = sinDouble11(x);
             z += y;
             x += dx;
         }
@@ -79,7 +77,7 @@ public class TrigonometricTest {
         int ly;
         start = System.currentTimeMillis();
         for(int i=0; i<N; i++){
-            ly = sin_int32(i);
+            ly = sinInt9(i);
             lz += ly;
         }
         end = System.currentTimeMillis();
