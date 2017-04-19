@@ -18,6 +18,8 @@ public class TrigonometricTest {
         // error measurement
         double x1 = Math.PI/4.0;
         System.out.println("x = " + x1);
+        System.out.println("-1    = " + Integer.toBinaryString(-1));
+        System.out.println("scale =   " + Long.toBinaryString(scale));
         double ys1 = sinDouble11(x1);
         System.out.println("sin_dbl = " + ys1);
         double yc1 = cosDouble10(x1);
@@ -52,6 +54,33 @@ public class TrigonometricTest {
             System.out.println("target = " + Long.toBinaryString(target));
             System.out.println("error = " + error);
             */
+            error_sum += error;
+        }
+        System.out.println("N         = " + N);
+        System.out.println("error sum = " + error_sum);
+    }
+
+    @Test
+    public void full_range_test() {
+        // error measurement
+        long N = 200;
+        double lowLimit = -Math.PI;
+        double hiLimit  =  Math.PI;
+        long target = scale;
+        long error_sum = 0;
+        for(int i=0;i<=N;i++){
+            double x = lowLimit + i*(hiLimit-lowLimit)/N;
+            long j = (long)((x*scaledPi)/Math.PI);
+            long s = sinInt9(j);
+            long c = cosInt10(j);
+            long res = (s*s + c*c)>>(shift);
+            long error = Math.abs(res - target);
+
+            System.out.println("x    = " + x);
+            System.out.println("res    = " + Long.toBinaryString(res));
+            System.out.println("target = " + Long.toBinaryString(target));
+            System.out.println("error = " + error);
+
             error_sum += error;
         }
         System.out.println("N         = " + N);

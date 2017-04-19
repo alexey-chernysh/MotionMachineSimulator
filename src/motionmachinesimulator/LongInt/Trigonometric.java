@@ -32,9 +32,15 @@ public class Trigonometric {
         return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
     }
 
-    public final static int shift = 30;
+    public final static int shift = 29;
     private final static long one = 1;
     public final static long scale = one<<shift;
+
+    public final static long scaledHalfPi = scale;
+    public final static long scaledPi = scaledHalfPi<<1;
+    public final static long scaledHalfPiMinus = -scaledHalfPi;
+    public final static long scaledPiMinus = -scaledPi;
+
     private final static double log2 = Math.log(2.0);
     private static int shiftNeeded(double x){
         return -(int)(Math.log(Math.abs(x))/log2);
@@ -63,11 +69,13 @@ public class Trigonometric {
     private final static long k9_7  = (long)(dsk_7  * scale7);
     private final static long k9_9  = (long)(dsk_9  * scale9);
 
-    public static int sinInt9(int angle) {
+    public static int sinInt9(long angle) {
     /* in int32 format - PI = Ox0100 0000 0000 0000 0000 0000 0000 0000
-        sin(PI = Ox0100 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
+        sin(PI/2) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
     * */
-        long tmp = angle;
+        long tmp = maskToPi(angle);
+        if(tmp > scaledHalfPi)      tmp = scaledPi      - tmp;
+        if(tmp < scaledHalfPiMinus) tmp = scaledPiMinus - tmp;
         long x2 = (tmp * tmp)>>shift;
         long result = (x2 * k9_9)>>(n9-n7+shift);
         result = (x2 * (k9_7 + result))>>(n7-n5+shift);
@@ -104,12 +112,21 @@ public class Trigonometric {
     private final static long k10_8   = (long)(dck_8  * scale8);
     private final static long k10_10  = (long)(dck_10 * scale10);
 
-    public static int cosInt10(int angle) {
-    /* in int32 format - PI = Ox0100 0000 0000 0000 0000 0000 0000 0000
-        sin(PI = Ox0100 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
+    public static int cosInt10(long angle) {
+    /* in int32 format - PI = Ox0010 0000 0000 0000 0000 0000 0000 0000
+        cos(0) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
         return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
     * */
-        long tmp = angle;
+        long tmp = maskToPi(angle);
+        boolean positiveResult = true;
+        if(tmp > scaledHalfPi){
+            tmp = scaledPi - tmp;
+            positiveResult =false;
+        }
+        if(tmp < scaledHalfPiMinus){
+            tmp = scaledPiMinus - tmp;
+            positiveResult =false;
+        }
         long x2 = (tmp * tmp)>>shift;
         long result = (x2 * k10_10)>>(n10-n8+shift);
         result = (x2 * (k10_8 + result))>>(n8-n6+shift);
@@ -117,7 +134,19 @@ public class Trigonometric {
         result = (x2 * (k10_4 + result))>>(n4-n2+shift);
         result = (x2 * (k10_2 + result))>>(n2-n0+shift);
         result = (k10_0 + result)>>(n0-shift);
-        return (int)(result);
+        if(positiveResult)return (int)(result);
+        else return -(int)(result);
+    }
+
+    public long scaleAngleToInt(double x){
+        // for testing purpose only
+        return (long)((x*scaledPi)/Math.PI);
+    }
+
+    // masking hi bits for sine & cosine
+    private static int maskToPi(long scaledAngle){
+        // 32 bit data used only
+        return (int)scaledAngle;
     }
 
 }
