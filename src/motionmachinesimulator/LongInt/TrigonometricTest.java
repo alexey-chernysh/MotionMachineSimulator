@@ -15,17 +15,24 @@ public class TrigonometricTest {
     @Test
     public void error_estimation() {
         // error measurement
-        double x1 = Math.PI/6.0;
+        double x1 = Math.PI/4.0;
         System.out.println("x = " + x1);
-        double y1 = sinDouble11(x1);
-        System.out.println("sin_dbl = " + y1);
+        double ys1 = sinDouble11(x1);
+        System.out.println("sin_dbl = " + ys1);
+        double yc1 = cosDouble10(x1);
+        System.out.println("cos_dbl = " + yc1);
+        System.out.println("sin_dbl^2 + cos_dbl^2 = " + (ys1*ys1+yc1*yc1));
         double z = Math.sin(x1);
-        double error1 = Math.abs(y1-z);
+        double error1 = Math.abs(ys1-z);
         System.out.println("ERROR MEASUREMENT: " + error1);
-        double y2 = sinInt9((int)(x1*scale))/((double)(scale));
-        System.out.println("sin_int = " + y2);
-        double error2 = Math.abs(y2-z);
+        double ys2 = sinInt9((int)(x1*scale))/((double)(scale));
+        System.out.println("sin_int = " + ys2);
+        double error2 = Math.abs(ys2-z);
         System.out.println("ERROR MEASUREMENT: " + error2);
+        double yc2 = cosInt10((int)(x1*scale))/((double)(scale));
+        System.out.println("cos_int = " + yc2);
+        double error3 = Math.abs(yc2-Math.cos(x1));
+        System.out.println("ERROR MEASUREMENT: " + error3);
     }
 
     @Test
