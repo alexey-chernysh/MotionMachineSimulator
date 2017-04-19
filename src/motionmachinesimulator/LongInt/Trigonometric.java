@@ -32,7 +32,7 @@ public class Trigonometric {
         return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
     }
 
-    private final static int shift = 30;
+    public final static int shift = 30;
     private final static long one = 1;
     public final static long scale = one<<shift;
     private final static double log2 = Math.log(2.0);

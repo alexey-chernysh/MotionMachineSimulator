@@ -12,6 +12,7 @@ import static motionmachinesimulator.LongInt.Trigonometric.*;
  * Created by Sales on 14.04.2017.
  */
 public class TrigonometricTest {
+
     @Test
     public void error_estimation() {
         // error measurement
@@ -33,6 +34,28 @@ public class TrigonometricTest {
         System.out.println("cos_int = " + yc2);
         double error3 = Math.abs(yc2-Math.cos(x1));
         System.out.println("ERROR MEASUREMENT: " + error3);
+    }
+
+    @Test
+    public void error_estimation_integer() {
+        // error measurement
+        long N = scale;
+        long target = scale;
+        long error_sum = 0;
+        for(int i=0;i<=N;i++){
+            long s = sinInt9(i);
+            long c = cosInt10(i);
+            long res = (s*s + c*c)>>(shift);
+            long error = Math.abs(res - target);
+            /*
+            System.out.println("res    = " + Long.toBinaryString(res));
+            System.out.println("target = " + Long.toBinaryString(target));
+            System.out.println("error = " + error);
+            */
+            error_sum += error;
+        }
+        System.out.println("N         = " + N);
+        System.out.println("error sum = " + error_sum);
     }
 
     @Test
