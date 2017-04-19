@@ -34,7 +34,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
     private JLabel PositionX;
     private JLabel PositionY;
 
-    private CNCTask task = MotionController.getInstance().getCurrentTask();
+    private CNCTask task = CNCMotionController.getInstance().getCurrentTask();
     private VelocityHistory history = VelocityHistory.getInstance();
     private double wayLengthForTask = task.getWayLength();
 
@@ -53,17 +53,17 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
 
         buttonStart.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MotionController.getInstance().resumeForwardExecution();
+                CNCMotionController.getInstance().resumeForwardExecution();
             }
         });
         buttonStop.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MotionController.getInstance().pauseExecution();
+                CNCMotionController.getInstance().pauseExecution();
             }
         });
         buttonRewind.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                MotionController.getInstance().resumeBackwardExecution();
+                CNCMotionController.getInstance().resumeBackwardExecution();
             }
         });
 

@@ -9,19 +9,19 @@ package motionmachinesimulator.Processor;
  *  velocity change (acceleration/deceleration)
  */
 
-public class MotionController extends Thread {
+public class CNCMotionController extends Thread {
 
     private final CNCTask currentTask;
     private Thread controllerThread;
     private ExecutionDirection executionDirection;
     private ExecutionState executionState;
 
-    private static MotionController ourInstance = new MotionController();
+    private static CNCMotionController ourInstance = new CNCMotionController();
 
-    public static MotionController getInstance() {
+    public static CNCMotionController getInstance() {
         return ourInstance;
     }
-    private MotionController() {
+    private CNCMotionController() {
         super();
         currentTask = new CNCTask();
         controllerThread = new Thread(this);

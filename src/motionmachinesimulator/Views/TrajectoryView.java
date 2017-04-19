@@ -30,7 +30,7 @@ public class TrajectoryView {
     }
 
     public static void paint(Graphics g){
-        MotionController mc = MotionController.getInstance();
+        CNCMotionController mc = CNCMotionController.getInstance();
         ArrayList<CNCMotion> task = mc.getCurrentTask();
         //  draw trajectory
         CNCPoint2D startPoint = new CNCPoint2D();
