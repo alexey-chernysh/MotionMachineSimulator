@@ -72,7 +72,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
         for(CNCMotion motion: this){
             motion.wayLengthCurrent = 0.0;
         }
-        CurrentPosition.getInstance().reset();
+        CNCStepperPorts.reset();
         ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);
     }
 

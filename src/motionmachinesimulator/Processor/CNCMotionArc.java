@@ -72,7 +72,7 @@ public class CNCMotionArc extends CNCMotion {
     }
 
     @Override
-    CNCPoint2D onFastTimerTick(double dl) {
+    CNCPoint2DInt onFastTimerTick(double dl) {
         this.wayLengthCurrent += dl;
         double angleChange = this.wayLengthCurrent /this.radius;
         if(this.direction == DIRECTION.CW) angleChange = - angleChange;

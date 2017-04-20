@@ -31,4 +31,9 @@ public class CNCStepperPorts {
     public static CNCPoint2DInt getPosition(){
         return new CNCPoint2DInt(position.x, position.y);
     }
+
+    public static void reset() {
+        position.x = 0;
+        position.y = 0;
+    }
 }

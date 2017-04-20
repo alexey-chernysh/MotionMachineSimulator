@@ -6,7 +6,6 @@ public abstract class CNCMotion extends CNCAction {
     // environment access
     private ExecutionDirection executionDirection = ExecutionDirection.getInstance();
     private ExecutionState executionState = ExecutionState.getInstance();
-    private CurrentPosition currentPosition = CurrentPosition.getInstance();
 
     private MOTION_PHASE phase;
     private MOTION_TYPE motion_type;
@@ -68,14 +67,14 @@ public abstract class CNCMotion extends CNCAction {
 
     }
 
-    abstract CNCPoint2D onFastTimerTick(double dl); //return new relative position
+    abstract CNCPoint2DInt onFastTimerTick(double dl); //return new relative position
 
     public abstract CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint);
 
-    public void run(CNCPoint2D startPos){
+    public void run(CNCPoint2DInt startPos){
         double currentDistanceToTarget = wayLength;
-        CNCPoint2D currentAbsPos;
-        CNCPoint2D relPos;
+        CNCPoint2DInt currentAbsPos;
+        CNCPoint2DInt relPos;
         double stepSizeCurrent;
 
         if(executionDirection.isForward())stepSizeCurrent =  stepSizeBeforeAcceleration;
@@ -88,7 +87,7 @@ public abstract class CNCMotion extends CNCAction {
                 else relPos = onFastTimerTick(-stepSizeCurrent);
 
                 currentAbsPos = startPos.add(relPos);
-                currentPosition.set(currentAbsPos);
+                CNCStepperPorts.setNewPosition((int)currentAbsPos.x,(int)currentAbsPos.y);
                 ControllerSettings.setCurrentStepSIze(stepSizeCurrent);
 
                 switch (phase){

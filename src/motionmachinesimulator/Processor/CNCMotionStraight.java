@@ -60,7 +60,7 @@ public class CNCMotionStraight extends CNCMotion {
     }
 
     @Override
-    CNCPoint2D onFastTimerTick(double dl) {
+    CNCPoint2DInt onFastTimerTick(double dl) {
         this.wayLengthCurrent += dl;
         this.currentRelativePosition.x = this.wayLengthCurrent * this.Kx;
         this.currentRelativePosition.y = this.wayLengthCurrent * this.Ky;

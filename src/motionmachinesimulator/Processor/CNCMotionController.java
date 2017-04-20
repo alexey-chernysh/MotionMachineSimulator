@@ -57,14 +57,14 @@ public class CNCMotionController extends Thread {
     @Override
     public void run() {
         final int taskSize = currentTask.size();
-        CNCPoint2D[] startPos = new CNCPoint2D[taskSize];
+        CNCPoint2DInt[] startPos = new CNCPoint2DInt[taskSize];
         do{
             CNCMotion currentMotion;
             int currentMotionNum = 0;
             while((currentMotionNum>=0)&&(currentMotionNum<taskSize)){
                 System.out.println("Debug message: CNCMotion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
-                if(this.executionDirection.isForward()) startPos[currentMotionNum] = CurrentPosition.getInstance().get();
+                if(this.executionDirection.isForward()) startPos[currentMotionNum] = CNCStepperPorts.getPosition();
                 currentMotion.run(startPos[currentMotionNum]);
                 if(this.executionDirection.isForward()) currentMotionNum++;
                 else currentMotionNum--;

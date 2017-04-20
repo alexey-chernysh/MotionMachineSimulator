@@ -20,4 +20,16 @@ public class CNCPoint2DInt {
         x = _x;
         y = _y;
     }
+
+    public CNCPoint2DInt add(CNCPoint2DInt p){
+        return new CNCPoint2DInt(this.x + p.x, this.y + p.y);
+    }
+
+    public CNCPoint2DInt sub(CNCPoint2DInt p){
+        return new CNCPoint2DInt(this.x - p.x, this.y - p.y);
+    }
+
+    public CNCPoint2D toCNCPoint2D() {
+        return new CNCPoint2D(this.x, this.y);
+    }
 }

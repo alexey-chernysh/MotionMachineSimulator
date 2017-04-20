@@ -38,7 +38,8 @@ public class TrajectoryView {
             startPoint = currentMotion.paint(g, startPoint);
         }
         // draw current position
-        CNCPoint2D currentPosition = CurrentPosition.getInstance().get();
+        CNCPoint2DInt currentPositionInt = CNCStepperPorts.getPosition();
+        CNCPoint2D currentPosition = currentPositionInt.toCNCPoint2D();
         int[] x;
         try {
             x = TrajectoryView.transfer(currentPosition);
