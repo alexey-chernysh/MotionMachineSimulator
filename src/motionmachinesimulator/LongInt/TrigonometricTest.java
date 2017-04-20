@@ -64,8 +64,8 @@ public class TrigonometricTest {
     public void full_range_test() {
         // error measurement
         long N = 200;
-        double lowLimit = -Math.PI;
-        double hiLimit  =  Math.PI;
+        double lowLimit = -2.0*Math.PI;
+        double hiLimit  =  2.0*Math.PI;
         long target = scale;
         long error_sum = 0;
         for(int i=0;i<=N;i++){

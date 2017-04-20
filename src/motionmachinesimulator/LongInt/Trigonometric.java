@@ -32,7 +32,7 @@ public class Trigonometric {
         return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
     }
 
-    public final static int shift = 29;
+    public final static int shift = 30;
     private final static long one = 1;
     public final static long scale = one<<shift;
 
@@ -125,7 +125,7 @@ public class Trigonometric {
         }
         if(tmp < scaledHalfPiMinus){
             tmp = scaledPiMinus - tmp;
-            positiveResult =false;
+            positiveResult = false;
         }
         long x2 = (tmp * tmp)>>shift;
         long result = (x2 * k10_10)>>(n10-n8+shift);
