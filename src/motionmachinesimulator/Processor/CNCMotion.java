@@ -16,7 +16,7 @@ public abstract class CNCMotion extends CNCAction {
     private double stepSizeIncrement;
 
     protected final CNCPoint2D relativeEndPoint; // all in meters
-    protected CNCPoint2D currentRelativePosition;
+    protected CNCPoint2DInt currentRelativePosition;
 
     protected double wayLength; // all in meters
     protected double wayLengthCurrent;
@@ -47,7 +47,7 @@ public abstract class CNCMotion extends CNCAction {
 
         stepSizeIncrement = ControllerSettings.getStepIncrement4Acceleration();
 
-        currentRelativePosition = new CNCPoint2D();
+        currentRelativePosition = new CNCPoint2DInt();
 
         phase = MOTION_PHASE.ACCELERATION;
     }
