@@ -10,19 +10,19 @@ public abstract class CNCMotion extends CNCAction {
     private MOTION_PHASE phase;
     private MOTION_TYPE motion_type;
 
-    private double stepSizeBeforeAcceleration;
-    private double stepSizeAfterDeceleration;
-    private double stepSizeConstantVelocity;
-    private double stepSizeIncrement;
+    private long stepSizeBeforeAcceleration;
+    private long stepSizeAfterDeceleration;
+    private long stepSizeConstantVelocity;
+    private long stepSizeIncrement;
 
     protected final CNCPoint2DInt relativeEndPoint;
     protected CNCPoint2DInt currentRelativePosition;
 
-    protected double wayLength; // all in meters
-    protected double wayLengthCurrent;
-    private double wayLengthAcceleration;
-    private double wayLengthDeceleration;
-    private double wayLengthConstantVelocity;
+    protected long wayLength;
+    protected long wayLengthCurrent;
+    private long wayLengthAcceleration;
+    private long wayLengthDeceleration;
+    private long wayLengthConstantVelocity;
 
     /**
      * @param endPoint - relative position change after motion
@@ -39,7 +39,7 @@ public abstract class CNCMotion extends CNCAction {
 
         stepSizeConstantVelocity = ControllerSettings.getTargetStepSize(motion_type);
 
-        if(startVel >= 0.0)stepSizeBeforeAcceleration = ControllerSettings.getStep4Velocity(startVel);
+        if(startVel >= 0.0) stepSizeBeforeAcceleration = ControllerSettings.getStep4Velocity(startVel);
         else throw new Exception("Velocity should be positive");
 
         if(endVel >= 0.0) stepSizeAfterDeceleration = ControllerSettings.getStep4Velocity(endVel);

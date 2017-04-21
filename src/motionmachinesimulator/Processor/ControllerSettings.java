@@ -58,7 +58,7 @@ public class ControllerSettings {
     public static double getStartVelocity(){ return startVelocity; }
 
     private static double freeRunVelocity = 5.0/60.0; // m/sec for 5.0 m/min
-    public static double getStepSizeFreeRun() {
+    public static long getStepSizeFreeRun() {
         return getStep4Velocity(freeRunVelocity);
     }
     public static double getFreeRunVelocity() {
@@ -70,7 +70,7 @@ public class ControllerSettings {
     public static double getWorkingVelocity() {
         return workingVelocity;
     }
-    public static double getStepSizeWorking() {
+    public static long getStepSizeWorking() {
         return getStep4Velocity(workingVelocity);
     }
     public static double getWorkingVelocityMMinMin() {
@@ -89,7 +89,7 @@ public class ControllerSettings {
     public static void setCurrentStepSIze(double currentStepSIze) {
         ControllerSettings.currentStepSIze = currentStepSIze;
     }
-
+/*
     public static double getCurrentVelocity() {
         return getVelocity4Step(currentStepSIze);
     }
@@ -97,7 +97,7 @@ public class ControllerSettings {
         double velMeterPerSec = ControllerSettings.getCurrentVelocity();
         return velMeterPerSec * 60 * 1000; // mm in min
     }
-
+*/
     private static double acceleration = 0.015; // m/sec/sec
     public static double getAcceleration() {
         return acceleration;
@@ -105,29 +105,26 @@ public class ControllerSettings {
     public static void setAcceleration(double value) {
         acceleration = value;
     }
-    public static double getStepIncrement4Acceleration(){
+    public static long getStepIncrement4Acceleration(){
         double velocityIncrement = acceleration * intervalInSec;
-        return (velocityIncrement*intervalInSec);
+        return CNCScaleForLong.getLongFromDouble(velocityIncrement*intervalInSec);
     }
 
-    public static final int stepPulseBitNumber = 33;
-    public static final long stepPulseBitMask = 1L<<(stepPulseBitNumber-1);
-
-    public static double getStep4Velocity(double velocity){
-        return velocity*intervalInSec;
+    public static long getStep4Velocity(double velocity){
+        return CNCScaleForLong.getLongFromDouble(velocity*intervalInSec);
     }
     private static double getVelocity4Step(double stepSIze) {
         return stepSIze/intervalInSec;
     }
 
-    public static double getWayLength4StepChange(double stepSize1, double stepSize2) {
-        double stepDifference = stepSize2 - stepSize1;
-        double stepIncrement = getStepIncrement4Acceleration();
+    public static long getWayLength4StepChange(long stepSize1, long stepSize2) {
+        long stepDifference = stepSize2 - stepSize1;
+        long stepIncrement = getStepIncrement4Acceleration();
 //        double stepIncrement = 1.0;   // for junit test1 only
         /*
             sum of i for i from 1 to N is N*(N+1)/2
          */
-        double nStep = stepDifference/stepIncrement;
+        long nStep = stepDifference/stepIncrement;
         int nStep1 = (int)Math.abs(nStep) + 1;
         double result = stepSize1 * nStep1 + stepIncrement*nStep*nStep1/2;
         return result;
