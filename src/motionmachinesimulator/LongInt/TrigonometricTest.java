@@ -89,16 +89,19 @@ public class TrigonometricTest {
 
     @Test
     public void scaling_test() {
-        double lowLimit = -Math.PI;
-        for(int i=0;i<5;i++){
-            double x = lowLimit + i*Math.PI/2.0;
+        double lowLimit = -Math.PI/2;
+        for(int i=0;i<9;i++){
+            double x = lowLimit + i*Math.PI/8.0;
             long j = getLongFromDoubleAngle(x);
             long s = sinInt9(j);
             long c = cosInt10(j);
+            double ds = ((double)s)/scale;
+            double dc = ((double)c)/scale;
 
             System.out.println("x      = " + x);
-            System.out.println("sin(x) = " + ((double)s)/scale);
-            System.out.println("cos(x) = " + ((double)c)/scale);
+            System.out.println("sin(x) = " + ds);
+            System.out.println("cos(x) = " + dc);
+            System.out.println("norm = " + (ds*ds+dc*dc));
             System.out.println();
         }
     }
