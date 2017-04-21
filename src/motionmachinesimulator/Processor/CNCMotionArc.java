@@ -10,9 +10,8 @@ import java.awt.*;
 
 public class CNCMotionArc extends CNCMotion {
 
-
     // arc params
-    private CNCPoint2D centerOffset;
+    private CNCPoint2DInt centerOffset;
     private CNCMotionArc.DIRECTION direction;
 
     //arc vars
@@ -24,8 +23,8 @@ public class CNCMotionArc extends CNCMotion {
 
     private static final double twoPi = 2.0*Math.PI;
 
-    public CNCMotionArc(CNCPoint2D change,
-                        CNCPoint2D center,
+    public CNCMotionArc(CNCPoint2DInt change,
+                        CNCPoint2DInt center,
                         CNCMotionArc.DIRECTION dir,
                         MOTION_TYPE type,
                         double startVel,
@@ -36,7 +35,7 @@ public class CNCMotionArc extends CNCMotion {
         this.direction = dir;
 
         if(this.centerOffset != null){
-            this.radius = this.centerOffset.distance();
+            this.radius = this.centerOffset.getDistanceInMeters();
             if(this.radius <= 0.0) throw new Exception("Zero radius arc not supported");
             this.startAngle = Math.atan2(-this.centerOffset.y,-this.centerOffset.x);
             this.currentAngle = this.startAngle;
@@ -55,7 +54,7 @@ public class CNCMotionArc extends CNCMotion {
                     throw new Exception("Unsupported arc direction");
             }
             this.angle = this.endAngle - this.startAngle;
-        }
+        } else throw new Exception("Null radius not supported");
 
         this.wayLength = Math.abs(this.radius * this.angle);
 
@@ -83,15 +82,15 @@ public class CNCMotionArc extends CNCMotion {
     }
 
     @Override
-    public CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint) {
+    public CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint) {
         try {
-            CNCPoint2D radiusOffset = new CNCPoint2D(radius, radius);
-            CNCPoint2D  leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
-            CNCPoint2D  rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
+            CNCPoint2DInt radiusOffset = new CNCPoint2DInt(radius, radius);
+            CNCPoint2DInt  leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
+            CNCPoint2DInt  rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
 
-            CNCPoint2D  endPoint  = fromPoint.add(relativeEndPoint);
+            CNCPoint2DInt  endPoint  = fromPoint.add(relativeEndPoint);
 
-            double angleChange = this.wayLengthCurrent /this.radius;
+            double angleChange = this.wayLengthCurrent/this.radius;
             if(this.direction == DIRECTION.CW) angleChange = - angleChange;
             int[] p1 = TrajectoryView.transfer(leftBottomPoint);
             int[] p2 = TrajectoryView.transfer(rightTopPoint);

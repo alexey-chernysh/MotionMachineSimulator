@@ -19,13 +19,13 @@ public class CNCMotionStraight extends CNCMotion {
     private double Kx;
     private double Ky;
 
-    CNCMotionStraight(CNCPoint2D change,
+    CNCMotionStraight(CNCPoint2DInt change,
                       MOTION_TYPE type,
                       double startVel,
                       double endVel) throws Exception {
         super(change, type, startVel, endVel);
 
-        this.wayLength = change.distance();
+        this.wayLength = change.getDistanceInMeters();
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
@@ -40,11 +40,11 @@ public class CNCMotionStraight extends CNCMotion {
     }
 
     @Override
-    public CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint) {
+    public CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint) {
         try {
             double phase = this.wayLengthCurrent /this.wayLength;
-            CNCPoint2D innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
-            CNCPoint2D   endPoint = relativeEndPoint.add(fromPoint);;
+            CNCPoint2DInt innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
+            CNCPoint2DInt   endPoint = relativeEndPoint.add(fromPoint);;
             int[] p1 = TrajectoryView.transfer(fromPoint);
             int[] p2 = TrajectoryView.transfer(innerPoint);
             int[] p3 = TrajectoryView.transfer(endPoint);

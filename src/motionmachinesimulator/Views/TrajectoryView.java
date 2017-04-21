@@ -14,8 +14,8 @@ public class TrajectoryView {
     public static final Color color1 = new Color(255,0,0);
     public static final Color color2 = new Color(0,0,255);
 
-    public static int[] transfer(CNCPoint2D input) throws Exception {
-        double[] inputVector = {input.x,input.y};
+    public static int[] transfer(CNCPoint2DInt input) throws Exception {
+        double[] inputVector = {input.getXinMeters(),input.getYinMeters()};
         if(input != null){
             int[] result = new int[2];
             for (int i = 0; i< 2; i++){
@@ -33,13 +33,12 @@ public class TrajectoryView {
         CNCMotionController mc = CNCMotionController.getInstance();
         ArrayList<CNCMotion> task = mc.getCurrentTask();
         //  draw trajectory
-        CNCPoint2D startPoint = new CNCPoint2D();
+        CNCPoint2DInt startPoint = new CNCPoint2DInt();
         for(CNCMotion currentMotion : task){
             startPoint = currentMotion.paint(g, startPoint);
         }
         // draw current position
-        CNCPoint2DInt currentPositionInt = CNCStepperPorts.getPosition();
-        CNCPoint2D currentPosition = currentPositionInt.toCNCPoint2D();
+        CNCPoint2DInt currentPosition = CNCStepperPorts.getPosition();
         int[] x;
         try {
             x = TrajectoryView.transfer(currentPosition);

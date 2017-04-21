@@ -23,7 +23,7 @@ public class CNCPoint2DInt {
 
     public CNCPoint2DInt(double _x, double _y){
         x = CNCScaleForLong.getLongFromDouble(_x);
-        y = CNCScaleForLong.getLongFromDouble(_x);
+        y = CNCScaleForLong.getLongFromDouble(_y);
     }
 
     public double getXinMeters(){
@@ -48,4 +48,7 @@ public class CNCPoint2DInt {
         return (long)Math.sqrt(dx*dx+dy*dy);
     }
 
+    public CNCPoint2DInt mul(double scale) {
+        return new CNCPoint2DInt(scale*this.getXinMeters(), scale*this.getYinMeters());
+    }
 }

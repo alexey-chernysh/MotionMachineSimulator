@@ -12,17 +12,17 @@ public class CNCTask extends ArrayList<CNCMotion> {
 
     private void fillDebugTask(){
         // debug sequence
-        CNCPoint2D point1 = new CNCPoint2D( 0.0, 0.045);
-        CNCPoint2D point2 = new CNCPoint2D( 0.01, 0.01);
-        CNCPoint2D center1 = new CNCPoint2D(0.01, 0.00);
-        CNCPoint2D point3 = new CNCPoint2D( 0.03,  0.0);
-        CNCPoint2D point4 = new CNCPoint2D( 0.01, -0.01);
-        CNCPoint2D center2 = new CNCPoint2D(0.00, -0.01);
-        CNCPoint2D point5 = new CNCPoint2D(0.00, -0.03);
-        CNCPoint2D point6 = new CNCPoint2D(-0.01, -0.01);
-        CNCPoint2D center3 = new CNCPoint2D(-0.01, 0.0);
-        CNCPoint2D point7 = new CNCPoint2D(-0.045, 0.0);
-        CNCPoint2D point8 = new CNCPoint2D(0.005, -0.005);
+        CNCPoint2DInt point1 = new CNCPoint2DInt( 0.0, 0.045);
+        CNCPoint2DInt point2 = new CNCPoint2DInt( 0.01, 0.01);
+        CNCPoint2DInt center1 = new CNCPoint2DInt(0.01, 0.00);
+        CNCPoint2DInt point3 = new CNCPoint2DInt( 0.03,  0.0);
+        CNCPoint2DInt point4 = new CNCPoint2DInt( 0.01, -0.01);
+        CNCPoint2DInt center2 = new CNCPoint2DInt(0.00, -0.01);
+        CNCPoint2DInt point5 = new CNCPoint2DInt(0.00, -0.03);
+        CNCPoint2DInt point6 = new CNCPoint2DInt(-0.01, -0.01);
+        CNCPoint2DInt center3 = new CNCPoint2DInt(-0.01, 0.0);
+        CNCPoint2DInt point7 = new CNCPoint2DInt(-0.045, 0.0);
+        CNCPoint2DInt point8 = new CNCPoint2DInt(0.005, -0.005);
 
         CNCMotion.MOTION_TYPE t1 = CNCMotion.MOTION_TYPE.WORKING;
         CNCMotion.MOTION_TYPE t2 = CNCMotion.MOTION_TYPE.FREE_RUN;

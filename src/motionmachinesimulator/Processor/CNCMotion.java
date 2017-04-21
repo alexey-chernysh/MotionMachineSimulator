@@ -15,7 +15,7 @@ public abstract class CNCMotion extends CNCAction {
     private double stepSizeConstantVelocity;
     private double stepSizeIncrement;
 
-    protected final CNCPoint2D relativeEndPoint; // all in meters
+    protected final CNCPoint2DInt relativeEndPoint;
     protected CNCPoint2DInt currentRelativePosition;
 
     protected double wayLength; // all in meters
@@ -27,7 +27,7 @@ public abstract class CNCMotion extends CNCAction {
     /**
      * @param endPoint - relative position change after motion
      */
-    CNCMotion(CNCPoint2D endPoint,
+    CNCMotion(CNCPoint2DInt endPoint,
               MOTION_TYPE type,
               double startVel,
               double endVel) throws Exception {
@@ -69,7 +69,7 @@ public abstract class CNCMotion extends CNCAction {
 
     abstract CNCPoint2DInt onFastTimerTick(double dl); //return new relative position
 
-    public abstract CNCPoint2D paint(Graphics g, CNCPoint2D fromPoint);
+    public abstract CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint);
 
     public void run(CNCPoint2DInt startPos){
         double currentDistanceToTarget = wayLength;
