@@ -37,7 +37,7 @@ public abstract class CNCMotion extends CNCAction {
 
         motion_type = type;
 
-        stepSizeConstantVelocity = ControllerSettings.getTargetStepSize(motion_type);
+        stepSizeConstantVelocity = ControllerSettings.getStepSize(motion_type);
 
         if(startVel >= 0.0) stepSizeBeforeAcceleration = ControllerSettings.getStep4Velocity(startVel);
         else throw new Exception("Velocity should be positive");
@@ -53,41 +53,45 @@ public abstract class CNCMotion extends CNCAction {
     }
 
     public void buildVelocityPlan() {
-        wayLengthCurrent = 0.0;
-        wayLengthAcceleration = ControllerSettings.getWayLength4StepChange(stepSizeConstantVelocity, stepSizeBeforeAcceleration);
+        wayLengthCurrent = 0;
+        wayLengthAcceleration = ControllerSettings.getWayLength4StepChange(stepSizeBeforeAcceleration, stepSizeConstantVelocity);
         wayLengthDeceleration = ControllerSettings.getWayLength4StepChange(stepSizeConstantVelocity, stepSizeAfterDeceleration);
 
         wayLengthConstantVelocity = wayLength - wayLengthAcceleration - wayLengthDeceleration;
-        if(wayLengthConstantVelocity < 0.0){
+        if(wayLengthConstantVelocity < 0){
             // motion too short, processing without constant velocity state
             wayLengthAcceleration += wayLengthConstantVelocity/2;
             wayLengthDeceleration += wayLengthConstantVelocity/2;
-            wayLengthConstantVelocity = 0.0;
+            wayLengthConstantVelocity = 0;
         }
 
     }
 
-    abstract CNCPoint2DInt onFastTimerTick(double dl); //return new relative position
+    abstract CNCPoint2DInt onFastTimerTick(long dl); //return new relative position
 
     public abstract CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint);
 
     public void run(CNCPoint2DInt startPos){
-        double currentDistanceToTarget = wayLength;
+        long currentDistanceToTarget = wayLength;
         CNCPoint2DInt currentAbsPos;
         CNCPoint2DInt relPos;
-        double stepSizeCurrent;
+        long stepSizeCurrent;
 
-        if(executionDirection.isForward())stepSizeCurrent =  stepSizeBeforeAcceleration;
-        else stepSizeCurrent = stepSizeAfterDeceleration;
+        if(executionDirection.isForward())
+            stepSizeCurrent =  stepSizeBeforeAcceleration;
+        else
+            stepSizeCurrent = stepSizeAfterDeceleration;
 
         do{
             if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN){
 
-                if(executionDirection.isForward()) relPos = onFastTimerTick(stepSizeCurrent);
-                else relPos = onFastTimerTick(-stepSizeCurrent);
+                if(executionDirection.isForward())
+                    relPos = onFastTimerTick(stepSizeCurrent);
+                else
+                    relPos = onFastTimerTick(-stepSizeCurrent);
 
                 currentAbsPos = startPos.add(relPos);
-                CNCStepperPorts.setNewPosition((int)currentAbsPos.x,(int)currentAbsPos.y);
+                CNCStepperPorts.setNewPosition(currentAbsPos.x,currentAbsPos.y);
                 ControllerSettings.setCurrentStepSIze(stepSizeCurrent);
 
                 switch (phase){

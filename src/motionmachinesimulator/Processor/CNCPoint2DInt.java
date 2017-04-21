@@ -42,9 +42,9 @@ public class CNCPoint2DInt {
         return new CNCPoint2DInt(this.x - p.x, this.y - p.y);
     }
 
-    public double getDistanceInMeters(){
-        double dx = this.getXinMeters();
-        double dy = this.getYinMeters();
+    public long getDistance(){
+        double dx = x;
+        double dy = y;
         return (long)Math.sqrt(dx*dx+dy*dy);
     }
 

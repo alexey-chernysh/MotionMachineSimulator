@@ -88,6 +88,22 @@ public class TrigonometricTest {
     }
 
     @Test
+    public void scaling_test() {
+        double lowLimit = -Math.PI;
+        for(int i=0;i<5;i++){
+            double x = lowLimit + i*Math.PI/2.0;
+            long j = getLongFromDoubleAngle(x);
+            long s = sinInt9(j);
+            long c = cosInt10(j);
+
+            System.out.println("x      = " + x);
+            System.out.println("sin(x) = " + ((double)s)/scale);
+            System.out.println("cos(x) = " + ((double)c)/scale);
+            System.out.println();
+        }
+    }
+
+    @Test
     public void time_estimation() {
         // time measurement
         long N = 100000000; // number of call

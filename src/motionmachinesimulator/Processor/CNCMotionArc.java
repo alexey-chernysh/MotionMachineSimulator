@@ -4,6 +4,7 @@
 
 package motionmachinesimulator.Processor;
 
+import motionmachinesimulator.LongInt.Trigonometric;
 import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
@@ -15,11 +16,12 @@ public class CNCMotionArc extends CNCMotion {
     private CNCMotionArc.DIRECTION direction;
 
     //arc vars
-    private double radius;
-    private double        angle;
-    private double   startAngle;
-    private double     endAngle;
-    private double currentAngle;
+    private final double radius;
+    private final long radiusInt;
+    private long        angle;
+    private long   startAngle;
+    private long     endAngle;
+    private long currentAngle;
 
     private static final double twoPi = 2.0*Math.PI;
 
@@ -31,13 +33,15 @@ public class CNCMotionArc extends CNCMotion {
                         double endVel) throws Exception {
         super(change, type, startVel, endVel);
 
-        this.centerOffset = center; // should be non zero for arc motion
-        this.direction = dir;
+        centerOffset = center; // should be non zero for arc motion
+        direction = dir;
 
         if(this.centerOffset != null){
-            this.radius = this.centerOffset.getDistanceInMeters();
-            if(this.radius <= 0.0) throw new Exception("Zero radius arc not supported");
-            this.startAngle = Math.atan2(-this.centerOffset.y,-this.centerOffset.x);
+            radiusInt = this.centerOffset.getDistance();
+            radius = CNCScaleForLong.getDoubleFromLong(radiusInt);
+            if(radius <= 0.0) throw new Exception("Zero radius arc not supported");
+            /*
+            startAngle = Math.atan2(-(double)centerOffset.y,-(double)centerOffset.x);
             this.currentAngle = this.startAngle;
             this.endAngle = Math.atan2(this.relativeEndPoint.y - this.centerOffset.y,
                                        this.relativeEndPoint.x - this.centerOffset.x);
@@ -54,9 +58,10 @@ public class CNCMotionArc extends CNCMotion {
                     throw new Exception("Unsupported arc direction");
             }
             this.angle = this.endAngle - this.startAngle;
+            */
         } else throw new Exception("Null radius not supported");
 
-        this.wayLength = Math.abs(this.radius * this.angle);
+        wayLength = (long)(radius * Math.abs(Trigonometric.getDoubleFromLongAngle(this.angle)));
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
@@ -71,13 +76,15 @@ public class CNCMotionArc extends CNCMotion {
     }
 
     @Override
-    CNCPoint2DInt onFastTimerTick(double dl) {
+    CNCPoint2DInt onFastTimerTick(long dl) {
         this.wayLengthCurrent += dl;
-        double angleChange = this.wayLengthCurrent /this.radius;
+        /*
+        long angleChange = this.wayLengthCurrent /this.radius;
         if(this.direction == DIRECTION.CW) angleChange = - angleChange;
         this.currentAngle = this.startAngle + angleChange;
         this.currentRelativePosition.x = this.centerOffset.x + this.radius * Math.cos(this.currentAngle);
         this.currentRelativePosition.y = this.centerOffset.y + this.radius * Math.sin(this.currentAngle);
+        */
         return this.currentRelativePosition;
     }
 
@@ -85,10 +92,10 @@ public class CNCMotionArc extends CNCMotion {
     public CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint) {
         try {
             CNCPoint2DInt radiusOffset = new CNCPoint2DInt(radius, radius);
-            CNCPoint2DInt  leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
-            CNCPoint2DInt  rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
+            CNCPoint2DInt leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
+            CNCPoint2DInt rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
 
-            CNCPoint2DInt  endPoint  = fromPoint.add(relativeEndPoint);
+            CNCPoint2DInt endPoint  = fromPoint.add(relativeEndPoint);
 
             double angleChange = this.wayLengthCurrent/this.radius;
             if(this.direction == DIRECTION.CW) angleChange = - angleChange;

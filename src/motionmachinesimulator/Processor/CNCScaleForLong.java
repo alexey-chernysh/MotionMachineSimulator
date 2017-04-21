@@ -15,13 +15,13 @@ public class CNCScaleForLong {
     *   минимальный размер приращения длины, (приращение на
     *   максимальной частоте для минимальной скорости)
     *   должно быть пластичным. т.е. быть не менее 255
-    *   Тогда при частоте FPGA 5MHz и минимальной скорости
-    *   0,01 м/мин => 0,0001666 м/сек, приращение 3*10-11,
-    *   цена шага должна быть 1,3*10-13 или 1/(2^43)
+    *   Тогда при частоте тактов 1MHz и минимальной скорости
+    *   0,1 м/мин => 0,001666 м/сек, приращение 1,6*10-9,
+    *   цена шага должна быть 1,3*10-13 или 1/(2^38)
     * */
 
-    private static final int nFactor = 43;
-    private static final long scaleFactor = ((long)1)<<nFactor;
+    public static final int nFactor = 37;
+    public static final long scaleFactor = ((long)1)<<nFactor;
 
     public static double getDoubleFromLong(long x){
         return ((double)x)/scaleFactor;

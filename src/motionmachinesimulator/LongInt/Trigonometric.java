@@ -41,6 +41,14 @@ public class Trigonometric {
     public final static long scaledHalfPiMinus = -scaledHalfPi;
     public final static long scaledPiMinus = -scaledPi;
 
+    public static double getDoubleFromLongAngle(long x){
+        return (Math.PI*x)/scaledPi;
+    }
+
+    public static long getLongFromDoubleAngle(double x){
+        return (long)(x*scaledPi/Math.PI);
+    }
+
     private final static double log2 = Math.log(2.0);
     private static int shiftNeeded(double x){
         return -(int)(Math.log(Math.abs(x))/log2);

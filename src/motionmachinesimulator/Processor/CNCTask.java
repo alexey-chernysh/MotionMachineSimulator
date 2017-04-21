@@ -70,7 +70,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
 
     void reset(){
         for(CNCMotion motion: this){
-            motion.wayLengthCurrent = 0.0;
+            motion.wayLengthCurrent = 0;
         }
         CNCStepperPorts.reset();
         ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);
@@ -79,7 +79,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
     public double getWayLengthCurrent(){
         double result = 0.0;
         for(CNCMotion motion:this)
-            result += motion.wayLengthCurrent;
+            result += CNCScaleForLong.getDoubleFromLong(motion.wayLengthCurrent);
         return result;
     }
 }

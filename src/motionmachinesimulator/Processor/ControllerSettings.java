@@ -78,26 +78,26 @@ public class ControllerSettings {
         return velMeterPerSec*60*1000; // mm in min
     }
 
-    public static double getTargetStepSize(CNCMotion.MOTION_TYPE motion_type) {
+    public static long getStepSize(CNCMotion.MOTION_TYPE motion_type) {
         switch (motion_type){
             case FREE_RUN: return getStepSizeFreeRun();
             case WORKING: return getStepSizeWorking();
-            default: return 0.0;
+            default: return 0;
         }
     }
-    private static double currentStepSIze = 0.0;
-    public static void setCurrentStepSIze(double currentStepSIze) {
+    private static long currentStepSIze = 0;
+    public static void setCurrentStepSIze(long currentStepSIze) {
         ControllerSettings.currentStepSIze = currentStepSIze;
     }
-/*
+
     public static double getCurrentVelocity() {
-        return getVelocity4Step(currentStepSIze);
+        return CNCScaleForLong.getDoubleFromLong(currentStepSIze)/intervalInSec;
     }
     public static double getCurrentVelocityMMinMin() {
         double velMeterPerSec = ControllerSettings.getCurrentVelocity();
         return velMeterPerSec * 60 * 1000; // mm in min
     }
-*/
+
     private static double acceleration = 0.015; // m/sec/sec
     public static double getAcceleration() {
         return acceleration;
@@ -113,20 +113,23 @@ public class ControllerSettings {
     public static long getStep4Velocity(double velocity){
         return CNCScaleForLong.getLongFromDouble(velocity*intervalInSec);
     }
-    private static double getVelocity4Step(double stepSIze) {
-        return stepSIze/intervalInSec;
-    }
 
     public static long getWayLength4StepChange(long stepSize1, long stepSize2) {
-        long stepDifference = stepSize2 - stepSize1;
+        boolean isAccereting = (stepSize2 >= stepSize1);
         long stepIncrement = getStepIncrement4Acceleration();
-//        double stepIncrement = 1.0;   // for junit test1 only
-        /*
-            sum of i for i from 1 to N is N*(N+1)/2
-         */
-        long nStep = stepDifference/stepIncrement;
-        int nStep1 = (int)Math.abs(nStep) + 1;
-        double result = stepSize1 * nStep1 + stepIncrement*nStep*nStep1/2;
+        long result = 0;
+        long stepSize = stepSize1;
+        if(isAccereting){
+            while (stepSize < stepSize2){
+                result += stepSize;
+                stepSize += stepIncrement;
+            }
+        } else {
+            while (stepSize > stepSize2){
+                result += stepSize;
+                stepSize -= stepIncrement;
+            }
+        }
         return result;
     }
 }

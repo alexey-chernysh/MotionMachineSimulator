@@ -18,9 +18,9 @@ public class ControllerSettingsTest {
         double a = getAcceleration();
         double dt = intervalInSec;
         double vel1 = getStartVelocity();
-        double step1 = getStep4Velocity(vel1);
+        long step1 = getStep4Velocity(vel1);
         double vel2 = getWorkingVelocity();
-        double step2 = getStep4Velocity(vel2);
+        long step2 = getStep4Velocity(vel2);
         // Action
         double actualResult = getWayLength4StepChange(step1, step2);
         // Assert
@@ -32,9 +32,9 @@ public class ControllerSettingsTest {
         double ds = getStepIncrement4Acceleration();
         double dt = intervalInSec;
         double vel1 = getStartVelocity();
-        double step1 = getStep4Velocity(vel1);
+        long step1 = getStep4Velocity(vel1);
         double vel2 = getWorkingVelocity();
-        double step2 = getStep4Velocity(vel2);
+        long step2 = getStep4Velocity(vel2);
         // Action
         double actualResult = getWayLength4StepChange(step1, step2);
         // Assert

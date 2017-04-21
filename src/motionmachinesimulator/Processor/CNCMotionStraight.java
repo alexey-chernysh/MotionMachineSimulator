@@ -1,23 +1,19 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Copyright (c) 2017. Alexey Chernysh, Russia, Krasnoyarsk
  */
+
 package motionmachinesimulator.Processor;
 
+import motionmachinesimulator.LongInt.Trigonometric;
 import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
 
-/**
- * @author alexey
- */
-
 public class CNCMotionStraight extends CNCMotion {
 
     //general vars
-    private double Kx;
-    private double Ky;
+    private long Kx;
+    private long Ky;
 
     CNCMotionStraight(CNCPoint2DInt change,
                       MOTION_TYPE type,
@@ -25,13 +21,13 @@ public class CNCMotionStraight extends CNCMotion {
                       double endVel) throws Exception {
         super(change, type, startVel, endVel);
 
-        this.wayLength = change.getDistanceInMeters();
+        this.wayLength = change.getDistance();
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
-        this.Kx = this.relativeEndPoint.x/this.wayLength;
-        this.Ky = this.relativeEndPoint.y/this.wayLength;
+        Kx = (long)((((double)relativeEndPoint.x)/wayLength)* Trigonometric.scale);
+        Ky = (long)((((double)relativeEndPoint.x)/wayLength)* Trigonometric.scale);
 
         System.out.print("CNCMotionStraight:");
         System.out.print(" dX = " + this.relativeEndPoint.x);
@@ -42,7 +38,7 @@ public class CNCMotionStraight extends CNCMotion {
     @Override
     public CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint) {
         try {
-            double phase = this.wayLengthCurrent /this.wayLength;
+            double phase = ((double)this.wayLengthCurrent)/this.wayLength;
             CNCPoint2DInt innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
             CNCPoint2DInt   endPoint = relativeEndPoint.add(fromPoint);;
             int[] p1 = TrajectoryView.transfer(fromPoint);
@@ -60,10 +56,10 @@ public class CNCMotionStraight extends CNCMotion {
     }
 
     @Override
-    CNCPoint2DInt onFastTimerTick(double dl) {
-        this.wayLengthCurrent += dl;
-        this.currentRelativePosition.x = this.wayLengthCurrent * this.Kx;
-        this.currentRelativePosition.y = this.wayLengthCurrent * this.Ky;
-        return this.currentRelativePosition;
+    CNCPoint2DInt onFastTimerTick(long dl) {
+        wayLengthCurrent += dl;
+        currentRelativePosition.x = (wayLengthCurrent * Kx)>>Trigonometric.shift;
+        currentRelativePosition.y = (wayLengthCurrent * Ky)>>Trigonometric.shift;
+        return currentRelativePosition;
     }
 }
