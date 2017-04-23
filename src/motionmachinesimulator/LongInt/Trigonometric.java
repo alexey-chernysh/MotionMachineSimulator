@@ -36,17 +36,17 @@ public class Trigonometric {
     private final static long one = 1;
     public final static long scale = one<<shift;
 
-    public final static long scaledHalfPi = scale;
-    public final static long scaledPi = scaledHalfPi<<1;
+    public final static long scaledPi = (long)((Math.PI)*scale);
+    public final static long scaledHalfPi = scaledPi/2;
     public final static long scaledHalfPiMinus = -scaledHalfPi;
     public final static long scaledPiMinus = -scaledPi;
 
     public static double getDoubleFromLongAngle(long x){
-        return (Math.PI*x)/scaledPi;
+        return ((double)x)/scale;
     }
 
     public static long getLongFromDoubleAngle(double x){
-        return (long)(x*scaledPi/Math.PI);
+        return (long)(x*scale);
     }
 
     private final static double log2 = Math.log(2.0);

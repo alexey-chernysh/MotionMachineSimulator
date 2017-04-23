@@ -90,8 +90,8 @@ public class TrigonometricTest {
     @Test
     public void scaling_test() {
         double lowLimit = -Math.PI/2;
-        for(int i=0;i<9;i++){
-            double x = lowLimit + i*Math.PI/8.0;
+        for(int i=0;i<5;i++){
+            double x = lowLimit + i*Math.PI/4;
             long j = getLongFromDoubleAngle(x);
             long s = sinInt9(j);
             long c = cosInt10(j);
