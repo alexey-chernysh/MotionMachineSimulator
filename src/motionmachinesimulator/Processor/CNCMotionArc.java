@@ -9,6 +9,9 @@ import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
 
+import static motionmachinesimulator.LongInt.Trigonometric.cosInt10;
+import static motionmachinesimulator.LongInt.Trigonometric.sinInt9;
+
 public class CNCMotionArc extends CNCMotion {
 
     // arc params
@@ -17,11 +20,15 @@ public class CNCMotionArc extends CNCMotion {
 
     //arc vars
     private final double radius;
-    private final long radiusInt;
-    private long        angle;
-    private long   startAngle;
-    private long     endAngle;
-    private long currentAngle;
+    private final long   radiusInt;
+    private final long   oneDividedByRadiusScaled;
+    private double      angle;
+    private long        angleScaled;
+    private double startAngle;
+    private long   startAngleScaled;
+    private double   endAngle;
+    private long     endAngleScaled;
+    private long currentAngleScaled;
 
     private static final double twoPi = 2.0*Math.PI;
 
@@ -40,28 +47,32 @@ public class CNCMotionArc extends CNCMotion {
             radiusInt = this.centerOffset.getDistance();
             radius = CNCScaleForLong.getDoubleFromLong(radiusInt);
             if(radius <= 0.0) throw new Exception("Zero radius arc not supported");
-            /*
+            oneDividedByRadiusScaled = (long)((1.0/radius)*Trigonometric.scale);
             startAngle = Math.atan2(-(double)centerOffset.y,-(double)centerOffset.x);
-            this.currentAngle = this.startAngle;
-            this.endAngle = Math.atan2(this.relativeEndPoint.y - this.centerOffset.y,
-                                       this.relativeEndPoint.x - this.centerOffset.x);
-            switch (this.direction){
+            endAngle = Math.atan2(relativeEndPoint.y - centerOffset.y,
+                                  relativeEndPoint.x - centerOffset.x);
+            switch (direction){
                 case CW:
-                    while(this.endAngle >= this.startAngle ) this.endAngle -= twoPi;
-                    while((this.startAngle - this.endAngle) > twoPi ) this.endAngle += twoPi;
+                    while(endAngle >= startAngle ) endAngle -= twoPi;
+                    while((startAngle - endAngle) > twoPi ) endAngle += twoPi;
                     break;
                 case CCW:
-                    while(this.endAngle <= this.startAngle ) this.endAngle += twoPi;
-                    while((this.endAngle - this.startAngle) > twoPi ) this.endAngle -= twoPi;
+                    while(endAngle <= startAngle ) endAngle += twoPi;
+                    while((endAngle - startAngle) > twoPi ) endAngle -= twoPi;
                     break;
                 default:
                     throw new Exception("Unsupported arc direction");
             }
-            this.angle = this.endAngle - this.startAngle;
-            */
+            angle = endAngle - startAngle;
+
         } else throw new Exception("Null radius not supported");
 
-        wayLength = (long)(radius * Math.abs(Trigonometric.getDoubleFromLongAngle(this.angle)));
+        angleScaled = Trigonometric.getLongFromDoubleAngle(angle);
+        startAngleScaled = Trigonometric.getLongFromDoubleAngle(startAngle);
+        endAngleScaled = Trigonometric.getLongFromDoubleAngle(endAngle);
+        currentAngleScaled = startAngleScaled;
+
+        wayLength = (long)(radius * Math.abs(angle));
 
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
@@ -77,14 +88,12 @@ public class CNCMotionArc extends CNCMotion {
 
     @Override
     CNCPoint2DInt onFastTimerTick(long dl) {
-        this.wayLengthCurrent += dl;
-        /*
-        long angleChange = this.wayLengthCurrent /this.radius;
-        if(this.direction == DIRECTION.CW) angleChange = - angleChange;
-        this.currentAngle = this.startAngle + angleChange;
-        this.currentRelativePosition.x = this.centerOffset.x + this.radius * Math.cos(this.currentAngle);
-        this.currentRelativePosition.y = this.centerOffset.y + this.radius * Math.sin(this.currentAngle);
-        */
+        wayLengthCurrent += dl;
+        long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>Trigonometric.shift;
+        if(direction == DIRECTION.CW) angleChange = - angleChange;
+        currentAngleScaled = startAngleScaled + angleChange;
+        currentRelativePosition.x = centerOffset.x + (radiusInt * cosInt10(currentAngleScaled))>>Trigonometric.shift;
+        currentRelativePosition.y = centerOffset.y + (radiusInt * sinInt9(currentAngleScaled))>>Trigonometric.shift;
         return this.currentRelativePosition;
     }
 

@@ -33,8 +33,7 @@ public class Trigonometric {
     }
 
     public final static int shift = 30;
-    private final static long one = 1;
-    public final static long scale = one<<shift;
+    public final static long scale = 1L<<shift;
 
     public final static long scaledPi = (long)((Math.PI)*scale);
     public final static long scaledHalfPi = scaledPi/2;
@@ -61,15 +60,15 @@ public class Trigonometric {
     private final static double dsk_9  =  0.00000259811044408555809666;
 
     private final static int n1 = shift+shiftNeeded(dsk_1);
-    private final static long scale1 = one<<n1;
+    private final static long scale1 = 1L<<n1;
     private final static int n3 = shift+shiftNeeded(dsk_3);
-    private final static long scale3 = one<<n3;
+    private final static long scale3 = 1L<<n3;
     private final static int n5 = shift+shiftNeeded(dsk_5);
-    private final static long scale5 = one<<n5;
+    private final static long scale5 = 1L<<n5;
     private final static int n7 = shift+shiftNeeded(dsk_7);
-    private final static long scale7 = one<<n7;
+    private final static long scale7 = 1L<<n7;
     private final static int n9 = shift+shiftNeeded(dsk_9);
-    private final static long scale9 = one<<n9;
+    private final static long scale9 = 1L<<n9;
 
     private final static long k9_1  = (long)(dsk_1  * scale1);
     private final static long k9_3  = (long)(dsk_3  * scale3);
@@ -101,17 +100,17 @@ public class Trigonometric {
     private final static double dck_10 = -0.000000261150902081161051732;
 
     private final static int n0 = shift+shiftNeeded(dck_0);
-    private final static long scale0 = one<<n0;
+    private final static long scale0 = 1L<<n0;
     private final static int n2 = shift+shiftNeeded(dck_2);
-    private final static long scale2 = one<<n2;
+    private final static long scale2 = 1L<<n2;
     private final static int n4 = shift+shiftNeeded(dck_4);
-    private final static long scale4 = one<<n4;
+    private final static long scale4 = 1L<<n4;
     private final static int n6 = shift+shiftNeeded(dck_6);
-    private final static long scale6 = one<<n6;
+    private final static long scale6 = 1L<<n6;
     private final static int n8 = shift+shiftNeeded(dck_8);
-    private final static long scale8 = one<<n8;
+    private final static long scale8 = 1L<<n8;
     private final static int n10 = shift+shiftNeeded(dck_10);
-    private final static long scale10 = one<<n10;
+    private final static long scale10 = 1L<<n10;
 
     private final static long k10_0   = (long)(dck_0  * scale0);
     private final static long k10_2   = (long)(dck_2  * scale2);
