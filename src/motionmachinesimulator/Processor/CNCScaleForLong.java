@@ -21,7 +21,7 @@ public class CNCScaleForLong {
     * */
 
     public static final int nFactor = 37;
-    public static final long scaleFactor = ((long)1)<<nFactor;
+    public static final long scaleFactor = 1L<<nFactor;
 
     public static double getDoubleFromLong(long x){
         return ((double)x)/scaleFactor;

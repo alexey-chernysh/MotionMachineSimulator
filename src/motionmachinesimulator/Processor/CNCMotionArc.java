@@ -72,9 +72,9 @@ public class CNCMotionArc extends CNCMotion {
         endAngleScaled = Trigonometric.getLongFromDoubleAngle(endAngle);
         currentAngleScaled = startAngleScaled;
 
-        wayLength = (long)(radius * Math.abs(angle));
+        wayLength = (long)(radiusInt * Math.abs(angle));
 
-        if( this.wayLength <= 0.0)
+        if( wayLength <= 0)
             throw new Exception("Null motion not supported");
 
         System.out.print("CNCMotionArc:");
@@ -100,13 +100,13 @@ public class CNCMotionArc extends CNCMotion {
     @Override
     public CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint) {
         try {
-            CNCPoint2DInt radiusOffset = new CNCPoint2DInt(radius, radius);
+            CNCPoint2DInt radiusOffset = new CNCPoint2DInt(radiusInt, radiusInt);
             CNCPoint2DInt leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
             CNCPoint2DInt rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
 
             CNCPoint2DInt endPoint  = fromPoint.add(relativeEndPoint);
 
-            double angleChange = this.wayLengthCurrent/this.radius;
+            long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>Trigonometric.shift;
             if(this.direction == DIRECTION.CW) angleChange = - angleChange;
             int[] p1 = TrajectoryView.transfer(leftBottomPoint);
             int[] p2 = TrajectoryView.transfer(rightTopPoint);
