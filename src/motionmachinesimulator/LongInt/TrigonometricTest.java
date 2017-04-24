@@ -32,7 +32,7 @@ public class TrigonometricTest {
         System.out.println("sin_int = " + ys2);
         double error2 = Math.abs(ys2-z);
         System.out.println("ERROR MEASUREMENT: " + error2);
-        double yc2 = cosInt10((int)(x1*scale))/((double)(scale));
+        double yc2 = cosInt9((int)(x1*scale))/((double)(scale));
         System.out.println("cos_int = " + yc2);
         double error3 = Math.abs(yc2-Math.cos(x1));
         System.out.println("ERROR MEASUREMENT: " + error3);
@@ -46,7 +46,7 @@ public class TrigonometricTest {
         long error_sum = 0;
         for(int i=0;i<=N;i++){
             long s = sinInt9(i);
-            long c = cosInt10(i);
+            long c = cosInt9(i);
             long res = (s*s + c*c)>>(shift);
             long error = Math.abs(res - target);
             /*
@@ -72,7 +72,7 @@ public class TrigonometricTest {
             double x = lowLimit + i*(hiLimit-lowLimit)/N;
             long j = (long)((x*scaledPi)/Math.PI);
             long s = sinInt9(j);
-            long c = cosInt10(j);
+            long c = cosInt9(j);
             long res = (s*s + c*c)>>(shift);
             long error = Math.abs(res - target);
 
@@ -94,7 +94,7 @@ public class TrigonometricTest {
             double x = lowLimit + i*Math.PI/2;
             long j = getLongFromDoubleAngle(x);
             long s = sinInt9(j);
-            long c = cosInt10(j);
+            long c = cosInt9(j);
             double ds = ((double)s)/scale;
             double dc = ((double)c)/scale;
 

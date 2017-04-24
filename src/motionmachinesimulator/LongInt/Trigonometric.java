@@ -34,6 +34,7 @@ public class Trigonometric {
 
     public final static int shift = 30;
     public final static long scale = 1L<<shift;
+    public final static double doubleScale = scale;
 
     public final static long scaledPi = (long)((Math.PI)*scale);
     public final static long scaledHalfPi = scaledPi/2;
@@ -41,11 +42,11 @@ public class Trigonometric {
     public final static long scaledPiMinus = -scaledPi;
 
     public static double getDoubleFromLongAngle(long x){
-        return ((double)x)/scale;
+        return x/doubleScale;
     }
 
     public static long getLongFromDoubleAngle(double x){
-        return (long)(x*scale);
+        return (long)(x*doubleScale);
     }
 
     private final static double log2 = Math.log(2.0);
@@ -120,7 +121,7 @@ public class Trigonometric {
     private final static long k10_8   = (long)(dck_8  * scale8);
     private final static long k10_10  = (long)(dck_10 * scale10);
 
-    public static int cosInt10(long angle) {
+    public static int cosInt9(long angle) {
     /* in int32 format - PI = Ox0010 0000 0000 0000 0000 0000 0000 0000
         cos(0) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
         return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
@@ -145,11 +146,6 @@ public class Trigonometric {
         result = (k10_0 + result)>>(n0-shift);
         if(positiveResult)return (int)(result);
         else return -(int)(result);
-    }
-
-    public long scaleAngleToInt(double x){
-        // for testing purpose only
-        return (long)((x*scaledPi)/Math.PI);
     }
 
     // masking hi bits for sine & cosine

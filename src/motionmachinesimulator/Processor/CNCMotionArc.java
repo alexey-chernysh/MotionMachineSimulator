@@ -9,7 +9,7 @@ import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
 
-import static motionmachinesimulator.LongInt.Trigonometric.cosInt10;
+import static motionmachinesimulator.LongInt.Trigonometric.cosInt9;
 import static motionmachinesimulator.LongInt.Trigonometric.sinInt9;
 
 public class CNCMotionArc extends CNCMotion {
@@ -89,11 +89,14 @@ public class CNCMotionArc extends CNCMotion {
     @Override
     void onFastTimerTick(long dl) {
         wayLengthCurrent += dl;
-        long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>Trigonometric.shift;
-        if(direction == DIRECTION.CCW) angleChange = - angleChange;
-        currentAngleScaled += angleChange;
-        currentRelativePosition.setX(centerOffset.getX() + (radiusInt * cosInt10(currentAngleScaled))>>Trigonometric.shift);
-        currentRelativePosition.setY(centerOffset.getY() + (radiusInt * sinInt9(currentAngleScaled)) >>Trigonometric.shift);
+        long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>CNCScaler.shift;
+        // debug data
+        long angleChangeControl = (wayLength*oneDividedByRadiusScaled)>>CNCScaler.shift;
+        double check = angleChangeControl/((double)angleScaled);
+        if(direction == DIRECTION.CW) angleChange = - angleChange;
+        currentAngleScaled = startAngleScaled + angleChange;
+        currentRelativePosition.setX((radiusInt * cosInt9(currentAngleScaled))>>Trigonometric.shift - centerOffset.getX());
+        currentRelativePosition.setY((radiusInt * sinInt9(currentAngleScaled))>>Trigonometric.shift - centerOffset.getY());
     }
 
     @Override
