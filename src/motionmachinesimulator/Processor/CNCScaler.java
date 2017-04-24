@@ -22,9 +22,11 @@ public class CNCScaler {
 
     public static final int nFactor = 30;
     public static final long scaleFactor = 1L<<nFactor;
+    private static final double doubleScaleFactor = scaleFactor;
 
     public static double long2double(long x){
-        return ((double)x)/scaleFactor;
+        double tmp = x;
+        return tmp/doubleScaleFactor;
     }
 
     public static long double2long(double x){

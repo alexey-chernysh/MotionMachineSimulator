@@ -135,8 +135,10 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         history.addVelocity(currentVelocity, wayLengthCurrent / wayLengthForTask);
         this.displayVelocity((int) currentVelocity);
         CNCPoint position = CNCStepperPorts.getPosition();
-        int x = (int) (position.getXinMeters() * 1000000.0);
-        int y = (int) (position.getYinMeters() * 1000000.0);
+        double dx = position.getXinMeters();
+        double dy = position.getYinMeters();
+        int x = (int) (dx * 1000000.0);
+        int y = (int) (dy * 1000000.0);
         this.displayPositionX(x / 1000.0);
         this.displayPositionY(y / 1000.0);
         repaint();

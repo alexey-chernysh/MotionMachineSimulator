@@ -29,7 +29,7 @@ public class CNCStepperPorts {
     }
 
     public static CNCPoint getPosition(){
-        return position;
+        return new CNCPoint(position.getX(), position.getY());
     }
 
     public static void reset() {

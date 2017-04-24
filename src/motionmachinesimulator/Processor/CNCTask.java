@@ -57,7 +57,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
     public double getWayLength(){
         double taskWayLength = 0.0;
         for(CNCMotion motion: this){
-            taskWayLength += motion.wayLength;
+            taskWayLength += CNCScaler.long2double(motion.wayLength);
         }
         return taskWayLength;
     }
