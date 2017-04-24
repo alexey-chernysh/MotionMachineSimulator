@@ -4,10 +4,7 @@
 
 package motionmachinesimulator.Processor;
 
-/**
- * Created by Sales on 21.04.2017.
- */
-public class CNCScaler {
+class CNCScaler {
     /*
     *   Целочисленное масшатабироване использовано для ускорения
     *   арифметических оперций.
@@ -20,17 +17,16 @@ public class CNCScaler {
     *   цена шага должна быть 1,3*10-13 или 1/(2^38)
     * */
 
-    public static final int nFactor = 30;
-    public static final long scaleFactor = 1L<<nFactor;
+    private static final int nFactor = 27;
+    private static final long scaleFactor = 1L<<nFactor;
     private static final double doubleScaleFactor = scaleFactor;
 
-    public static double long2double(long x){
-        double tmp = x;
-        return tmp/doubleScaleFactor;
+   static double long2double(long x){
+        return x/doubleScaleFactor;
     }
 
-    public static long double2long(double x){
-        return (long)(x*scaleFactor);
+    static long double2long(double x){
+        return (long)(x*doubleScaleFactor);
     }
 
 }

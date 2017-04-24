@@ -32,7 +32,7 @@ public class CNCStepperPorts {
         return new CNCPoint(position.getX(), position.getY());
     }
 
-    public static void reset() {
+    static void reset() {
         position.setX(0);
         position.setY(0);
     }

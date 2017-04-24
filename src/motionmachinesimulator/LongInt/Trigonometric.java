@@ -80,7 +80,8 @@ public class Trigonometric {
     /* in int32 format - PI = Ox0100 0000 0000 0000 0000 0000 0000 0000
         sin(PI/2) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
     * */
-        long tmp = maskToPi(angle);
+//        long tmp = maskToPi(angle);
+        long tmp = angle;
         if(tmp > scaledHalfPi)      tmp = scaledPi      - tmp;
         if(tmp < scaledHalfPiMinus) tmp = scaledPiMinus - tmp;
         long x2 = (tmp * tmp)>>shift;
@@ -124,7 +125,8 @@ public class Trigonometric {
         cos(0) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
         return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
     * */
-        long tmp = maskToPi(angle);
+//        long tmp = maskToPi(angle);
+        long tmp = angle;
         boolean positiveResult = true;
         if(tmp > scaledHalfPi){
             tmp = scaledPi - tmp;

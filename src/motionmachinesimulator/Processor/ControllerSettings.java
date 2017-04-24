@@ -54,7 +54,7 @@ public class ControllerSettings {
     public final static int intervalInMillis = 1; // min available
     public final static double intervalInSec = intervalInMillis/1000.0;
 
-    private static double startVelocity = 0.1/60.0; // m/sec 100 mm in  min
+    private static double startVelocity = 0.05/60.0; // m/sec 100 mm in  min
     public static double getStartVelocity(){ return startVelocity; }
 
     private static double freeRunVelocity = 5.0/60.0; // m/sec for 5.0 m/min
@@ -65,7 +65,7 @@ public class ControllerSettings {
         return freeRunVelocity;
     }
 
-    private static double workingVelocity = 1.0/60.0; // m/sec for 1.0 m/min
+    private static double workingVelocity = 0.30/60.0; // m/sec for 1.0 m/min
     public static void setWorkingVelocity(double newValue){ workingVelocity = newValue;}
     public static double getWorkingVelocity() {
         return workingVelocity;

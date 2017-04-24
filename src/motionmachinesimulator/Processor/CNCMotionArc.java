@@ -47,7 +47,7 @@ public class CNCMotionArc extends CNCMotion {
             radiusInt = this.centerOffset.getDistance();
             radius = CNCScaler.long2double(radiusInt);
             if(radius <= 0.0) throw new Exception("Zero radius arc not supported");
-            oneDividedByRadiusScaled = (long)((1.0/radius)*Trigonometric.scale);
+            oneDividedByRadiusScaled = (long)(Trigonometric.scale/radius);
             startAngle = Math.atan2(-centerOffset.getY(),-centerOffset.getX());
             endAngle = Math.atan2(relativeEndPoint.getY() - centerOffset.getY(),
                                   relativeEndPoint.getX() - centerOffset.getX());
