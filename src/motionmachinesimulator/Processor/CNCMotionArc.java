@@ -48,9 +48,9 @@ public class CNCMotionArc extends CNCMotion {
             radius = CNCScaler.long2double(radiusInt);
             if(radius <= 0.0) throw new Exception("Zero radius arc not supported");
             oneDividedByRadiusScaled = (long)((1.0/radius)*Trigonometric.scale);
-            startAngle = Math.atan2(-centerOffset.y,-centerOffset.x);
-            endAngle = Math.atan2(relativeEndPoint.y - centerOffset.y,
-                                  relativeEndPoint.x - centerOffset.x);
+            startAngle = Math.atan2(-centerOffset.getY(),-centerOffset.getX());
+            endAngle = Math.atan2(relativeEndPoint.getY() - centerOffset.getY(),
+                                  relativeEndPoint.getX() - centerOffset.getX());
             switch (direction){
                 case CW:
                     while(endAngle >= startAngle ) endAngle -= twoPi;
@@ -78,8 +78,8 @@ public class CNCMotionArc extends CNCMotion {
             throw new Exception("Null motion not supported");
 
         System.out.print("CNCMotionArc:");
-        System.out.print(" dX = " + this.relativeEndPoint.x);
-        System.out.print(" dY = " + this.relativeEndPoint.y);
+        System.out.print(" dX = " + this.relativeEndPoint.getXinMeters());
+        System.out.print(" dY = " + this.relativeEndPoint.getYinMeters());
         System.out.print(" startAngle = " + this.startAngle);
         System.out.print(" endAngle = " + this.endAngle);
         System.out.print(" angle = " + this.angle);
@@ -92,8 +92,8 @@ public class CNCMotionArc extends CNCMotion {
         long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>Trigonometric.shift;
         if(direction == DIRECTION.CCW) angleChange = - angleChange;
         currentAngleScaled += angleChange;
-        currentRelativePosition.x = centerOffset.x + (radiusInt * cosInt10(currentAngleScaled))>>Trigonometric.shift;
-        currentRelativePosition.y = centerOffset.y + (radiusInt * sinInt9(currentAngleScaled)) >>Trigonometric.shift;
+        currentRelativePosition.setX(centerOffset.getX() + (radiusInt * cosInt10(currentAngleScaled))>>Trigonometric.shift);
+        currentRelativePosition.setY(centerOffset.getY() + (radiusInt * sinInt9(currentAngleScaled)) >>Trigonometric.shift);
     }
 
     @Override

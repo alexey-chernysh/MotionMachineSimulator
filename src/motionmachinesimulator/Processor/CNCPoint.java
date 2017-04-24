@@ -4,12 +4,11 @@
 
 package motionmachinesimulator.Processor;
 
-/**
- * Created by Sales on 20.04.2017.
- */
 public class CNCPoint {
-    public long x;
-    public long y;
+
+    private long x;
+
+    private long y;
 
     public CNCPoint(){
         x = 0;
@@ -24,6 +23,22 @@ public class CNCPoint {
     public CNCPoint(double _x, double _y){
         x = CNCScaler.double2long(_x);
         y = CNCScaler.double2long(_y);
+    }
+
+    public long getX() {
+        return x;
+    }
+
+    public void setX(long newX) {
+        x = newX;
+    }
+
+    public long getY() {
+        return y;
+    }
+
+    public void setY(long newY) {
+        y = newY;
     }
 
     public double getXinMeters(){

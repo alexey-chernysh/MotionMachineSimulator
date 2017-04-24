@@ -26,12 +26,12 @@ public class CNCMotionStraight extends CNCMotion {
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
-        Kx = (long)((((double)relativeEndPoint.x)/wayLength)* Trigonometric.scale);
-        Ky = (long)((((double)relativeEndPoint.x)/wayLength)* Trigonometric.scale);
+        Kx = (long)((((double)relativeEndPoint.getX())/wayLength)* Trigonometric.scale);
+        Ky = (long)((((double)relativeEndPoint.getY())/wayLength)* Trigonometric.scale);
 
         System.out.print("CNCMotionStraight:");
-        System.out.print(" dX = " + this.relativeEndPoint.x);
-        System.out.print(" dY = " + this.relativeEndPoint.y);
+        System.out.print(" dX = " + this.relativeEndPoint.getXinMeters());
+        System.out.print(" dY = " + this.relativeEndPoint.getYinMeters());
         System.out.println(" wayLength = " + this.wayLength);
     }
 
@@ -58,7 +58,7 @@ public class CNCMotionStraight extends CNCMotion {
     @Override
     void onFastTimerTick(long dl) {
         wayLengthCurrent += dl;
-        currentRelativePosition.x = (wayLengthCurrent * Kx)>>Trigonometric.shift;
-        currentRelativePosition.y = (wayLengthCurrent * Ky)>>Trigonometric.shift;
+        currentRelativePosition.setX((wayLengthCurrent * Kx)>>Trigonometric.shift);
+        currentRelativePosition.setY((wayLengthCurrent * Ky)>>Trigonometric.shift);
     }
 }

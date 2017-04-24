@@ -21,11 +21,11 @@ public class CNCStepperPorts {
 
 //        dirX  = (newPosition.x >= position.x);
 //        stepX = (newPosition.x & stepBitMask) > 0;
-        position.x =  newPosition.x;
+        position.setX(newPosition.getX());
 
 //        dirY  = (newPosition.y >= position.y);
 //        stepY = (newPosition.y & stepBitMask) > 0;
-        position.y =  newPosition.y;
+        position.setY(newPosition.getY());
     }
 
     public static CNCPoint getPosition(){
@@ -33,7 +33,7 @@ public class CNCStepperPorts {
     }
 
     public static void reset() {
-        position.x = 0;
-        position.y = 0;
+        position.setX(0);
+        position.setY(0);
     }
 }
