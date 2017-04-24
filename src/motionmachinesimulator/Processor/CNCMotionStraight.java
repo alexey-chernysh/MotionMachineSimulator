@@ -15,7 +15,7 @@ public class CNCMotionStraight extends CNCMotion {
     private long Kx;
     private long Ky;
 
-    CNCMotionStraight(CNCPoint2DInt change,
+    CNCMotionStraight(CNCPoint change,
                       MOTION_TYPE type,
                       double startVel,
                       double endVel) throws Exception {
@@ -36,11 +36,11 @@ public class CNCMotionStraight extends CNCMotion {
     }
 
     @Override
-    public CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint) {
+    public CNCPoint paint(Graphics g, CNCPoint fromPoint) {
         try {
             double phase = ((double)this.wayLengthCurrent)/this.wayLength;
-            CNCPoint2DInt innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
-            CNCPoint2DInt   endPoint = relativeEndPoint.add(fromPoint);;
+            CNCPoint innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
+            CNCPoint endPoint = relativeEndPoint.add(fromPoint);;
             int[] p1 = TrajectoryView.transfer(fromPoint);
             int[] p2 = TrajectoryView.transfer(innerPoint);
             int[] p3 = TrajectoryView.transfer(endPoint);
@@ -56,10 +56,9 @@ public class CNCMotionStraight extends CNCMotion {
     }
 
     @Override
-    CNCPoint2DInt onFastTimerTick(long dl) {
+    void onFastTimerTick(long dl) {
         wayLengthCurrent += dl;
         currentRelativePosition.x = (wayLengthCurrent * Kx)>>Trigonometric.shift;
         currentRelativePosition.y = (wayLengthCurrent * Ky)>>Trigonometric.shift;
-        return currentRelativePosition;
     }
 }

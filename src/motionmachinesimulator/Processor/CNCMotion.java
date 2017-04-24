@@ -15,11 +15,12 @@ public abstract class CNCMotion extends CNCAction {
     private long stepSizeConstantVelocity;
     private long stepSizeIncrement;
 
-    protected final CNCPoint2DInt relativeEndPoint;
-    protected CNCPoint2DInt currentRelativePosition;
+    protected final CNCPoint relativeEndPoint;
+    protected CNCPoint currentRelativePosition;
 
     protected long wayLength;
     protected long wayLengthCurrent;
+
     private long wayLengthAcceleration;
     private long wayLengthDeceleration;
     private long wayLengthConstantVelocity;
@@ -27,7 +28,7 @@ public abstract class CNCMotion extends CNCAction {
     /**
      * @param endPoint - relative position change after motion
      */
-    CNCMotion(CNCPoint2DInt endPoint,
+    CNCMotion(CNCPoint endPoint,
               MOTION_TYPE type,
               double startVel,
               double endVel) throws Exception {
@@ -47,7 +48,7 @@ public abstract class CNCMotion extends CNCAction {
 
         stepSizeIncrement = ControllerSettings.getStepIncrement4Acceleration();
 
-        currentRelativePosition = new CNCPoint2DInt();
+        currentRelativePosition = new CNCPoint();
 
         phase = MOTION_PHASE.ACCELERATION;
     }
@@ -67,14 +68,12 @@ public abstract class CNCMotion extends CNCAction {
 
     }
 
-    abstract CNCPoint2DInt onFastTimerTick(long dl); //return new relative position
+    abstract void onFastTimerTick(long dl); //return new relative position
 
-    public abstract CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint);
+    public abstract CNCPoint paint(Graphics g, CNCPoint fromPoint);
 
-    public void run(CNCPoint2DInt startPos){
+    public void run(CNCPoint startPos){
         long currentDistanceToTarget = wayLength;
-        CNCPoint2DInt currentAbsPos;
-        CNCPoint2DInt relPos;
         long stepSizeCurrent;
 
         if(executionDirection.isForward())
@@ -86,12 +85,11 @@ public abstract class CNCMotion extends CNCAction {
             if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN){
 
                 if(executionDirection.isForward())
-                    relPos = onFastTimerTick(stepSizeCurrent);
+                    onFastTimerTick(stepSizeCurrent);
                 else
-                    relPos = onFastTimerTick(-stepSizeCurrent);
+                    onFastTimerTick(-stepSizeCurrent);
 
-                currentAbsPos = startPos.add(relPos);
-                CNCStepperPorts.setNewPosition(currentAbsPos.x,currentAbsPos.y);
+                CNCStepperPorts.setPosition(startPos.add(currentRelativePosition));
                 ControllerSettings.setCurrentStepSIze(stepSizeCurrent);
 
                 switch (phase){

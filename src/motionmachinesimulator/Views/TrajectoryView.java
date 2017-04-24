@@ -14,13 +14,13 @@ public class TrajectoryView {
     public static final Color color1 = new Color(255,0,0);
     public static final Color color2 = new Color(0,0,255);
 
-    public static int[] transfer(CNCPoint2DInt input) throws Exception {
+    public static int[] transfer(CNCPoint input) throws Exception {
         double[] inputVector = {input.getXinMeters(),input.getYinMeters()};
         if(input != null){
             int[] result = new int[2];
-            for (int i = 0; i< 2; i++){
+            for (int i = 0; i < 2; i++){
                 double tmp = offsetVector[i];
-                for(int j = 0; j< 2; j++){
+                for(int j = 0; j < 2; j++){
                     tmp += inputVector[j]*rotationMatrix[i][j];
                 }
                 result[i] = (int)(scale*tmp);
@@ -30,15 +30,15 @@ public class TrajectoryView {
     }
 
     public static void paint(Graphics g){
-        CNCMotionController mc = CNCMotionController.getInstance();
-        ArrayList<CNCMotion> task = mc.getCurrentTask();
+        ArrayList<CNCMotion> task = CNCMotionController.getInstance().getCurrentTask();
+
         //  draw trajectory
-        CNCPoint2DInt startPoint = new CNCPoint2DInt();
+        CNCPoint startPoint = new CNCPoint();
         for(CNCMotion currentMotion : task){
             startPoint = currentMotion.paint(g, startPoint);
         }
         // draw current position
-        CNCPoint2DInt currentPosition = CNCStepperPorts.getPosition();
+        CNCPoint currentPosition = CNCStepperPorts.getPosition();
         int[] x;
         try {
             x = TrajectoryView.transfer(currentPosition);

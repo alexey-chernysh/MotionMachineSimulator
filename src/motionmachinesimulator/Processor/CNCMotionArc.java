@@ -15,7 +15,7 @@ import static motionmachinesimulator.LongInt.Trigonometric.sinInt9;
 public class CNCMotionArc extends CNCMotion {
 
     // arc params
-    private CNCPoint2DInt centerOffset;
+    private CNCPoint centerOffset;
     private CNCMotionArc.DIRECTION direction;
 
     //arc vars
@@ -32,8 +32,8 @@ public class CNCMotionArc extends CNCMotion {
 
     private static final double twoPi = 2.0*Math.PI;
 
-    public CNCMotionArc(CNCPoint2DInt change,
-                        CNCPoint2DInt center,
+    public CNCMotionArc(CNCPoint change,
+                        CNCPoint center,
                         CNCMotionArc.DIRECTION dir,
                         MOTION_TYPE type,
                         double startVel,
@@ -45,10 +45,10 @@ public class CNCMotionArc extends CNCMotion {
 
         if(this.centerOffset != null){
             radiusInt = this.centerOffset.getDistance();
-            radius = CNCScaleForLong.getDoubleFromLong(radiusInt);
+            radius = CNCScaler.long2double(radiusInt);
             if(radius <= 0.0) throw new Exception("Zero radius arc not supported");
             oneDividedByRadiusScaled = (long)((1.0/radius)*Trigonometric.scale);
-            startAngle = Math.atan2(-(double)centerOffset.y,-(double)centerOffset.x);
+            startAngle = Math.atan2(-centerOffset.y,-centerOffset.x);
             endAngle = Math.atan2(relativeEndPoint.y - centerOffset.y,
                                   relativeEndPoint.x - centerOffset.x);
             switch (direction){
@@ -87,27 +87,27 @@ public class CNCMotionArc extends CNCMotion {
     }
 
     @Override
-    CNCPoint2DInt onFastTimerTick(long dl) {
+    void onFastTimerTick(long dl) {
         wayLengthCurrent += dl;
         long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>Trigonometric.shift;
-        if(direction == DIRECTION.CW) angleChange = - angleChange;
-        currentAngleScaled = startAngleScaled + angleChange;
+        if(direction == DIRECTION.CCW) angleChange = - angleChange;
+        currentAngleScaled += angleChange;
         currentRelativePosition.x = centerOffset.x + (radiusInt * cosInt10(currentAngleScaled))>>Trigonometric.shift;
-        currentRelativePosition.y = centerOffset.y + (radiusInt * sinInt9(currentAngleScaled))>>Trigonometric.shift;
-        return this.currentRelativePosition;
+        currentRelativePosition.y = centerOffset.y + (radiusInt * sinInt9(currentAngleScaled)) >>Trigonometric.shift;
     }
 
     @Override
-    public CNCPoint2DInt paint(Graphics g, CNCPoint2DInt fromPoint) {
+    public CNCPoint paint(Graphics g, CNCPoint fromPoint) {
         try {
-            CNCPoint2DInt radiusOffset = new CNCPoint2DInt(radiusInt, radiusInt);
-            CNCPoint2DInt leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
-            CNCPoint2DInt rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
+            CNCPoint radiusOffset = new CNCPoint(radiusInt, radiusInt);
+            CNCPoint leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
+            CNCPoint rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
 
-            CNCPoint2DInt endPoint  = fromPoint.add(relativeEndPoint);
+            CNCPoint endPoint  = fromPoint.add(relativeEndPoint);
 
-            long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>Trigonometric.shift;
-            if(this.direction == DIRECTION.CW) angleChange = - angleChange;
+            double phase = ((double)this.wayLengthCurrent)/this.wayLength;
+            double angleChange = angle/phase;
+            if(this.direction == DIRECTION.CCW) angleChange = - angleChange;
             int[] p1 = TrajectoryView.transfer(leftBottomPoint);
             int[] p2 = TrajectoryView.transfer(rightTopPoint);
             int x1 = Math.min(p1[0],p2[0]);

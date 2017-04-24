@@ -91,7 +91,7 @@ public class ControllerSettings {
     }
 
     public static double getCurrentVelocity() {
-        return CNCScaleForLong.getDoubleFromLong(currentStepSIze)/intervalInSec;
+        return CNCScaler.long2double(currentStepSIze)/intervalInSec;
     }
     public static double getCurrentVelocityMMinMin() {
         double velMeterPerSec = ControllerSettings.getCurrentVelocity();
@@ -107,11 +107,11 @@ public class ControllerSettings {
     }
     public static long getStepIncrement4Acceleration(){
         double velocityIncrement = acceleration * intervalInSec;
-        return CNCScaleForLong.getLongFromDouble(velocityIncrement*intervalInSec);
+        return CNCScaler.double2long(velocityIncrement*intervalInSec);
     }
 
     public static long getStep4Velocity(double velocity){
-        return CNCScaleForLong.getLongFromDouble(velocity*intervalInSec);
+        return CNCScaler.double2long(velocity*intervalInSec);
     }
 
     public static long getWayLength4StepChange(long stepSize1, long stepSize2) {

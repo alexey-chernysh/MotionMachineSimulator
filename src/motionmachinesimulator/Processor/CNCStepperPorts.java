@@ -6,8 +6,8 @@ package motionmachinesimulator.Processor;
 
 public class CNCStepperPorts {
 
-    private static CNCPoint2DInt position = new CNCPoint2DInt();
-
+    private static CNCPoint position = new CNCPoint();
+/*
     private static boolean dirX = false;
     private static boolean dirY = false;
 
@@ -16,20 +16,20 @@ public class CNCStepperPorts {
 
     private static final int stepBitPosition = 1;
     private static final long stepBitMask = ((int)1)<<(stepBitPosition-1);
+*/
+    public static void setPosition(CNCPoint newPosition){
 
-    public static void setNewPosition(long x, long y){
+//        dirX  = (newPosition.x >= position.x);
+//        stepX = (newPosition.x & stepBitMask) > 0;
+        position.x =  newPosition.x;
 
-        dirX  = (x >= position.x);
-        stepX = (x & stepBitMask) > 0;
-        position.x =  x;
-
-        dirY  = (y >= position.y);
-        stepY = (y & stepBitMask) > 0;
-        position.y =  y;
+//        dirY  = (newPosition.y >= position.y);
+//        stepY = (newPosition.y & stepBitMask) > 0;
+        position.y =  newPosition.y;
     }
 
-    public static CNCPoint2DInt getPosition(){
-        return new CNCPoint2DInt(position.x, position.y);
+    public static CNCPoint getPosition(){
+        return position;
     }
 
     public static void reset() {

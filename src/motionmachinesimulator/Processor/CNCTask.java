@@ -12,17 +12,17 @@ public class CNCTask extends ArrayList<CNCMotion> {
 
     private void fillDebugTask(){
         // debug sequence
-        CNCPoint2DInt point1 = new CNCPoint2DInt( 0.0, 0.045);
-        CNCPoint2DInt point2 = new CNCPoint2DInt( 0.01, 0.01);
-        CNCPoint2DInt center1 = new CNCPoint2DInt(0.01, 0.00);
-        CNCPoint2DInt point3 = new CNCPoint2DInt( 0.03,  0.0);
-        CNCPoint2DInt point4 = new CNCPoint2DInt( 0.01, -0.01);
-        CNCPoint2DInt center2 = new CNCPoint2DInt(0.00, -0.01);
-        CNCPoint2DInt point5 = new CNCPoint2DInt(0.00, -0.03);
-        CNCPoint2DInt point6 = new CNCPoint2DInt(-0.01, -0.01);
-        CNCPoint2DInt center3 = new CNCPoint2DInt(-0.01, 0.0);
-        CNCPoint2DInt point7 = new CNCPoint2DInt(-0.045, 0.0);
-        CNCPoint2DInt point8 = new CNCPoint2DInt(0.005, -0.005);
+        CNCPoint point1 = new CNCPoint( 0.0, 0.045);
+        CNCPoint point2 = new CNCPoint( 0.01, 0.01);
+        CNCPoint center1 = new CNCPoint(0.01, 0.00);
+        CNCPoint point3 = new CNCPoint( 0.03,  0.0);
+        CNCPoint point4 = new CNCPoint( 0.01, -0.01);
+        CNCPoint center2 = new CNCPoint(0.00, -0.01);
+        CNCPoint point5 = new CNCPoint(0.00, -0.03);
+        CNCPoint point6 = new CNCPoint(-0.01, -0.01);
+        CNCPoint center3 = new CNCPoint(-0.01, 0.0);
+        CNCPoint point7 = new CNCPoint(-0.045, 0.0);
+        CNCPoint point8 = new CNCPoint(0.005, -0.005);
 
         CNCMotion.MOTION_TYPE t1 = CNCMotion.MOTION_TYPE.WORKING;
         CNCMotion.MOTION_TYPE t2 = CNCMotion.MOTION_TYPE.FREE_RUN;
@@ -79,7 +79,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
     public double getWayLengthCurrent(){
         double result = 0.0;
         for(CNCMotion motion:this)
-            result += CNCScaleForLong.getDoubleFromLong(motion.wayLengthCurrent);
+            result += CNCScaler.long2double(motion.wayLengthCurrent);
         return result;
     }
 }
