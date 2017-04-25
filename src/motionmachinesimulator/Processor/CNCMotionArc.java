@@ -90,13 +90,17 @@ public class CNCMotionArc extends CNCMotion {
     void onFastTimerTick(long dl) {
         wayLengthCurrent += dl;
         long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>CNCScaler.shift;
-        // debug data
-        long angleChangeControl = (wayLength*oneDividedByRadiusScaled)>>CNCScaler.shift;
-        double check = angleChangeControl/((double)angleScaled);
         if(direction == DIRECTION.CW) angleChange = - angleChange;
         currentAngleScaled = startAngleScaled + angleChange;
-        currentRelativePosition.setX((radiusInt * cosInt9(currentAngleScaled))>>Trigonometric.shift - centerOffset.getX());
-        currentRelativePosition.setY((radiusInt * sinInt9(currentAngleScaled))>>Trigonometric.shift - centerOffset.getY());
+        // TODO temporary variables should be removed
+        long tmpX1 = centerOffset.getX();
+        long tmpX2 = (radiusInt * cosInt9(currentAngleScaled)) >> Trigonometric.shift;
+        long tmpX3 = tmpX1 + tmpX2;
+        currentRelativePosition.setX(tmpX3);
+        long tmpY1 = centerOffset.getY();
+        long tmpY2 = (radiusInt * sinInt9(currentAngleScaled)) >> Trigonometric.shift;
+        long tmpY3 = tmpY1 + tmpY2;
+        currentRelativePosition.setY(tmpY3);
     }
 
     @Override
@@ -105,22 +109,26 @@ public class CNCMotionArc extends CNCMotion {
             CNCPoint radiusOffset = new CNCPoint(radiusInt, radiusInt);
             CNCPoint leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
             CNCPoint rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
-
             CNCPoint endPoint  = fromPoint.add(relativeEndPoint);
 
-            double phase = ((double)this.wayLengthCurrent)/this.wayLength;
-            double angleChange = angle/phase;
-            if(this.direction == DIRECTION.CCW) angleChange = - angleChange;
             int[] p1 = TrajectoryView.transfer(leftBottomPoint);
             int[] p2 = TrajectoryView.transfer(rightTopPoint);
+
+            double phase = ((double)this.wayLengthCurrent)/this.wayLength;
+            double angleChange = angle*phase;
+            if(this.direction == DIRECTION.CCW) angleChange = - angleChange;
             int x1 = Math.min(p1[0],p2[0]);
             int y1 = Math.min(p1[1],p2[1]);
             int x2 = Math.max(p1[0],p2[0]) - x1;
             int y2 = Math.max(p1[1],p2[1]) - y1;
             g.setColor(TrajectoryView.color1);
-            g.drawArc(x1, y1, x2, y2, rad2grad(startAngle), rad2grad(angleChange));
+            int angle1 = rad2grad(startAngle);
+            int angle2 = rad2grad(angleChange);
+            g.drawArc(x1, y1, x2, y2, angle1, angle2);
             g.setColor(TrajectoryView.color2);
-            g.drawArc(x1, y1, x2, y2, rad2grad(startAngle+angleChange), rad2grad(angle-angleChange));
+            int angle3 = rad2grad(startAngle+angleChange);
+            int angle4 = rad2grad(angle-angleChange);
+            g.drawArc(x1, y1, x2, y2, angle3, angle4);
             return endPoint;
         } catch (Exception e) {
             e.printStackTrace();
