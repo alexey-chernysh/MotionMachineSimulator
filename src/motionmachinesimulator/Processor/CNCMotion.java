@@ -10,10 +10,10 @@ public abstract class CNCMotion extends CNCAction {
     private MOTION_PHASE phase;
     private MOTION_TYPE motion_type;
 
-    private long stepSizeBeforeAcceleration;
-    private long stepSizeAfterDeceleration;
-    private long stepSizeConstantVelocity;
-    private long stepSizeIncrement;
+    private final long stepSizeBeforeAcceleration;
+    private final long stepSizeAfterDeceleration;
+    private final long stepSizeConstantVelocity;
+    private final long stepSizeIncrement;
 
     protected final CNCPoint relativeEndPoint;
     protected CNCPoint currentRelativePosition;
