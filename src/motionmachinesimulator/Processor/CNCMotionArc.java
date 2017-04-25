@@ -19,15 +19,11 @@ public class CNCMotionArc extends CNCMotion {
     private CNCMotionArc.DIRECTION direction;
 
     //arc vars
-    private final double radius;
     private final long   radiusInt;
     private final long   oneDividedByRadiusScaled;
-    private double      angle;
-    private long        angleScaled;
-    private double startAngle;
-    private long   startAngleScaled;
-    private double   endAngle;
-    private long     endAngleScaled;
+
+    private final long angleScaled;
+    private final long startAngleScaled;
     private long currentAngleScaled;
 
     private static final double twoPi = 2.0*Math.PI;
@@ -43,11 +39,14 @@ public class CNCMotionArc extends CNCMotion {
         centerOffset = center; // should be non zero for arc motion
         direction = dir;
 
+        double      angle;
+        double startAngle;
+        double   endAngle;
+
         if(this.centerOffset != null){
             radiusInt = this.centerOffset.getDistance();
-            radius = CNCScaler.long2double(radiusInt);
-            if(radius <= 0.0) throw new Exception("Zero radius arc not supported");
-            oneDividedByRadiusScaled = (long)(Trigonometric.scale/radius);
+            if(radiusInt <= 0) throw new Exception("Zero radius arc not supported");
+            oneDividedByRadiusScaled = (long)(Trigonometric.scale/CNCScaler.long2double(radiusInt));
             startAngle = Math.atan2(-centerOffset.getY(),-centerOffset.getX());
             endAngle = Math.atan2(relativeEndPoint.getY() - centerOffset.getY(),
                                   relativeEndPoint.getX() - centerOffset.getX());
@@ -69,7 +68,6 @@ public class CNCMotionArc extends CNCMotion {
 
         angleScaled = Trigonometric.getLongFromDoubleAngle(angle);
         startAngleScaled = Trigonometric.getLongFromDoubleAngle(startAngle);
-        endAngleScaled = Trigonometric.getLongFromDoubleAngle(endAngle);
         currentAngleScaled = startAngleScaled;
 
         wayLength = (long)(radiusInt * Math.abs(angle));
@@ -80,9 +78,9 @@ public class CNCMotionArc extends CNCMotion {
         System.out.print("CNCMotionArc:");
         System.out.print(" dX = " + this.relativeEndPoint.getXinMeters());
         System.out.print(" dY = " + this.relativeEndPoint.getYinMeters());
-        System.out.print(" startAngle = " + this.startAngle);
-        System.out.print(" endAngle = " + this.endAngle);
-        System.out.print(" angle = " + this.angle);
+        System.out.print(" startAngle = " + startAngle);
+        System.out.print(" endAngle = " + endAngle);
+        System.out.print(" angle = " + angle);
         System.out.println(" wayLength = " + this.wayLength);
     }
 
@@ -115,19 +113,19 @@ public class CNCMotionArc extends CNCMotion {
             int[] p2 = TrajectoryView.transfer(rightTopPoint);
 
             double phase = ((double)this.wayLengthCurrent)/this.wayLength;
-            double angleChange = angle*phase;
+            double angleChange = phase*(angleScaled/Trigonometric.doubleScale);
             if(this.direction == DIRECTION.CCW) angleChange = - angleChange;
             int x1 = Math.min(p1[0],p2[0]);
             int y1 = Math.min(p1[1],p2[1]);
             int x2 = Math.max(p1[0],p2[0]) - x1;
             int y2 = Math.max(p1[1],p2[1]) - y1;
             g.setColor(TrajectoryView.color1);
-            int angle1 = rad2grad(startAngle);
+            int angle1 = rad2grad(startAngleScaled/Trigonometric.doubleScale);
             int angle2 = rad2grad(angleChange);
             g.drawArc(x1, y1, x2, y2, angle1, angle2);
             g.setColor(TrajectoryView.color2);
-            int angle3 = rad2grad(startAngle+angleChange);
-            int angle4 = rad2grad(angle-angleChange);
+            int angle3 = rad2grad(startAngleScaled/Trigonometric.doubleScale+angleChange);
+            int angle4 = rad2grad(angleScaled/Trigonometric.doubleScale-angleChange);
             g.drawArc(x1, y1, x2, y2, angle3, angle4);
             return endPoint;
         } catch (Exception e) {
