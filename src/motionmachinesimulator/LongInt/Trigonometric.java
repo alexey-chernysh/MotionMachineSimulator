@@ -77,7 +77,7 @@ public class Trigonometric {
     private final static long k9_7  = (long)(dsk_7  * scale7);
     private final static long k9_9  = (long)(dsk_9  * scale9);
 
-    public static int sinInt9(long angle) {
+    public static long sinInt9(long angle) {
     /* in int32 format - PI = Ox0100 0000 0000 0000 0000 0000 0000 0000
         sin(PI/2) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
     * */
@@ -91,7 +91,7 @@ public class Trigonometric {
         result = (x2 * (k9_5 + result))>>(n5-n3+shift);
         result = (x2 * (k9_3 + result))>>(n3-n1+shift);
         result = (tmp * (k9_1 + result))>>n1;
-        return (int)(result);
+        return result;
     }
 
     private final static double dck_0 = 0.999999999845705468807;
@@ -121,7 +121,7 @@ public class Trigonometric {
     private final static long k10_8   = (long)(dck_8  * scale8);
     private final static long k10_10  = (long)(dck_10 * scale10);
 
-    public static int cosInt9(long angle) {
+    public static long cosInt9(long angle) {
     /* in int32 format - PI = Ox0010 0000 0000 0000 0000 0000 0000 0000
         cos(0) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
         return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
@@ -144,8 +144,8 @@ public class Trigonometric {
         result = (x2 * (k10_4 + result))>>(n4-n2+shift);
         result = (x2 * (k10_2 + result))>>(n2-n0+shift);
         result = (k10_0 + result)>>(n0-shift);
-        if(positiveResult)return (int)(result);
-        else return -(int)(result);
+        if(positiveResult)return result;
+        else return -result;
     }
 
     // masking hi bits for sine & cosine

@@ -19,8 +19,8 @@ public class CNCMotionArc extends CNCMotion {
     private CNCMotionArc.DIRECTION direction;
 
     //arc vars
-    private final long   radiusInt;
-    private final long   oneDividedByRadiusScaled;
+    private final long radiusLong;
+    private final long oneDividedByRadiusScaled;
 
     private final long angleScaled;
     private final long startAngleScaled;
@@ -44,9 +44,9 @@ public class CNCMotionArc extends CNCMotion {
         double   endAngle;
 
         if(this.centerOffset != null){
-            radiusInt = this.centerOffset.getDistance();
-            if(radiusInt <= 0) throw new Exception("Zero radius arc not supported");
-            oneDividedByRadiusScaled = (long)(Trigonometric.scale/CNCScaler.long2double(radiusInt));
+            radiusLong = this.centerOffset.getDistance();
+            if(radiusLong <= 0) throw new Exception("Zero radius arc not supported");
+            oneDividedByRadiusScaled = (long)(Trigonometric.scale/CNCScaler.long2double(radiusLong));
             startAngle = Math.atan2(-centerOffset.getY(),-centerOffset.getX());
             endAngle = Math.atan2(relativeEndPoint.getY() - centerOffset.getY(),
                                   relativeEndPoint.getX() - centerOffset.getX());
@@ -70,7 +70,7 @@ public class CNCMotionArc extends CNCMotion {
         startAngleScaled = Trigonometric.getLongFromDoubleAngle(startAngle);
         currentAngleScaled = startAngleScaled;
 
-        wayLength = (long)(radiusInt * Math.abs(angle));
+        wayLength = (long)(radiusLong * Math.abs(angle));
 
         if( wayLength <= 0)
             throw new Exception("Null motion not supported");
@@ -85,26 +85,21 @@ public class CNCMotionArc extends CNCMotion {
     }
 
     @Override
-    void onFastTimerTick(long dl) {
-        wayLengthCurrent += dl;
-        long angleChange = (wayLengthCurrent*oneDividedByRadiusScaled)>>CNCScaler.shift;
+    void onFastTimerTick(long wayLengthCurrent_) {
+        long angleChange = (wayLengthCurrent_*oneDividedByRadiusScaled)>>CNCScaler.shift;
         if(direction == DIRECTION.CW) angleChange = - angleChange;
         currentAngleScaled = startAngleScaled + angleChange;
         // TODO temporary variables should be removed
-        long tmpX1 = centerOffset.getX();
-        long tmpX2 = (radiusInt * cosInt9(currentAngleScaled)) >> Trigonometric.shift;
-        long tmpX3 = tmpX1 + tmpX2;
-        currentRelativePosition.setX(tmpX3);
-        long tmpY1 = centerOffset.getY();
-        long tmpY2 = (radiusInt * sinInt9(currentAngleScaled)) >> Trigonometric.shift;
-        long tmpY3 = tmpY1 + tmpY2;
-        currentRelativePosition.setY(tmpY3);
+        long tmpX2 = (radiusLong * cosInt9(currentAngleScaled)) >> Trigonometric.shift;
+        currentRelativePosition.setX(centerOffset.getX() + tmpX2);
+        long tmpY2 = (radiusLong * sinInt9(currentAngleScaled)) >> Trigonometric.shift;
+        currentRelativePosition.setY(centerOffset.getY() + tmpY2);
     }
 
     @Override
     public CNCPoint paint(Graphics g, CNCPoint fromPoint) {
         try {
-            CNCPoint radiusOffset = new CNCPoint(radiusInt, radiusInt);
+            CNCPoint radiusOffset = new CNCPoint(radiusLong, radiusLong);
             CNCPoint leftBottomPoint = fromPoint.add(centerOffset).sub(radiusOffset);
             CNCPoint rightTopPoint = fromPoint.add(centerOffset).add(radiusOffset);
             CNCPoint endPoint  = fromPoint.add(relativeEndPoint);

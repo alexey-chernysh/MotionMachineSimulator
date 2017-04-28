@@ -4,7 +4,7 @@
 
 package motionmachinesimulator.Processor;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static motionmachinesimulator.Processor.ControllerSettings.*;
 import static org.hamcrest.core.IsEqual.equalTo;

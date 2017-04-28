@@ -85,9 +85,10 @@ public abstract class CNCMotion extends CNCAction {
             if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN){
 
                 if(executionDirection.isForward())
-                    onFastTimerTick(stepSizeCurrent);
+                    wayLengthCurrent += stepSizeCurrent;
                 else
-                    onFastTimerTick(-stepSizeCurrent);
+                    wayLengthCurrent -= stepSizeCurrent;
+                onFastTimerTick(wayLengthCurrent);
 
                 CNCStepperPorts.setPosition(startPos.add(currentRelativePosition));
                 ControllerSettings.setCurrentStepSIze(stepSizeCurrent);

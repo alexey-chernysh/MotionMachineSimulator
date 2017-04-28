@@ -56,9 +56,8 @@ public class CNCMotionStraight extends CNCMotion {
     }
 
     @Override
-    void onFastTimerTick(long dl) {
-        wayLengthCurrent += dl;
-        currentRelativePosition.setX((wayLengthCurrent * Kx)>>Trigonometric.shift);
-        currentRelativePosition.setY((wayLengthCurrent * Ky)>>Trigonometric.shift);
+    void onFastTimerTick(long wayLengthCurrent_) {
+        currentRelativePosition.setX((wayLengthCurrent_ * Kx)>>Trigonometric.shift);
+        currentRelativePosition.setY((wayLengthCurrent_ * Ky)>>Trigonometric.shift);
     }
 }

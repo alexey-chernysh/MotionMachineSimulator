@@ -152,7 +152,7 @@ public class TrigonometricTest {
 
         // measurement 3
         long lz = 0;
-        int ly;
+        long ly;
         start = System.currentTimeMillis();
         for(int i=0; i<N; i++){
             ly = sinInt9(i);
