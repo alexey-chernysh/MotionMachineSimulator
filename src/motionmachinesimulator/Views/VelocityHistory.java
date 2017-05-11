@@ -6,12 +6,9 @@ package motionmachinesimulator.Views;
 
 import java.util.ArrayList;
 
-/**
- * Created by Sales on 17.04.2017.
- */
 public class VelocityHistory {
 
-    public ArrayList<VelocityRecord> history;
+    ArrayList<VelocityRecord> history;
 
     private static VelocityHistory ourInstance = new VelocityHistory();
 
@@ -38,11 +35,11 @@ public class VelocityHistory {
             wayLengthPosition = l;
         }
 
-        public double getWayLength() {
+        double getWayLength() {
             return wayLengthPosition;
         }
 
-        public double getVelocity() {
+        double getVelocity() {
             return velocityValue;
         }
     }

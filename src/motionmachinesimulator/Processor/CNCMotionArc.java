@@ -28,12 +28,12 @@ public class CNCMotionArc extends CNCMotion {
 
     private static final double twoPi = 2.0*Math.PI;
 
-    public CNCMotionArc(CNCPoint change,
-                        CNCPoint center,
-                        CNCMotionArc.DIRECTION dir,
-                        MOTION_TYPE type,
-                        double startVel,
-                        double endVel) throws Exception {
+    CNCMotionArc(CNCPoint change,
+                 CNCPoint center,
+                 CNCMotionArc.DIRECTION dir,
+                 MOTION_TYPE type,
+                 double startVel,
+                 double endVel) throws Exception {
         super(change, type, startVel, endVel);
 
         centerOffset = center; // should be non zero for arc motion

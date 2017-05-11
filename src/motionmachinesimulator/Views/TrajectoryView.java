@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 public class TrajectoryView {
 
-    private static double scale = 3000.0;
     private static double[][] rotationMatrix = {{1.0, 0.0},{0.0,-1.0}};
     private static double[] offsetVector = {0.008,0.062};
 
@@ -15,15 +14,16 @@ public class TrajectoryView {
     public static final Color color2 = new Color(0,0,255);
 
     public static int[] transfer(CNCPoint input) throws Exception {
-        double[] inputVector = {input.getXinMeters(),input.getYinMeters()};
         if(input != null){
+            double[] inputVector = {input.getXinMeters(),input.getYinMeters()};
             int[] result = new int[2];
             for (int i = 0; i < 2; i++){
                 double tmp = offsetVector[i];
                 for(int j = 0; j < 2; j++){
                     tmp += inputVector[j]*rotationMatrix[i][j];
                 }
-                result[i] = (int)(scale*tmp);
+                double scale = 3000.0;
+                result[i] = (int)(scale *tmp);
             }
             return result;
         } else throw new Exception("Null point not supported");
@@ -48,10 +48,6 @@ public class TrajectoryView {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public static void setScale(double newScale) {
-        TrajectoryView.scale = newScale;
     }
 
 }

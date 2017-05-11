@@ -17,7 +17,7 @@ class CNCScaler {
     *   цена шага должна быть 1,3*10-13 или 1/(2^38)
     * */
 
-    public static final int shift = 31;
+    static final int shift = 31;
     private static final long scaleFactor = 1L<< shift;
     private static final double doubleScaleFactor = scaleFactor;
 

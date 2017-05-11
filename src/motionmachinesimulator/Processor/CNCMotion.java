@@ -8,22 +8,20 @@ public abstract class CNCMotion extends CNCAction {
     private ExecutionState executionState = ExecutionState.getInstance();
 
     private MOTION_PHASE phase;
-    private MOTION_TYPE motion_type;
 
     private final long stepSizeBeforeAcceleration;
     private final long stepSizeAfterDeceleration;
     private final long stepSizeConstantVelocity;
     private final long stepSizeIncrement;
 
-    protected final CNCPoint relativeEndPoint;
-    protected CNCPoint currentRelativePosition;
+    final CNCPoint relativeEndPoint;
+    CNCPoint currentRelativePosition;
 
-    protected long wayLength;
-    protected long wayLengthCurrent;
+    long wayLength;
+    long wayLengthCurrent;
 
     private long wayLengthAcceleration;
     private long wayLengthDeceleration;
-    private long wayLengthConstantVelocity;
 
     /**
      * @param endPoint - relative position change after motion
@@ -36,9 +34,7 @@ public abstract class CNCMotion extends CNCAction {
         if (endPoint == null) throw new Exception("Null motion not supported");
         else relativeEndPoint = endPoint;
 
-        motion_type = type;
-
-        stepSizeConstantVelocity = ControllerSettings.getStepSize(motion_type);
+        stepSizeConstantVelocity = ControllerSettings.getStepSize(type);
 
         if(startVel >= 0.0) stepSizeBeforeAcceleration = ControllerSettings.getStep4Velocity(startVel);
         else throw new Exception("Velocity should be positive");
@@ -53,17 +49,16 @@ public abstract class CNCMotion extends CNCAction {
         phase = MOTION_PHASE.ACCELERATION;
     }
 
-    public void buildVelocityPlan() {
+    void calcWayLength() {
         wayLengthCurrent = 0;
         wayLengthAcceleration = ControllerSettings.getWayLength4StepChange(stepSizeBeforeAcceleration, stepSizeConstantVelocity);
         wayLengthDeceleration = ControllerSettings.getWayLength4StepChange(stepSizeConstantVelocity, stepSizeAfterDeceleration);
 
-        wayLengthConstantVelocity = wayLength - wayLengthAcceleration - wayLengthDeceleration;
+        long wayLengthConstantVelocity = wayLength - wayLengthAcceleration - wayLengthDeceleration;
         if(wayLengthConstantVelocity < 0){
             // motion too short, processing without constant velocity state
-            wayLengthAcceleration += wayLengthConstantVelocity/2;
-            wayLengthDeceleration += wayLengthConstantVelocity/2;
-            wayLengthConstantVelocity = 0;
+            wayLengthAcceleration += wayLengthConstantVelocity /2;
+            wayLengthDeceleration += wayLengthConstantVelocity /2;
         }
 
     }
@@ -72,7 +67,7 @@ public abstract class CNCMotion extends CNCAction {
 
     public abstract CNCPoint paint(Graphics g, CNCPoint fromPoint);
 
-    public void run(CNCPoint startPos){
+    void run(CNCPoint startPos){
         long currentDistanceToTarget = wayLength;
         long stepSizeCurrent;
 
@@ -138,7 +133,7 @@ public abstract class CNCMotion extends CNCAction {
                         phase = MOTION_PHASE.ACCELERATION;
                 }
 
-            }; // else System.out.print("+");
+            }
 
             try {
                 Thread.sleep(ControllerSettings.intervalInMillis);

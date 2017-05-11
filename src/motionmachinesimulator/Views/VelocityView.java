@@ -4,19 +4,12 @@
 
 package motionmachinesimulator.Views;
 
-import motionmachinesimulator.Processor.ControllerSettings;
-
 import java.awt.*;
 
-/**
- * Created by Sales on 17.04.2017.
- */
 public class VelocityView {
 
-    public static final Color color1 = new Color(255,0,0);
-    public static final Color color2 = new Color(0,0,255);
+    private static final Color color1 = new Color(255,0,0);
     private static VelocityHistory velocityHistory = VelocityHistory.getInstance();
-    private static double workingVelocity = ControllerSettings.getWorkingVelocity();
 
     public static void paint(Graphics g, int width, int height){
 

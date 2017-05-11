@@ -18,7 +18,6 @@ public class TrigonometricInt {
     public static double getDoubleFromLongAngle(long x){
         return x/doubleScale;
     }
-
     public static long getLongFromDoubleAngle(double x){
         return (long)(x*doubleScale);
     }
@@ -96,11 +95,6 @@ public class TrigonometricInt {
     private final static long k10_10  = (long)(dck_10 * scale10);
 
     public static long cosInt9(long angle) {
-    /* in int32 format - PI = Ox0010 0000 0000 0000 0000 0000 0000 0000
-        cos(0) = Ox0010 0000 0000 0000 0000 0000 0000 0000) = Ox0100 0000 0000 0000 0000 0000 0000 0000
-        return b0 + x2*(b2 + x2*(b4 + x2*(b6 + x2*(b8 + x2*b10))));
-    * */
-//        long tmp = maskToPi(angle);
         long tmp = angle;
         boolean positiveResult = true;
         if(tmp > scaledHalfPi){
@@ -120,12 +114,6 @@ public class TrigonometricInt {
         result = (k10_0 + result)>>(n0-shift);
         if(positiveResult)return result;
         else return -result;
-    }
-
-    // masking hi bits for sine & cosine
-    private static int maskToPi(long scaledAngle){
-        // 32 bit data used only
-        return (int)scaledAngle;
     }
 
 }

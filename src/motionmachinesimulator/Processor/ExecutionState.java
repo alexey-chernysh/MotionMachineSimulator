@@ -4,13 +4,13 @@
 
 package motionmachinesimulator.Processor;
 
-public class ExecutionState {
+class ExecutionState {
 
     private EXECUTION_STATE state;
 
     private static ExecutionState ourInstance = new ExecutionState();
 
-    public static ExecutionState getInstance() {
+    static ExecutionState getInstance() {
         return ourInstance;
     }
 

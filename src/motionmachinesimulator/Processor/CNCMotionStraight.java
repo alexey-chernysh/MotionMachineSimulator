@@ -40,7 +40,7 @@ public class CNCMotionStraight extends CNCMotion {
         try {
             double phase = ((double)this.wayLengthCurrent)/this.wayLength;
             CNCPoint innerPoint = relativeEndPoint.mul(phase).add(fromPoint);
-            CNCPoint endPoint = relativeEndPoint.add(fromPoint);;
+            CNCPoint endPoint = relativeEndPoint.add(fromPoint);
             int[] p1 = TrajectoryView.transfer(fromPoint);
             int[] p2 = TrajectoryView.transfer(innerPoint);
             int[] p3 = TrajectoryView.transfer(endPoint);

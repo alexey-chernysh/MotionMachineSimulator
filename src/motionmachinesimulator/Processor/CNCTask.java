@@ -65,7 +65,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
 
     public void buildAllVelocityPlans(){
         for(CNCMotion motion: this){
-            motion.buildVelocityPlan();
+            motion.calcWayLength();
         }
     }
 

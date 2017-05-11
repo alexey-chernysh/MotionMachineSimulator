@@ -9,9 +9,6 @@ import org.junit.Test;
 import static motionmachinesimulator.LongInt.TrigonometricDouble.*;
 import static motionmachinesimulator.LongInt.TrigonometricInt.*;
 
-/**
- * Created by Sales on 14.04.2017.
- */
 public class TrigonometricTest {
 
     @Test
@@ -43,18 +40,12 @@ public class TrigonometricTest {
     public void error_estimation_integer() {
         // error measurement
         long N = scale;
-        long target = scale;
         long error_sum = 0;
         for(int i=0;i<=N;i++){
             long s = sinInt9(i);
             long c = cosInt9(i);
             long res = (s*s + c*c)>>(shift);
-            long error = Math.abs(res - target);
-            /*
-            System.out.println("res    = " + Long.toBinaryString(res));
-            System.out.println("target = " + Long.toBinaryString(target));
-            System.out.println("error = " + error);
-            */
+            long error = Math.abs(res - N);
             error_sum += error;
         }
         System.out.println("N         = " + N);

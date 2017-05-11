@@ -15,12 +15,12 @@ public class CNCPoint {
         y = 0;
     }
 
-    public CNCPoint(long _x, long _y){
+    CNCPoint(long _x, long _y){
         x = _x;
         y = _y;
     }
 
-    public CNCPoint(double _x, double _y){
+    CNCPoint(double _x, double _y){
         x = CNCScaler.double2long(_x);
         y = CNCScaler.double2long(_y);
     }
@@ -33,11 +33,11 @@ public class CNCPoint {
         x = newX;
     }
 
-    public long getY() {
+    long getY() {
         return y;
     }
 
-    public void setY(long newY) {
+    void setY(long newY) {
         y = newY;
     }
 
@@ -49,21 +49,21 @@ public class CNCPoint {
         return CNCScaler.long2double(y);
     }
 
-    public CNCPoint add(CNCPoint p){
+    CNCPoint add(CNCPoint p){
         return new CNCPoint(this.x + p.x, this.y + p.y);
     }
 
-    public CNCPoint sub(CNCPoint p){
+    CNCPoint sub(CNCPoint p){
         return new CNCPoint(this.x - p.x, this.y - p.y);
     }
 
-    public long getDistance(){
+    long getDistance(){
         double dx = x;
         double dy = y;
         return (long)Math.sqrt(dx*dx+dy*dy);
     }
 
-    public CNCPoint mul(double scale) {
+    CNCPoint mul(double scale) {
         return new CNCPoint(scale*this.getXinMeters(), scale*this.getYinMeters());
     }
 }

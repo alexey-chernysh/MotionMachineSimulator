@@ -4,13 +4,13 @@
 
 package motionmachinesimulator.Processor;
 
-public class ExecutionDirection {
+class ExecutionDirection {
 
     private boolean forward;
 
     private static ExecutionDirection ourInstance = new ExecutionDirection();
 
-    public static ExecutionDirection getInstance() {
+    static ExecutionDirection getInstance() {
         return ourInstance;
     }
 
@@ -18,19 +18,15 @@ public class ExecutionDirection {
         forward = true;
     }
 
-    public boolean isForward() {
+    boolean isForward() {
         return forward;
     }
 
-    public boolean isBackward() {
-        return !forward;
-    }
-
-    public void setForward() {
+    void setForward() {
         this.forward = true;
     }
 
-    public void setBackward() {
+    void setBackward() {
         this.forward = false;
     }
 
