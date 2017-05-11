@@ -4,13 +4,13 @@
 
 package motionmachinesimulator.Processor;
 
-import motionmachinesimulator.LongInt.Trigonometric;
+import motionmachinesimulator.LongInt.TrigonometricInt;
 import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
 
-import static motionmachinesimulator.LongInt.Trigonometric.cosInt9;
-import static motionmachinesimulator.LongInt.Trigonometric.sinInt9;
+import static motionmachinesimulator.LongInt.TrigonometricInt.cosInt9;
+import static motionmachinesimulator.LongInt.TrigonometricInt.sinInt9;
 
 public class CNCMotionArc extends CNCMotion {
 
@@ -46,7 +46,7 @@ public class CNCMotionArc extends CNCMotion {
         if(this.centerOffset != null){
             radiusLong = this.centerOffset.getDistance();
             if(radiusLong <= 0) throw new Exception("Zero radius arc not supported");
-            oneDividedByRadiusScaled = (long)(Trigonometric.scale/CNCScaler.long2double(radiusLong));
+            oneDividedByRadiusScaled = (long)(TrigonometricInt.scale/CNCScaler.long2double(radiusLong));
             startAngle = Math.atan2(-centerOffset.getY(),-centerOffset.getX());
             endAngle = Math.atan2(relativeEndPoint.getY() - centerOffset.getY(),
                                   relativeEndPoint.getX() - centerOffset.getX());
@@ -66,8 +66,8 @@ public class CNCMotionArc extends CNCMotion {
 
         } else throw new Exception("Null radius not supported");
 
-        angleScaled = Trigonometric.getLongFromDoubleAngle(angle);
-        startAngleScaled = Trigonometric.getLongFromDoubleAngle(startAngle);
+        angleScaled = TrigonometricInt.getLongFromDoubleAngle(angle);
+        startAngleScaled = TrigonometricInt.getLongFromDoubleAngle(startAngle);
         currentAngleScaled = startAngleScaled;
 
         wayLength = (long)(radiusLong * Math.abs(angle));
@@ -90,9 +90,9 @@ public class CNCMotionArc extends CNCMotion {
         if(direction == DIRECTION.CW) angleChange = - angleChange;
         currentAngleScaled = startAngleScaled + angleChange;
         // TODO temporary variables should be removed
-        long tmpX2 = (radiusLong * cosInt9(currentAngleScaled)) >> Trigonometric.shift;
+        long tmpX2 = (radiusLong * cosInt9(currentAngleScaled)) >> TrigonometricInt.shift;
         currentRelativePosition.setX(centerOffset.getX() + tmpX2);
-        long tmpY2 = (radiusLong * sinInt9(currentAngleScaled)) >> Trigonometric.shift;
+        long tmpY2 = (radiusLong * sinInt9(currentAngleScaled)) >> TrigonometricInt.shift;
         currentRelativePosition.setY(centerOffset.getY() + tmpY2);
     }
 
@@ -108,19 +108,19 @@ public class CNCMotionArc extends CNCMotion {
             int[] p2 = TrajectoryView.transfer(rightTopPoint);
 
             double phase = ((double)this.wayLengthCurrent)/this.wayLength;
-            double angleChange = phase*(angleScaled/Trigonometric.doubleScale);
+            double angleChange = phase*(angleScaled/ TrigonometricInt.doubleScale);
             if(this.direction == DIRECTION.CCW) angleChange = - angleChange;
             int x1 = Math.min(p1[0],p2[0]);
             int y1 = Math.min(p1[1],p2[1]);
             int x2 = Math.max(p1[0],p2[0]) - x1;
             int y2 = Math.max(p1[1],p2[1]) - y1;
             g.setColor(TrajectoryView.color1);
-            int angle1 = rad2grad(startAngleScaled/Trigonometric.doubleScale);
+            int angle1 = rad2grad(startAngleScaled/ TrigonometricInt.doubleScale);
             int angle2 = rad2grad(angleChange);
             g.drawArc(x1, y1, x2, y2, angle1, angle2);
             g.setColor(TrajectoryView.color2);
-            int angle3 = rad2grad(startAngleScaled/Trigonometric.doubleScale+angleChange);
-            int angle4 = rad2grad(angleScaled/Trigonometric.doubleScale-angleChange);
+            int angle3 = rad2grad(startAngleScaled/ TrigonometricInt.doubleScale+angleChange);
+            int angle4 = rad2grad(angleScaled/ TrigonometricInt.doubleScale-angleChange);
             g.drawArc(x1, y1, x2, y2, angle3, angle4);
             return endPoint;
         } catch (Exception e) {

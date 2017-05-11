@@ -4,7 +4,7 @@
 
 package motionmachinesimulator.Processor;
 
-import motionmachinesimulator.LongInt.Trigonometric;
+import motionmachinesimulator.LongInt.TrigonometricInt;
 import motionmachinesimulator.Views.TrajectoryView;
 
 import java.awt.*;
@@ -26,8 +26,8 @@ public class CNCMotionStraight extends CNCMotion {
         if( this.wayLength <= 0.0)
             throw new Exception("Null motion not supported");
 
-        Kx = (long)((((double)relativeEndPoint.getX())/wayLength)* Trigonometric.scale);
-        Ky = (long)((((double)relativeEndPoint.getY())/wayLength)* Trigonometric.scale);
+        Kx = (long)((((double)relativeEndPoint.getX())/wayLength)* TrigonometricInt.scale);
+        Ky = (long)((((double)relativeEndPoint.getY())/wayLength)* TrigonometricInt.scale);
 
         System.out.print("CNCMotionStraight:");
         System.out.print(" dX = " + this.relativeEndPoint.getXinMeters());
@@ -57,7 +57,7 @@ public class CNCMotionStraight extends CNCMotion {
 
     @Override
     void onFastTimerTick(long wayLengthCurrent_) {
-        currentRelativePosition.setX((wayLengthCurrent_ * Kx)>>Trigonometric.shift);
-        currentRelativePosition.setY((wayLengthCurrent_ * Ky)>>Trigonometric.shift);
+        currentRelativePosition.setX((wayLengthCurrent_ * Kx)>> TrigonometricInt.shift);
+        currentRelativePosition.setY((wayLengthCurrent_ * Ky)>> TrigonometricInt.shift);
     }
 }

@@ -6,7 +6,8 @@ package motionmachinesimulator.LongInt;
 
 import org.junit.Test;
 
-import static motionmachinesimulator.LongInt.Trigonometric.*;
+import static motionmachinesimulator.LongInt.TrigonometricDouble.*;
+import static motionmachinesimulator.LongInt.TrigonometricInt.*;
 
 /**
  * Created by Sales on 14.04.2017.
