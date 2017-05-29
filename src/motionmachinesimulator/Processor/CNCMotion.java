@@ -71,7 +71,7 @@ public abstract class CNCMotion extends CNCAction {
     private long stepSizeCurrent;
     private CNCPoint startPos;
 
-    void start(){
+    void prepareData(){
         currentDistanceToTarget = wayLength;
 
         if(ExecutionDirection.isForward())
@@ -84,7 +84,7 @@ public abstract class CNCMotion extends CNCAction {
     }
 
     void run(){
-        start();
+        prepareData();
         do{
             if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN){
 

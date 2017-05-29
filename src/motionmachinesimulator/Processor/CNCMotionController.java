@@ -21,6 +21,7 @@ public class CNCMotionController extends Thread {
     public static CNCMotionController getInstance() {
         return ourInstance;
     }
+
     private CNCMotionController() {
         super();
         currentTask = new CNCTask();
@@ -37,16 +38,19 @@ public class CNCMotionController extends Thread {
     public void pauseExecution() {
         this.executionState.setState(ExecutionState.EXECUTION_STATE.PAUSED);
     }
+
     public void resumeForwardExecution() {
         executionDirection.setForward();
         checkThreadState();
         executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
     }
+
     public void resumeBackwardExecution() {
         executionDirection.setBackward();
         checkThreadState();
         executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
     }
+
     private void checkThreadState(){
         if(!controllerThread.isAlive()) {
             controllerThread = new Thread(this);
@@ -60,7 +64,7 @@ public class CNCMotionController extends Thread {
         do{
             CNCMotion currentMotion;
             int currentMotionNum = 0;
-            while((currentMotionNum>=0)&&(currentMotionNum<taskSize)){
+            while((currentMotionNum >= 0)&&(currentMotionNum < taskSize)){
                 System.out.println("Debug message: CNCMotion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 currentMotion.run();
