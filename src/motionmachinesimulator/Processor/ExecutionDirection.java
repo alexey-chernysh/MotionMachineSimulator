@@ -18,8 +18,8 @@ class ExecutionDirection {
         forward = true;
     }
 
-    boolean isForward() {
-        return forward;
+    static boolean isForward() {
+        return getInstance().forward;
     }
 
     void setForward() {

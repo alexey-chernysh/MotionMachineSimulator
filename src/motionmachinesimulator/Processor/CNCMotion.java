@@ -3,8 +3,8 @@ package motionmachinesimulator.Processor;
 import java.awt.*;
 
 public abstract class CNCMotion extends CNCAction {
+
     // environment access
-    private ExecutionDirection executionDirection = ExecutionDirection.getInstance();
     private ExecutionState executionState = ExecutionState.getInstance();
 
     private MOTION_PHASE phase;
@@ -67,19 +67,28 @@ public abstract class CNCMotion extends CNCAction {
 
     public abstract CNCPoint paint(Graphics g, CNCPoint fromPoint);
 
-    void run(CNCPoint startPos){
-        long currentDistanceToTarget = wayLength;
-        long stepSizeCurrent;
+    private long currentDistanceToTarget;
+    private long stepSizeCurrent;
+    private CNCPoint startPos;
 
-        if(executionDirection.isForward())
+    void start(){
+        currentDistanceToTarget = wayLength;
+
+        if(ExecutionDirection.isForward())
             stepSizeCurrent =  stepSizeBeforeAcceleration;
         else
             stepSizeCurrent = stepSizeAfterDeceleration;
 
+        if(ExecutionDirection.isForward())
+            startPos = CNCStepperPorts.getPosition();
+    }
+
+    void run(){
+        start();
         do{
             if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN){
 
-                if(executionDirection.isForward())
+                if(ExecutionDirection.isForward())
                     wayLengthCurrent += stepSizeCurrent;
                 else
                     wayLengthCurrent -= stepSizeCurrent;
@@ -92,7 +101,7 @@ public abstract class CNCMotion extends CNCAction {
                     case PAUSED:
                         break;
                     case ACCELERATION:
-                        if(executionDirection.isForward()){
+                        if(ExecutionDirection.isForward()){
                             if(stepSizeCurrent < stepSizeConstantVelocity){
                                 stepSizeCurrent += stepSizeIncrement;
                             } else {
@@ -108,7 +117,7 @@ public abstract class CNCMotion extends CNCAction {
                             stepSizeCurrent = stepSizeConstantVelocity;
                         break;
                     case DECELERATION:
-                        if(executionDirection.isForward()){
+                        if(ExecutionDirection.isForward()){
                             if(stepSizeCurrent > stepSizeAfterDeceleration) stepSizeCurrent -= stepSizeIncrement;
                             else stepSizeCurrent = stepSizeAfterDeceleration;
                         } else {
@@ -123,7 +132,7 @@ public abstract class CNCMotion extends CNCAction {
                     default:
                 }
 
-                if(executionDirection.isForward()){
+                if(ExecutionDirection.isForward()){
                     currentDistanceToTarget = wayLength - wayLengthCurrent;
                     if(currentDistanceToTarget<wayLengthDeceleration)
                         phase = MOTION_PHASE.DECELERATION;
