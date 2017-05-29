@@ -28,7 +28,7 @@ public class CNCMotionArc extends CNCMotion {
 
     private static final double twoPi = 2.0*Math.PI;
 
-    // TODO обавить ограничене на максимальную скорость в зависимости от максимального ускоения a = v*v/r => vmax = sqrt(amax*r)
+    // TODO добавить ограничене на максимальную скорость в зависимости от максимального ускоения a = v*v/r => vmax = sqrt(amax*r)
 
     CNCMotionArc(CNCPoint change,
                  CNCPoint center,
