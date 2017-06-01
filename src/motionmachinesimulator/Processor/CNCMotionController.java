@@ -67,7 +67,23 @@ public class CNCMotionController extends Thread {
             while((currentMotionNum >= 0)&&(currentMotionNum < taskSize)){
                 System.out.println("Debug message: CNCMotion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
-                currentMotion.run();
+                currentMotion.prepareData();
+                boolean anotherStepNeeded = true;
+                do{
+                    if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN) {
+                        if(ExecutionDirection.isForward())
+                            anotherStepNeeded = currentMotion.goByOneNanoStepForward(1.0);
+                        else
+                            anotherStepNeeded = currentMotion.goByOneNanoStepBackward(1.0);
+                    }
+
+                    try {
+                        Thread.sleep(ControllerSettings.intervalInMillis);
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+
+                } while (anotherStepNeeded);
                 if(this.executionDirection.isForward())
                     currentMotionNum++;
                 else

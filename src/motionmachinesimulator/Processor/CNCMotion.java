@@ -46,7 +46,7 @@ public abstract class CNCMotion extends CNCAction {
 
         currentRelativePosition = new CNCPoint();
 
-        phase = MOTION_PHASE.ACCELERATION;
+        phase = MOTION_PHASE.HEAD;
     }
 
     void calcWayLength() {
@@ -83,74 +83,70 @@ public abstract class CNCMotion extends CNCAction {
             startPos = CNCStepperPorts.getPosition();
     }
 
-    void run(){
-        prepareData();
-        do{
-            if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN){
+    boolean goByOneNanoStepForward(double stepScale){ // return true if another step needed
 
-                if(ExecutionDirection.isForward())
-                    wayLengthCurrent += stepSizeCurrent;
-                else
-                    wayLengthCurrent -= stepSizeCurrent;
-                onFastTimerTick(wayLengthCurrent);
+        wayLengthCurrent += stepSizeCurrent;
+        onFastTimerTick(wayLengthCurrent);
 
-                CNCStepperPorts.setPosition(startPos.add(currentRelativePosition));
-                ControllerSettings.setCurrentStepSIze(stepSizeCurrent);
+        CNCStepperPorts.setPosition(startPos.add(currentRelativePosition));
+        ControllerSettings.setCurrentStepSize(stepSizeCurrent);
 
-                switch (phase){
-                    case PAUSED:
-                        break;
-                    case ACCELERATION:
-                        if(ExecutionDirection.isForward()){
-                            if(stepSizeCurrent < stepSizeConstantVelocity){
-                                stepSizeCurrent += stepSizeIncrement;
-                            } else {
-                                stepSizeCurrent = stepSizeConstantVelocity;
-                                phase = MOTION_PHASE.CONSTANT_VELOCITY;
-                            }
-                        } else {
-                            if(stepSizeCurrent > stepSizeBeforeAcceleration) stepSizeCurrent -= stepSizeIncrement;
-                            else stepSizeCurrent = stepSizeBeforeAcceleration;
-                        }
-                        break;
-                    case CONSTANT_VELOCITY:
-                            stepSizeCurrent = stepSizeConstantVelocity;
-                        break;
-                    case DECELERATION:
-                        if(ExecutionDirection.isForward()){
-                            if(stepSizeCurrent > stepSizeAfterDeceleration) stepSizeCurrent -= stepSizeIncrement;
-                            else stepSizeCurrent = stepSizeAfterDeceleration;
-                        } else {
-                            if(stepSizeCurrent < stepSizeConstantVelocity)stepSizeCurrent += stepSizeIncrement;
-                            else {
-                                stepSizeCurrent = stepSizeConstantVelocity;
-                                phase = MOTION_PHASE.CONSTANT_VELOCITY;
-                            }
-
-                        }
-                        break;
-                    default:
-                }
-
-                if(ExecutionDirection.isForward()){
-                    currentDistanceToTarget = wayLength - wayLengthCurrent;
-                    if(currentDistanceToTarget<wayLengthDeceleration)
-                        phase = MOTION_PHASE.DECELERATION;
+        switch (phase){
+            case HEAD:
+                if(stepSizeCurrent < stepSizeConstantVelocity){
+                    stepSizeCurrent += stepSizeIncrement;
                 } else {
-                    currentDistanceToTarget = wayLengthCurrent;
-                    if(currentDistanceToTarget<wayLengthAcceleration)
-                        phase = MOTION_PHASE.ACCELERATION;
+                    stepSizeCurrent = stepSizeConstantVelocity;
+                    phase = MOTION_PHASE.BODY;
                 }
+                break;
+            case BODY:
+                stepSizeCurrent = stepSizeConstantVelocity;
+                break;
+            case TAIL:
+                if(stepSizeCurrent > stepSizeAfterDeceleration) stepSizeCurrent -= stepSizeIncrement;
+                else stepSizeCurrent = stepSizeAfterDeceleration;
+                break;
+            default:
+        }
 
-            }
+        currentDistanceToTarget = wayLength - wayLengthCurrent;
+        if(currentDistanceToTarget<wayLengthDeceleration)
+            phase = MOTION_PHASE.TAIL;
 
-            try {
-                Thread.sleep(ControllerSettings.intervalInMillis);
-            } catch (InterruptedException ie) {
-                ie.printStackTrace();
-            }
+        return (Math.abs(currentDistanceToTarget) > stepSizeCurrent);
+    }
 
-        } while (Math.abs(currentDistanceToTarget) > stepSizeCurrent);
+    boolean goByOneNanoStepBackward(double stepScale){ // return true if another step needed
+
+        wayLengthCurrent -= stepSizeCurrent;
+        onFastTimerTick(wayLengthCurrent);
+
+        CNCStepperPorts.setPosition(startPos.add(currentRelativePosition));
+        ControllerSettings.setCurrentStepSize(stepSizeCurrent);
+
+        switch (phase){
+            case HEAD:
+                if(stepSizeCurrent > stepSizeBeforeAcceleration) stepSizeCurrent -= stepSizeIncrement;
+                else stepSizeCurrent = stepSizeBeforeAcceleration;
+                break;
+            case BODY:
+                stepSizeCurrent = stepSizeConstantVelocity;
+                break;
+            case TAIL:
+                if(stepSizeCurrent < stepSizeConstantVelocity)stepSizeCurrent += stepSizeIncrement;
+                else {
+                    stepSizeCurrent = stepSizeConstantVelocity;
+                    phase = MOTION_PHASE.BODY;
+                }
+                break;
+            default:
+        }
+
+        currentDistanceToTarget = wayLengthCurrent;
+        if(currentDistanceToTarget<wayLengthAcceleration) phase = MOTION_PHASE.HEAD;
+
+        return (Math.abs(currentDistanceToTarget) > stepSizeCurrent);
     }
 
     enum MOTION_TYPE {
@@ -159,10 +155,9 @@ public abstract class CNCMotion extends CNCAction {
     }
 
     enum MOTION_PHASE {
-        PAUSED,
-        ACCELERATION,
-        CONSTANT_VELOCITY,
-        DECELERATION,
+        HEAD,
+        BODY,
+        TAIL
     }
 
 }

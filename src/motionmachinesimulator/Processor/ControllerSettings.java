@@ -85,13 +85,13 @@ public class ControllerSettings {
             default: return 0;
         }
     }
-    private static long currentStepSIze = 0;
-    public static void setCurrentStepSIze(long currentStepSIze) {
-        ControllerSettings.currentStepSIze = currentStepSIze;
+    private static long currentStepSize = 0;
+    public static void setCurrentStepSize(long currentStepSIze) {
+        ControllerSettings.currentStepSize = currentStepSIze;
     }
 
     public static double getCurrentVelocity() {
-        return CNCScaler.long2double(currentStepSIze)/intervalInSec;
+        return CNCScaler.long2double(currentStepSize)/intervalInSec;
     }
     public static double getCurrentVelocityMMinMin() {
         double velMeterPerSec = ControllerSettings.getCurrentVelocity();
