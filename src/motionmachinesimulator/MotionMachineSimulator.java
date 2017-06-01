@@ -44,7 +44,7 @@ public class MotionMachineSimulator extends JDialog implements ActionListener {
         $$$setupUI$$$();
 
         timer = new Timer(100, this);
-        timer.setInitialDelay(100);
+        timer.setInitialDelay(500);
         timer.start();
 
         setContentPane(contentPane);
