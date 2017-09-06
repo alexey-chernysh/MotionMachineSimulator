@@ -40,15 +40,19 @@ public class CNCMotionController extends Thread {
     }
 
     public void resumeForwardExecution() {
-        executionDirection.setForward();
-        checkThreadState();
-        executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
+        if(this.executionState.isPaused()){
+            executionDirection.setForward();
+            checkThreadState();
+            executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
+        }
     }
 
     public void resumeBackwardExecution() {
-        executionDirection.setBackward();
-        checkThreadState();
-        executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
+        if(this.executionState.isPaused()){
+            executionDirection.setBackward();
+            checkThreadState();
+            executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
+        }
     }
 
     private void checkThreadState(){

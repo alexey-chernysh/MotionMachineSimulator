@@ -15,7 +15,7 @@ class ExecutionState {
     }
 
     private ExecutionState() {
-        state = EXECUTION_STATE.EMPTY;
+        state = EXECUTION_STATE.PAUSED;
     }
 
     EXECUTION_STATE getState() {
@@ -26,9 +26,11 @@ class ExecutionState {
         this.state = newState;
     }
 
+    public boolean isPaused() {
+        return EXECUTION_STATE.PAUSED == state;
+    }
+
     enum EXECUTION_STATE {
-        EMPTY,
-        READY_TO_START,
         ON_THE_RUN,
         PAUSED
     }

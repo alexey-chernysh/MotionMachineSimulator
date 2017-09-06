@@ -46,7 +46,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
             this.add(straightMotion4);
             CNCMotionStraight straightMotion5 = new CNCMotionStraight(point8, t2, v, v);
             this.add(straightMotion5);
-            ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);
+            ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.PAUSED);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -74,7 +74,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
             motion.wayLengthCurrent = 0;
         }
         CNCStepperPorts.reset();
-        ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.READY_TO_START);
+        ExecutionState.getInstance().setState(ExecutionState.EXECUTION_STATE.PAUSED);
     }
 
     public double getWayLengthCurrent(){
