@@ -36,14 +36,14 @@ public class CNCMotionController extends Thread {
     }
 
     public void pauseExecution() {
-        this.executionState.setState(ExecutionState.EXECUTION_STATE.PAUSED);
+        this.executionState.setStopped();
     }
 
     public void resumeForwardExecution() {
         if(this.executionState.isPaused()){
             executionDirection.setForward();
             checkThreadState();
-            executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
+            executionState.setRunning();
         }
     }
 
@@ -51,7 +51,7 @@ public class CNCMotionController extends Thread {
         if(this.executionState.isPaused()){
             executionDirection.setBackward();
             checkThreadState();
-            executionState.setState(ExecutionState.EXECUTION_STATE.ON_THE_RUN);
+            executionState.setRunning();
         }
     }
 
@@ -74,7 +74,7 @@ public class CNCMotionController extends Thread {
                 currentMotion.prepareData();
                 boolean anotherStepNeeded = true;
                 do{
-                    if(executionState.getState() == ExecutionState.EXECUTION_STATE.ON_THE_RUN) {
+                    if(executionState.isRunning()) {
                         if(ExecutionDirection.isForward())
                             anotherStepNeeded = currentMotion.goByOneNanoStepForward(1.0);
                         else

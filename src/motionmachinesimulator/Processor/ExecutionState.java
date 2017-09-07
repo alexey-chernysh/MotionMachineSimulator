@@ -6,7 +6,9 @@ package motionmachinesimulator.Processor;
 
 class ExecutionState {
 
-    private EXECUTION_STATE state;
+    private boolean running;
+    private boolean resuming;
+    private boolean suspending;
 
     private static ExecutionState ourInstance = new ExecutionState();
 
@@ -15,24 +17,30 @@ class ExecutionState {
     }
 
     private ExecutionState() {
-        state = EXECUTION_STATE.PAUSED;
+        running = false;
+        resuming = false;
+        suspending = false;
     }
 
-    EXECUTION_STATE getState() {
-        return this.state;
+    void setRunning() {
+        this.running = true;
+    }
+    void setStopped() { this.running = false; }
+
+    boolean isRunning() {
+        return running;
     }
 
-    void setState(EXECUTION_STATE newState) {
-        this.state = newState;
+    boolean isPaused() {
+        return !running;
     }
 
-    public boolean isPaused() {
-        return EXECUTION_STATE.PAUSED == state;
+    public boolean isResuming() {
+        return resuming;
     }
 
-    enum EXECUTION_STATE {
-        ON_THE_RUN,
-        PAUSED
+    public boolean isSuspending() {
+        return suspending;
     }
 
 }
