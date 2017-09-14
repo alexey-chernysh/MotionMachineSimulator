@@ -3,9 +3,7 @@ package motionmachinesimulator.Processor;
 /**
  * Created by Sales on 16.02.2017.
  * Functions needed to be implemented:
- *  start/resume
  *  stop/pause
- *  direction change (forward/backward)
  *  velocity change (acceleration/deceleration)
  */
 
@@ -32,7 +30,8 @@ public class CNCMotionController extends Thread {
     }
 
     public void pauseExecution() {
-        ExecutionState.setStopped();
+        if(ExecutionState.isRunning())
+            ExecutionState.setPausing();
     }
 
     public void resumeForwardExecution() {

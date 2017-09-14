@@ -46,6 +46,8 @@ class ExecutionState {
     }
 
     static long resumingStepSize = 0;
+    static long pausingStepSize = 0;
+    static long startStopStepSize = 0;
     static long stepIncrement = 0;
 
     static void setResuming(){
@@ -62,6 +64,27 @@ class ExecutionState {
             else {
                 resuming = false;
                 return currentStepSize;
+            }
+        } else return currentStepSize;
+    }
+
+    static void setPausing(){
+        resuming = false;
+        pausing = true;
+        pausingStepSize = ControllerSettings.getCurrentStepSize();
+        stepIncrement = ControllerSettings.getStepIncrement4Acceleration();
+        startStopStepSize = ControllerSettings.getStartStepSize();
+    }
+
+    static long getPausingStepSize(long currentStepSize){
+        if(pausing){
+            pausingStepSize -= stepIncrement;
+            if(pausingStepSize > startStopStepSize){
+                return pausingStepSize;
+            } else {
+                running = false;
+                pausing = false;
+                return startStopStepSize;
             }
         } else return currentStepSize;
     }

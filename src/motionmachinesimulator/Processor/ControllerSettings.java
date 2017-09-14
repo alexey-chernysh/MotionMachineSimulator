@@ -90,6 +90,9 @@ public class ControllerSettings {
     public static void setCurrentStepSize(long currentStepSIze) {
         ControllerSettings.currentStepSize = currentStepSIze;
     }
+    public static long getCurrentStepSize() {
+        return currentStepSize;
+    }
 
     public static double getCurrentVelocity() {
         return CNCScaler.long2double(currentStepSize)/intervalInSec;
@@ -133,4 +136,5 @@ public class ControllerSettings {
         }
         return result;
     }
+
 }

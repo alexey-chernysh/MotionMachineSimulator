@@ -87,6 +87,7 @@ public abstract class CNCMotion extends CNCAction {
 
         long stepSizeCurrent = stepSizeForTrapeciedalProfile;
         stepSizeCurrent = ExecutionState.getResumingStepSize(stepSizeCurrent);
+        stepSizeCurrent = ExecutionState.getPausingStepSize(stepSizeCurrent);
         wayLengthCurrent += stepSizeCurrent;
         onFastTimerTick(wayLengthCurrent);
 
@@ -123,6 +124,7 @@ public abstract class CNCMotion extends CNCAction {
 
         long stepSizeCurrent = stepSizeForTrapeciedalProfile;
         stepSizeCurrent = ExecutionState.getResumingStepSize(stepSizeCurrent);
+        stepSizeCurrent = ExecutionState.getPausingStepSize(stepSizeCurrent);
         wayLengthCurrent -= stepSizeCurrent;
         onFastTimerTick(wayLengthCurrent);
 
