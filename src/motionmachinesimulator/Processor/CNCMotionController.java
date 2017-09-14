@@ -73,9 +73,9 @@ public class CNCMotionController extends Thread {
                 do{
                     if(ExecutionState.isRunning()) {
                         if(ExecutionState.isForward())
-                            anotherStepNeeded = currentMotion.goByOneNanoStepForward(1.0);
+                            anotherStepNeeded = currentMotion.goByOneNanoStepForward();
                         else
-                            anotherStepNeeded = currentMotion.goByOneNanoStepBackward(1.0);
+                            anotherStepNeeded = currentMotion.goByOneNanoStepBackward();
                     }
 
                     try {

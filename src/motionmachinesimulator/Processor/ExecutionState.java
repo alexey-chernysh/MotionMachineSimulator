@@ -78,10 +78,10 @@ class ExecutionState {
 
     static long getPausingStepSize(long currentStepSize){
         if(pausing){
+            long result = pausingStepSize;
             pausingStepSize -= stepIncrement;
-            if(pausingStepSize > startStopStepSize){
-                return pausingStepSize;
-            } else {
+            if(result > startStopStepSize) return result;
+            else {
                 running = false;
                 pausing = false;
                 return startStopStepSize;

@@ -83,7 +83,7 @@ public abstract class CNCMotion extends CNCAction {
             startPos = CNCStepperPorts.getPosition();
     }
 
-    boolean goByOneNanoStepForward(double stepScale){ // return true if another step needed
+    boolean goByOneNanoStepForward(){ // return true if another step needed
 
         long stepSizeCurrent = stepSizeForTrapeciedalProfile;
         stepSizeCurrent = ExecutionState.getResumingStepSize(stepSizeCurrent);
@@ -120,7 +120,7 @@ public abstract class CNCMotion extends CNCAction {
         return (Math.abs(currentDistanceToTarget) > stepSizeForTrapeciedalProfile);
     }
 
-    boolean goByOneNanoStepBackward(double stepScale){ // return true if another step needed
+    boolean goByOneNanoStepBackward(){ // return true if another step needed
 
         long stepSizeCurrent = stepSizeForTrapeciedalProfile;
         stepSizeCurrent = ExecutionState.getResumingStepSize(stepSizeCurrent);
