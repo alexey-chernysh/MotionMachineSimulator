@@ -13,8 +13,6 @@ public class CNCMotionController extends Thread {
 
     private final CNCTask currentTask;
     private Thread controllerThread;
-    private ExecutionDirection executionDirection;
-    private ExecutionState executionState;
 
     private static CNCMotionController ourInstance = new CNCMotionController();
 
@@ -26,8 +24,6 @@ public class CNCMotionController extends Thread {
         super();
         currentTask = new CNCTask();
         controllerThread = new Thread(this);
-        executionDirection = ExecutionDirection.getInstance();
-        executionState = ExecutionState.getInstance();
         controllerThread.start();
     }
 
@@ -36,22 +32,24 @@ public class CNCMotionController extends Thread {
     }
 
     public void pauseExecution() {
-        this.executionState.setStopped();
+        ExecutionState.setStopped();
     }
 
     public void resumeForwardExecution() {
-        if(this.executionState.isPaused()){
-            executionDirection.setForward();
+        if(ExecutionState.isPaused()){
             checkThreadState();
-            executionState.setRunning();
+            ExecutionState.setForward();
+            ExecutionState.setResuming();
+            ExecutionState.setRunning();
         }
     }
 
     public void resumeBackwardExecution() {
-        if(this.executionState.isPaused()){
-            executionDirection.setBackward();
+        if(ExecutionState.isPaused()){
             checkThreadState();
-            executionState.setRunning();
+            ExecutionState.setBackward();
+            ExecutionState.setResuming();
+            ExecutionState.setRunning();
         }
     }
 
@@ -74,8 +72,8 @@ public class CNCMotionController extends Thread {
                 currentMotion.prepareData();
                 boolean anotherStepNeeded = true;
                 do{
-                    if(executionState.isRunning()) {
-                        if(ExecutionDirection.isForward())
+                    if(ExecutionState.isRunning()) {
+                        if(ExecutionState.isForward())
                             anotherStepNeeded = currentMotion.goByOneNanoStepForward(1.0);
                         else
                             anotherStepNeeded = currentMotion.goByOneNanoStepBackward(1.0);
@@ -88,7 +86,7 @@ public class CNCMotionController extends Thread {
                     }
 
                 } while (anotherStepNeeded);
-                if(this.executionDirection.isForward())
+                if(ExecutionState.isForward())
                     currentMotionNum++;
                 else
                     currentMotionNum--;

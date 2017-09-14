@@ -55,6 +55,7 @@ public class ControllerSettings {
     public final static double intervalInSec = intervalInMillis/1000.0;
 
     private static double startVelocity = 0.1/60.0; // m/sec 100 mm in  min
+    public static long getStartStepSize(){ return getStep4Velocity(startVelocity); }
     public static double getStartVelocity(){ return startVelocity; }
 
     private static double freeRunVelocity = 5.0/60.0; // m/sec for 5.0 m/min

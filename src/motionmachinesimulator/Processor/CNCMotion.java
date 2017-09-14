@@ -68,23 +68,25 @@ public abstract class CNCMotion extends CNCAction {
     public abstract CNCPoint paint(Graphics g, CNCPoint fromPoint);
 
     private long currentDistanceToTarget;
-    private long stepSizeCurrent;
+    private long stepSizeForTrapeciedalProfile;
     private CNCPoint startPos;
 
     void prepareData(){
         currentDistanceToTarget = wayLength;
 
-        if(ExecutionDirection.isForward())
-            stepSizeCurrent =  stepSizeBeforeAcceleration;
+        if(ExecutionState.isForward())
+            stepSizeForTrapeciedalProfile =  stepSizeBeforeAcceleration;
         else
-            stepSizeCurrent = stepSizeAfterDeceleration;
+            stepSizeForTrapeciedalProfile = stepSizeAfterDeceleration;
 
-        if(ExecutionDirection.isForward())
+        if(ExecutionState.isForward())
             startPos = CNCStepperPorts.getPosition();
     }
 
     boolean goByOneNanoStepForward(double stepScale){ // return true if another step needed
 
+        long stepSizeCurrent = stepSizeForTrapeciedalProfile;
+        stepSizeCurrent = ExecutionState.getResumingStepSize(stepSizeCurrent);
         wayLengthCurrent += stepSizeCurrent;
         onFastTimerTick(wayLengthCurrent);
 
@@ -93,19 +95,19 @@ public abstract class CNCMotion extends CNCAction {
 
         switch (phase){
             case HEAD:
-                if(stepSizeCurrent < stepSizeConstantVelocity){
-                    stepSizeCurrent += stepSizeIncrement;
+                if(stepSizeForTrapeciedalProfile < stepSizeConstantVelocity){
+                    stepSizeForTrapeciedalProfile += stepSizeIncrement;
                 } else {
-                    stepSizeCurrent = stepSizeConstantVelocity;
+                    stepSizeForTrapeciedalProfile = stepSizeConstantVelocity;
                     phase = MOTION_PHASE.BODY;
                 }
                 break;
             case BODY:
-                stepSizeCurrent = stepSizeConstantVelocity;
+                stepSizeForTrapeciedalProfile = stepSizeConstantVelocity;
                 break;
             case TAIL:
-                if(stepSizeCurrent > stepSizeAfterDeceleration) stepSizeCurrent -= stepSizeIncrement;
-                else stepSizeCurrent = stepSizeAfterDeceleration;
+                if(stepSizeForTrapeciedalProfile > stepSizeAfterDeceleration) stepSizeForTrapeciedalProfile -= stepSizeIncrement;
+                else stepSizeForTrapeciedalProfile = stepSizeAfterDeceleration;
                 break;
             default:
         }
@@ -114,11 +116,13 @@ public abstract class CNCMotion extends CNCAction {
         if(currentDistanceToTarget<wayLengthDeceleration)
             phase = MOTION_PHASE.TAIL;
 
-        return (Math.abs(currentDistanceToTarget) > stepSizeCurrent);
+        return (Math.abs(currentDistanceToTarget) > stepSizeForTrapeciedalProfile);
     }
 
     boolean goByOneNanoStepBackward(double stepScale){ // return true if another step needed
 
+        long stepSizeCurrent = stepSizeForTrapeciedalProfile;
+        stepSizeCurrent = ExecutionState.getResumingStepSize(stepSizeCurrent);
         wayLengthCurrent -= stepSizeCurrent;
         onFastTimerTick(wayLengthCurrent);
 
@@ -127,16 +131,16 @@ public abstract class CNCMotion extends CNCAction {
 
         switch (phase){
             case HEAD:
-                if(stepSizeCurrent > stepSizeBeforeAcceleration) stepSizeCurrent -= stepSizeIncrement;
-                else stepSizeCurrent = stepSizeBeforeAcceleration;
+                if(stepSizeForTrapeciedalProfile > stepSizeBeforeAcceleration) stepSizeForTrapeciedalProfile -= stepSizeIncrement;
+                else stepSizeForTrapeciedalProfile = stepSizeBeforeAcceleration;
                 break;
             case BODY:
-                stepSizeCurrent = stepSizeConstantVelocity;
+                stepSizeForTrapeciedalProfile = stepSizeConstantVelocity;
                 break;
             case TAIL:
-                if(stepSizeCurrent < stepSizeConstantVelocity)stepSizeCurrent += stepSizeIncrement;
+                if(stepSizeForTrapeciedalProfile < stepSizeConstantVelocity) stepSizeForTrapeciedalProfile += stepSizeIncrement;
                 else {
-                    stepSizeCurrent = stepSizeConstantVelocity;
+                    stepSizeForTrapeciedalProfile = stepSizeConstantVelocity;
                     phase = MOTION_PHASE.BODY;
                 }
                 break;
@@ -146,7 +150,7 @@ public abstract class CNCMotion extends CNCAction {
         currentDistanceToTarget = wayLengthCurrent;
         if(currentDistanceToTarget<wayLengthAcceleration) phase = MOTION_PHASE.HEAD;
 
-        return (Math.abs(currentDistanceToTarget) > stepSizeCurrent);
+        return (Math.abs(currentDistanceToTarget) > stepSizeForTrapeciedalProfile);
     }
 
     enum MOTION_TYPE {

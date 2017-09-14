@@ -6,9 +6,10 @@ package motionmachinesimulator.Processor;
 
 class ExecutionState {
 
-    private boolean running;
-    private boolean resuming;
-    private boolean suspending;
+    private static boolean running;
+    private static boolean resuming;
+    private static boolean pausing;
+    private static boolean forward;
 
     private static ExecutionState ourInstance = new ExecutionState();
 
@@ -19,28 +20,66 @@ class ExecutionState {
     private ExecutionState() {
         running = false;
         resuming = false;
-        suspending = false;
+        pausing = false;
+        forward = true;
     }
 
-    void setRunning() {
-        this.running = true;
+    static void setRunning() {
+        running = true;
     }
-    void setStopped() { this.running = false; }
+    static void setStopped() { running = false; }
 
-    boolean isRunning() {
+    static boolean isRunning() {
         return running;
     }
 
-    boolean isPaused() {
+    static boolean isPaused() {
         return !running;
     }
 
-    public boolean isResuming() {
+    static boolean isResuming() {
         return resuming;
     }
 
-    public boolean isSuspending() {
-        return suspending;
+    static boolean isPausing() {
+        return pausing;
+    }
+
+    static long resumingStepSize = 0;
+    static long stepIncrement = 0;
+
+    static void setResuming(){
+        resuming = true;
+        resumingStepSize = ControllerSettings.getStartStepSize();
+        stepIncrement = ControllerSettings.getStepIncrement4Acceleration();
+    }
+
+    static long getResumingStepSize(long currentStepSize){
+        if(resuming){
+            long result = resumingStepSize;
+            resumingStepSize += stepIncrement;
+            if(result < currentStepSize) return result;
+            else {
+                resuming = false;
+                return currentStepSize;
+            }
+        } else return currentStepSize;
+    }
+
+    public static boolean isForward() {
+        return forward;
+    }
+
+    public static boolean isBackward() {
+        return !forward;
+    }
+
+    public static void setForward() {
+        forward = true;
+    }
+
+    public static void setBackward() {
+        forward = false;
     }
 
 }
