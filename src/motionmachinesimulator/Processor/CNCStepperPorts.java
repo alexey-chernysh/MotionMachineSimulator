@@ -17,7 +17,7 @@ public class CNCStepperPorts {
     private static final int stepBitPosition = 1;
     private static final long stepBitMask = ((int)1)<<(stepBitPosition-1);
 */
-    public static void setPosition(CNCPoint newPosition){
+    static void setPosition(CNCPoint newPosition){
 
 //        dirX  = (newPosition.x >= position.x);
 //        stepX = (newPosition.x & stepBitMask) > 0;

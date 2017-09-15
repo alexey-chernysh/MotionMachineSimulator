@@ -46,7 +46,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
             this.add(straightMotion4);
             CNCMotionStraight straightMotion5 = new CNCMotionStraight(point8, t2, v, v);
             this.add(straightMotion5);
-            ExecutionState.getInstance().setStopped();
+            ExecutionState.setStopped();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,7 +63,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
         return taskWayLength;
     }
 
-    public void buildAllVelocityPlans(){
+    private void buildAllVelocityPlans(){
         for(CNCMotion motion: this){
             motion.calcWayLength();
         }
@@ -74,7 +74,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
             motion.wayLengthCurrent = 0;
         }
         CNCStepperPorts.reset();
-        ExecutionState.getInstance().setStopped();
+        ExecutionState.setStopped();
     }
 
     public double getWayLengthCurrent(){

@@ -7,22 +7,21 @@ package motionmachinesimulator.Processor;
 public class CNCPoint {
 
     private long x;
-
     private long y;
 
     public CNCPoint(){
-        x = 0;
-        y = 0;
+        this.x = 0;
+        this.y = 0;
     }
 
     CNCPoint(long _x, long _y){
-        x = _x;
-        y = _y;
+        this.x = _x;
+        this.y = _y;
     }
 
-    CNCPoint(double _x, double _y){
-        x = CNCScaler.double2long(_x);
-        y = CNCScaler.double2long(_y);
+    CNCPoint(double newX, double newY){
+        this.x = CNCScaler.double2long(newX);
+        this.y = CNCScaler.double2long(newY);
     }
 
     public long getX() {
@@ -33,7 +32,7 @@ public class CNCPoint {
         x = newX;
     }
 
-    long getY() {
+    public long getY() {
         return y;
     }
 

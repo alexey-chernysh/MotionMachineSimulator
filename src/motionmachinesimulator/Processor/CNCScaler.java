@@ -21,12 +21,12 @@ class CNCScaler {
     private static final long scaleFactor = 1L<< shift;
     private static final double doubleScaleFactor = scaleFactor;
 
-   static double long2double(long x){
-        return x/doubleScaleFactor;
+   static double long2double(long longValue){
+        return longValue/doubleScaleFactor;
     }
 
-    static long double2long(double x){
-        return (long)(x*doubleScaleFactor);
+    static long double2long(double doubleValue){
+        return (long)(doubleValue*doubleScaleFactor);
     }
 
 }

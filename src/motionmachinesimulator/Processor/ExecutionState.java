@@ -11,6 +11,11 @@ class ExecutionState {
     private static boolean pausing;
     private static boolean forward;
 
+    private static long resumingStepSize;
+    private static long pausingStepSize;
+    private static long startStopStepSize;
+    private static long stepIncrement;
+
     private static ExecutionState ourInstance = new ExecutionState();
 
     static ExecutionState getInstance() {
@@ -22,6 +27,12 @@ class ExecutionState {
         resuming = false;
         pausing = false;
         forward = true;
+
+        resumingStepSize = 0;
+        pausingStepSize = 0;
+        startStopStepSize = 0;
+        stepIncrement = 0;
+
     }
 
     static void setRunning() {
@@ -36,19 +47,6 @@ class ExecutionState {
     static boolean isPaused() {
         return !running;
     }
-
-    static boolean isResuming() {
-        return resuming;
-    }
-
-    static boolean isPausing() {
-        return pausing;
-    }
-
-    static long resumingStepSize = 0;
-    static long pausingStepSize = 0;
-    static long startStopStepSize = 0;
-    static long stepIncrement = 0;
 
     static void setResuming(){
         resuming = true;
@@ -89,19 +87,15 @@ class ExecutionState {
         } else return currentStepSize;
     }
 
-    public static boolean isForward() {
+    static boolean isForward() {
         return forward;
     }
 
-    public static boolean isBackward() {
-        return !forward;
-    }
-
-    public static void setForward() {
+    static void setForward() {
         forward = true;
     }
 
-    public static void setBackward() {
+    static void setBackward() {
         forward = false;
     }
 
