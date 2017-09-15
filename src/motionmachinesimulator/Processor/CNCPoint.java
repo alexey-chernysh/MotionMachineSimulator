@@ -24,15 +24,15 @@ public class CNCPoint {
         this.y = CNCScaler.double2long(newY);
     }
 
-    public long getX() {
+    long getX() {
         return x;
     }
 
-    public void setX(long newX) {
+    void setX(long newX) {
         x = newX;
     }
 
-    public long getY() {
+    long getY() {
         return y;
     }
 

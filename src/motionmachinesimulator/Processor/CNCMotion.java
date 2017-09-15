@@ -5,8 +5,6 @@ import java.awt.*;
 public abstract class CNCMotion extends CNCAction {
 
     // environment access
-    private ExecutionState executionState = ExecutionState.getInstance();
-
     private MOTION_PHASE phase;
 
     private final long stepSizeBeforeAcceleration;

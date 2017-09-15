@@ -3,7 +3,6 @@ package motionmachinesimulator.Processor;
 /**
  * Created by Sales on 16.02.2017.
  * Functions needed to be implemented:
- *  stop/pause
  *  velocity change (acceleration/deceleration)
  */
 
@@ -62,17 +61,17 @@ public class CNCMotionController extends Thread {
     @Override
     public void run() {
         final int taskSize = currentTask.size();
-        do{
+        while (true) {
             CNCMotion currentMotion;
             int currentMotionNum = 0;
-            while((currentMotionNum >= 0)&&(currentMotionNum < taskSize)){
+            while ((currentMotionNum >= 0) && (currentMotionNum < taskSize)) {
                 System.out.println("Debug message: CNCMotion num =  " + currentMotionNum);
                 currentMotion = currentTask.get(currentMotionNum);
                 currentMotion.prepareData();
                 boolean anotherStepNeeded = true;
-                do{
-                    if(ExecutionState.isRunning()) {
-                        if(ExecutionState.isForward())
+                do {
+                    if (ExecutionState.isRunning()) {
+                        if (ExecutionState.isForward())
                             anotherStepNeeded = currentMotion.goByOneNanoStepForward();
                         else
                             anotherStepNeeded = currentMotion.goByOneNanoStepBackward();
@@ -85,13 +84,13 @@ public class CNCMotionController extends Thread {
                     }
 
                 } while (anotherStepNeeded);
-                if(ExecutionState.isForward())
+                if (ExecutionState.isForward())
                     currentMotionNum++;
                 else
                     currentMotionNum--;
             }
             currentTask.reset();
-        }while(true);
+        }
     }
 
 }
