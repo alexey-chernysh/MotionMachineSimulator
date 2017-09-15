@@ -47,7 +47,10 @@ public abstract class CNCMotion extends CNCAction {
         phase = MOTION_PHASE.HEAD;
     }
 
-    void calcWayLength() {
+    abstract long calcWayLength();
+
+    void calcAllWayLengths() {
+        wayLength = calcWayLength();
         wayLengthCurrent = 0;
         wayLengthAcceleration = ControllerSettings.getWayLength4StepChange(stepSizeBeforeAcceleration, stepSizeConstantVelocity);
         wayLengthDeceleration = ControllerSettings.getWayLength4StepChange(stepSizeConstantVelocity, stepSizeAfterDeceleration);
@@ -151,6 +154,10 @@ public abstract class CNCMotion extends CNCAction {
         if(currentDistanceToTarget<wayLengthAcceleration) phase = MOTION_PHASE.HEAD;
 
         return (Math.abs(currentDistanceToTarget) > stepSizeForTrapeciedalProfile);
+    }
+
+    public void reset(){
+        calcAllWayLengths();
     }
 
     enum MOTION_TYPE {
