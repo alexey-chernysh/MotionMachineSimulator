@@ -12,8 +12,8 @@ import java.awt.*;
 public class CNCMotionStraight extends CNCMotion {
 
     //general vars
-    private long Kx;
-    private long Ky;
+    private final long Kx;
+    private final long Ky;
 
     CNCMotionStraight(CNCPoint change,
                       MOTION_TYPE type,

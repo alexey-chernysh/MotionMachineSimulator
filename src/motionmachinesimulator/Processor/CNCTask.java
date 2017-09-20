@@ -30,7 +30,7 @@ public class CNCTask extends ArrayList<CNCMotion> {
         try {
             double v = ControllerSettings.getStartVelocity();
             double v1 = ControllerSettings.getWorkingVelocity();
-            CNCMotionStraight straightMotion1 = new CNCMotionStraight(point1, t1, v1, v);
+            CNCMotionStraight straightMotion1 = new CNCMotionStraight(point1, t1, v, v);
             this.add(straightMotion1);
             CNCMotionArc arcMotion1 = new CNCMotionArc(point2, center1, CNCMotionArc.DIRECTION.CW, t1, v, v);
             this.add(arcMotion1);

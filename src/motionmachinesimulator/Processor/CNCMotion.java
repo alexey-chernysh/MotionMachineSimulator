@@ -9,11 +9,15 @@ public abstract class CNCMotion extends CNCAction {
 
     private final long stepSizeBeforeAcceleration;
     private final long stepSizeAfterDeceleration;
-    private final long stepSizeConstantVelocity;
     private final long stepSizeIncrement;
+    private final long stepSizeConstantVelocity;
+    private long currentDistanceToTarget;
+    private long stepSizeForTrapeciedalProfile;
 
     final CNCPoint relativeEndPoint;
     CNCPoint currentRelativePosition;
+    private CNCPoint startPos;
+
 
     long wayLength;
     long wayLengthCurrent;
@@ -43,8 +47,6 @@ public abstract class CNCMotion extends CNCAction {
         stepSizeIncrement = ControllerSettings.getStepIncrement4Acceleration();
 
         currentRelativePosition = new CNCPoint();
-
-        phase = MOTION_PHASE.HEAD;
     }
 
     void calcWayLength() {
@@ -65,20 +67,16 @@ public abstract class CNCMotion extends CNCAction {
 
     public abstract CNCPoint paint(Graphics g, CNCPoint fromPoint);
 
-    private long currentDistanceToTarget;
-    private long stepSizeForTrapeciedalProfile;
-    private CNCPoint startPos;
-
     void prepareData(){
         currentDistanceToTarget = wayLength;
-
-        if(ExecutionState.isForward())
-            stepSizeForTrapeciedalProfile =  stepSizeBeforeAcceleration;
-        else
-            stepSizeForTrapeciedalProfile = stepSizeAfterDeceleration;
-
-        if(ExecutionState.isForward())
+        if(ExecutionState.isForward()) {
+            stepSizeForTrapeciedalProfile = stepSizeBeforeAcceleration;
             startPos = CNCStepperPorts.getPosition();
+            phase = MOTION_PHASE.HEAD;
+        } else {
+            stepSizeForTrapeciedalProfile = stepSizeAfterDeceleration;
+            phase = MOTION_PHASE.TAIL;
+        }
     }
 
     boolean goByOneNanoStepForward(){ // return true if another step needed
