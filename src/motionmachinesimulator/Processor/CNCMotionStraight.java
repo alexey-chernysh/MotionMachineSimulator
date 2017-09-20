@@ -15,16 +15,11 @@ public class CNCMotionStraight extends CNCMotion {
     private final long Kx;
     private final long Ky;
 
-    CNCMotionStraight(CNCPoint change,
+    CNCMotionStraight(CNCPoint relEndPoint,
                       MOTION_TYPE type,
                       double startVel,
                       double endVel) throws Exception {
-        super(change, type, startVel, endVel);
-
-        this.wayLength = change.getDistance();
-
-        if( this.wayLength <= 0.0)
-            throw new Exception("Null motion not supported");
+        super(relEndPoint, type, startVel, endVel);
 
         Kx = (long)((((double)relativeEndPoint.getX())/wayLength)* TrigonometricInt.scale);
         Ky = (long)((((double)relativeEndPoint.getY())/wayLength)* TrigonometricInt.scale);
@@ -33,6 +28,11 @@ public class CNCMotionStraight extends CNCMotion {
         System.out.print(" dX = " + this.relativeEndPoint.getXinMeters());
         System.out.print(" dY = " + this.relativeEndPoint.getYinMeters());
         System.out.println(" wayLength = " + this.wayLength);
+    }
+
+    @Override
+    long calcWayLength() {
+        return relativeEndPoint.getDistance();
     }
 
     @Override

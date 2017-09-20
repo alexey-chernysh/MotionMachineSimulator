@@ -65,13 +65,13 @@ public class CNCTask extends ArrayList<CNCMotion> {
 
     private void buildAllVelocityPlans(){
         for(CNCMotion motion: this){
-            motion.calcWayLength();
+            motion.calcAllWayLengths();
         }
     }
 
     void reset(){
         for(CNCMotion motion: this){
-            motion.wayLengthCurrent = 0;
+            motion.reset();
         }
         CNCStepperPorts.reset();
         ExecutionState.setStopped();

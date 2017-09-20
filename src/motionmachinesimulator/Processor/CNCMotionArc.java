@@ -22,6 +22,7 @@ public class CNCMotionArc extends CNCMotion {
     private final long radiusLong;
     private final long oneDividedByRadiusScaled;
 
+    private final double angle;
     private final long angleScaled;
     private final long startAngleScaled;
     private long currentAngleScaled;
@@ -41,7 +42,6 @@ public class CNCMotionArc extends CNCMotion {
         centerOffset = center; // should be non zero for arc motion
         direction = dir;
 
-        double      angle;
         double startAngle;
         double   endAngle;
 
@@ -72,11 +72,6 @@ public class CNCMotionArc extends CNCMotion {
         startAngleScaled = TrigonometricInt.getLongFromDoubleAngle(startAngle);
         currentAngleScaled = startAngleScaled;
 
-        wayLength = (long)(radiusLong * Math.abs(angle));
-
-        if( wayLength <= 0)
-            throw new Exception("Null motion not supported");
-
         System.out.print("CNCMotionArc:");
         System.out.print(" dX = " + this.relativeEndPoint.getXinMeters());
         System.out.print(" dY = " + this.relativeEndPoint.getYinMeters());
@@ -84,6 +79,11 @@ public class CNCMotionArc extends CNCMotion {
         System.out.print(" endAngle = " + endAngle);
         System.out.print(" angle = " + angle);
         System.out.println(" wayLength = " + this.wayLength);
+    }
+
+    @Override
+    long calcWayLength() {
+        return (long)(radiusLong * Math.abs(angle));
     }
 
     @Override
